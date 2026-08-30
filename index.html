@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ERICA 캠퍼스 내부구조도 안내</title>
+  <meta name="description" content="ERICA 캠퍼스 건물을 검색하고 내부 구조도를 확인할 수 있는 인터랙티브 캠퍼스맵입니다." />
+
+  <style>
+    :root{
+      --blue:#0b5cab;
+      --blue-dark:#073c73;
+      --ink:#152238;
+      --muted:#6b7280;
+      --line:#dbe3ec;
+      --bg:#f5f7fa;
+      --card:#ffffff;
+      --shadow:0 12px 40px rgba(21,34,56,.10);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Segoe UI",sans-serif;
+      color:var(--ink);
+      background:var(--bg);
+    }
+
+    .page{
+      width:min(1600px,100%);
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .hero{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:24px;
+      margin-bottom:16px;
+    }
+
+    .title-wrap h1{
+      margin:0 0 7px;
+      font-size:clamp(24px,3vw,38px);
+      letter-spacing:-.045em;
+    }
+
+    .title-wrap p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .search-panel{
+      flex:0 1 520px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .search-box{
+      position:relative;
+      flex:1;
+    }
+
+    .search-box input{
+      width:100%;
+      height:48px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:14px;
+      padding:0 44px 0 16px;
+      font-size:15px;
+      outline:none;
+      box-shadow:0 4px 14px rgba(21,34,56,.05);
+      transition:.18s ease;
+    }
+
+    .search-box input:focus{
+      border-color:#75aee5;
+      box-shadow:0 0 0 4px rgba(11,92,171,.10);
+    }
+
+    .clear-btn{
+      position:absolute;
+      right:9px;
+      top:50%;
+      transform:translateY(-50%);
+      border:0;
+      background:transparent;
+      color:#8b95a1;
+      cursor:pointer;
+      font-size:20px;
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      display:none;
+    }
+    .clear-btn:hover{background:#eef3f8}
+
+    .search-btn{
+      height:48px;
+      padding:0 20px;
+      border:0;
+      border-radius:14px;
+      background:var(--blue);
+      color:#fff;
+      font-weight:750;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .search-btn:hover{background:var(--blue-dark)}
+
+    .message{
+      min-height:24px;
+      margin:0 0 10px;
+      color:#52606d;
+      font-size:14px;
+    }
+    .message strong{color:var(--blue-dark)}
+
+    .map-card{
+      position:relative;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .map-scroll{
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      background:#fff;
+    }
+
+    /* 모바일에서는 이미지가 너무 작아지지 않게 최소 폭을 둔다. */
+    .map-stage{
+      position:relative;
+      width:100%;
+      min-width:900px;
+      line-height:0;
+    }
+
+    .map-stage img{
+      display:block;
+      width:100%;
+      height:auto;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /*
+      지도 위 번호 클릭 영역.
+      URL이 비어 있어도 검색 강조는 가능하지만, 클릭 이동은 하지 않는다.
+    */
+    .map-hotspot{
+      position:absolute;
+      width:clamp(26px,2.15vw,38px);
+      aspect-ratio:1/1;
+      transform:translate(-50%,-50%);
+      border-radius:999px;
+      border:0;
+      padding:0;
+      background:transparent;
+      z-index:10;
+      cursor:default;
+    }
+
+    .map-hotspot.is-linked{cursor:pointer}
+    .map-hotspot.is-linked:hover{
+      background:rgba(255,255,255,.20);
+      box-shadow:0 0 0 3px rgba(255,255,255,.92),0 0 0 7px rgba(11,92,171,.55);
+    }
+
+    /* 하단 범례(이미지 속 건물명) 위에 얹는 투명 클릭 영역 */
+    .legend-hotspot{
+      position:absolute;
+      z-index:9;
+      border:0;
+      background:transparent;
+      border-radius:5px;
+      padding:0;
+      cursor:default;
+    }
+
+    .legend-hotspot.is-linked{cursor:pointer}
+    .legend-hotspot.is-linked:hover{
+      background:rgba(11,92,171,.10);
+      outline:2px solid rgba(11,92,171,.30);
+    }
+
+    /* 검색 시 지도 번호 + 하단 건물명 모두 번쩍 */
+    .search-hit{
+      z-index:30 !important;
+    }
+
+    .map-hotspot.search-hit::before{
+      content:"";
+      position:absolute;
+      inset:-9px;
+      border:4px solid #ff2d55;
+      border-radius:999px;
+      box-shadow:0 0 0 7px rgba(255,255,255,.92), 0 0 26px rgba(255,45,85,.95);
+      animation:flashRing .58s ease-in-out 6 alternate;
+      pointer-events:none;
+    }
+
+    .map-hotspot.search-hit::after{
+      content:attr(data-label);
+      position:absolute;
+      left:50%;
+      top:-40px;
+      transform:translateX(-50%);
+      background:#111827;
+      color:#fff;
+      line-height:1;
+      padding:8px 10px;
+      border-radius:9px;
+      white-space:nowrap;
+      font-size:12px;
+      font-weight:800;
+      box-shadow:0 8px 20px rgba(0,0,0,.20);
+      pointer-events:none;
+    }
+
+    .legend-hotspot.search-hit{
+      background:rgba(255,230,0,.28);
+      outline:3px solid #ff2d55;
+      box-shadow:0 0 18px rgba(255,45,85,.42);
+      animation:legendFlash .58s ease-in-out 6 alternate;
+    }
+
+    @keyframes flashRing{
+      from{opacity:.2; transform:scale(.80)}
+      to{opacity:1; transform:scale(1.16)}
+    }
+
+    @keyframes legendFlash{
+      from{opacity:.35}
+      to{opacity:1}
+    }
+
+    .hint{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 18px;
+      align-items:center;
+      padding:13px 17px;
+      border-top:1px solid var(--line);
+      background:#fbfcfe;
+      color:#697586;
+      font-size:13px;
+      line-height:1.4;
+    }
+
+    .dot{
+      display:inline-block;
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      margin-right:6px;
+      background:var(--blue);
+    }
+
+    .footer{
+      margin:14px 2px 0;
+      color:#8a94a3;
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    /* 디버그 모드: 주소 뒤에 ?debug=1 을 붙이면 클릭 영역이 보인다. */
+    body.debug .map-hotspot{
+      background:rgba(255,0,0,.22);
+      box-shadow:inset 0 0 0 2px rgba(255,0,0,.75);
+    }
+    body.debug .legend-hotspot{
+      background:rgba(0,110,255,.14);
+      outline:1px solid rgba(0,110,255,.65);
+    }
+
+    @media (max-width:900px){
+      .page{padding:14px}
+      .hero{align-items:stretch;flex-direction:column;gap:14px}
+      .search-panel{flex-basis:auto;width:100%}
+      .map-card{border-radius:14px}
+      .map-stage{min-width:1050px}
+      .title-wrap p{font-size:13px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important}
+      .map-hotspot.search-hit::before,
+      .legend-hotspot.search-hit{animation:none}
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="title-wrap">
+        <h1>ERICA 캠퍼스 내부구조도 안내</h1>
+        <p>
+          건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>
+          내부 구조도가 연결된 건물은 지도 번호 또는 하단 건물명을 눌러 확인할 수 있습니다.
+        </p>
+      </div>
+
+      <div class="search-panel">
+        <div class="search-box">
+          <input
+            id="searchInput"
+            type="search"
+            autocomplete="off"
+            placeholder="건물 번호·건물명 검색 (예: 101, 본관)"
+            aria-label="건물 번호 또는 건물명 검색"
+          />
+          <button class="clear-btn" id="clearBtn" type="button" aria-label="검색어 지우기">×</button>
+        </div>
+        <button class="search-btn" id="searchBtn" type="button">찾기</button>
+      </div>
+    </section>
+
+    <div class="message" id="message" aria-live="polite"></div>
+
+    <section class="map-card">
+      <div class="map-scroll" id="mapScroll">
+        <div class="map-stage" id="mapStage">
+          <img
+            id="campusMap"
+            src="assets/erica-map.jpg"
+            alt="한양대학교 ERICA 캠퍼스 항공 지도 및 건물 안내"
+            width="2048"
+            height="1122"
+          />
+        </div>
+      </div>
+
+      <div class="hint">
+        <span><i class="dot"></i>마우스를 올렸을 때 반응하는 건물은 내부 구조도가 연결된 건물입니다.</span>
+        <span>검색은 구조도 연결 여부와 관계없이 건물 위치를 표시합니다.</span>
+      </div>
+    </section>
+
+    <p class="footer">
+      ※ 지도 이미지의 표기와 현재 건물 명칭이 다른 경우, 아래 BUILDINGS 설정의 name/aliases를 수정하면 검색어를 추가할 수 있습니다.
+    </p>
+  </main>
+
+<script>
+/* ============================================================
+   ★ 여기만 수정하면 됨 ★
+
+   1) 각 건물의 url: "" 안에 블로그 주소를 넣는다.
+      예) url: "https://blog.naver.com/xxxxx/123456789"
+
+   2) URL이 빈 문자열("")이면
+      - 지도 번호 검색/번쩍임: 됨
+      - 지도 번호 클릭 이동: 안 됨
+      - 하단 건물명 클릭 이동: 안 됨
+
+   3) 지도 이미지에 적힌 명칭이 바뀐 경우
+      name과 aliases만 바꿔도 검색에는 새 명칭을 쓸 수 있다.
+      (이미지 자체 글자는 원본 이미지를 수정해야 바뀜)
+
+   4) 202·204는 현재 제공된 지도 이미지의 구명칭을 그대로 넣어둠.
+      나중에 실제 새 명칭을 name 또는 aliases에 추가하면 됨.
+
+   5) 좌표가 어긋나는지 확인하고 싶으면
+      사이트 주소 뒤에 ?debug=1
+      예) https://아이디.github.io/저장소/?debug=1
+   ============================================================ */
+
+const BUILDINGS = [
+  // ===== 100번대 =====
+  { id:"101", name:"본관", aliases:["Administration Building"], url:"", x:41.71, y:57.05, legend:["A",0] },
+  { id:"102", name:"학생복지관", aliases:["Student Welfare Building"], url:"", x:38.77, y:44.74, legend:["A",1] },
+  { id:"103", name:"학생회관", aliases:["Student Union"], url:"", x:39.35, y:38.84, legend:["A",2] },
+  { id:"104", name:"제2공학관", aliases:["Engineering Building II"], url:"", x:50.79, y:41.85, legend:["A",3] },
+  { id:"105", name:"건축디자인관", aliases:["Architectural Design Hall"], url:"", x:54.54, y:41.84, legend:["A",4] },
+  { id:"106", name:"초대형구조실험동", aliases:["Structural Experiment Laboratory"], url:"", x:56.73, y:41.58, legend:["A",5] },
+  { id:"107", name:"풍환경실험관", aliases:["Environment Experiment Center"], url:"", x:58.92, y:40.41, legend:["A",6] },
+  { id:"108", name:"수리실험동", aliases:["Hydraulics Lab"], url:"", x:61.15, y:40.27, legend:["A",7] },
+  { id:"109", name:"디자인문화관", aliases:["Design Culture Hall"], url:"", x:60.66, y:44.44, legend:["B",0] },
+  { id:"110", name:"디자인교육관", aliases:["Design Education Hall"], url:"", x:64.26, y:45.86, legend:["B",1] },
+  { id:"111", name:"디자인연구관", aliases:["Design Research Hall"], url:"", x:57.05, y:46.68, legend:["B",2] },
+  { id:"112", name:"스마트건축관", aliases:["Smart Architecture Building"], url:"", x:59.95, y:39.01, legend:["B",3] },
+
+  // ===== 200번대 =====
+  { id:"201", name:"경상관", aliases:["Business and Economics Hall"], url:"", x:18.95, y:54.48, legend:["C",0] },
+  { id:"202", name:"글로벌문화통상관", aliases:["Global Culture and Commerce Building"], url:"", x:26.53, y:54.48, legend:["C",1] },
+  { id:"203", name:"사회교육관/학군단", aliases:["Education Building","ROTC Building"], url:"", x:27.43, y:62.01, legend:["C",2] },
+  { id:"204", name:"언론정보관", aliases:["Communication and Social Sciences Hall"], url:"", x:21.25, y:64.20, legend:["C",3] },
+  { id:"205", name:"제1과학기술관", aliases:["Sciences and Technology Building I"], url:"", x:27.32, y:44.68, legend:["C",4] },
+  { id:"206", name:"컨퍼런스홀", aliases:["Conference Hall"], url:"", x:20.08, y:43.89, legend:["C",5] },
+  { id:"207", name:"제2과학기술관", aliases:["Sciences and Technology Building II"], url:"", x:21.96, y:39.51, legend:["C",6] },
+  { id:"208", name:"한양맞춤의약연구원", aliases:["Hanyang Institute for Precision Therapeutics"], url:"", x:26.02, y:42.23, legend:["C",7] },
+  { id:"209", name:"제1교육관", aliases:["Educational Building I"], url:"", x:30.40, y:41.91, legend:["C",8] },
+
+  // ===== 300번대 =====
+  { id:"301", name:"제1공학관", aliases:["Engineering Building I"], url:"", x:26.72, y:34.07, legend:["D",0] },
+  { id:"302", name:"시설관리관", aliases:["Facilities Management Building"], url:"", x:31.84, y:32.45, legend:["D",1] },
+  { id:"303", name:"제3공학관", aliases:["Engineering Building III"], url:"", x:31.72, y:34.57, legend:["D",2] },
+  { id:"304", name:"제4공학관", aliases:["Engineering Building IV"], url:"", x:35.37, y:29.76, legend:["D",3] },
+  { id:"305", name:"제5공학관", aliases:["Engineering Building V"], url:"", x:30.07, y:28.58, legend:["D",4] },
+  { id:"306", name:"버스승강장 및 학생휴게실", aliases:["Bus Stop and Student Lounge"], url:"", x:16.98, y:38.67, legend:["D",5] },
+  { id:"307", name:"ERICA컨벤션센터", aliases:["ERICA Convention Center"], url:"", x:16.07, y:30.28, legend:["D",6] },
+  { id:"308", name:"창업보육센터", aliases:["Hanyang Business Incubator"], url:"", x:35.60, y:22.28, legend:["D",7] },
+
+  { id:"309", name:"약학관", aliases:["Pharmacy Building"], url:"", x:29.42, y:25.04, legend:["E",0] },
+  { id:"310", name:"동물실험동", aliases:["Laboratory Animal Research Center"], url:"", x:31.92, y:24.87, legend:["E",1] },
+  { id:"311", name:"학연산클러스터지원센터", aliases:["ERICA Support Center"], url:"", x:26.23, y:23.11, legend:["E",2] },
+  { id:"312", name:"산학연협력관", aliases:["Industry-University-Research Cooperation Building"], url:"", x:23.15, y:24.01, legend:["E",3] },
+  { id:"313", name:"초고기능시험동", aliases:["Hanyang Accelerated Pavement Testing Building"], url:"", x:20.22, y:24.61, legend:["E",4] },
+  { id:"314", name:"퓨전전기기술응용연구센터", aliases:["EFT Center"], url:"", x:22.08, y:22.27, legend:["E",5] },
+  { id:"315", name:"BMR센터", aliases:["BMR Center"], url:"", x:19.61, y:21.99, legend:["E",6] },
+  { id:"316", name:"라이온스홀", aliases:["Lion's Hall"], url:"", x:20.06, y:18.49, legend:["E",7] },
+  { id:"317", name:"종합교육관", aliases:["Multidisciplinary Lecture Hall"], url:"", x:32.39, y:20.80, legend:["E",8] },
+  { id:"318", name:"다솜관", aliases:["Hanyang University ERICA Church"], url:"", x:14.61, y:29.13, legend:["E",9] },
+
+  // ===== 400번대 =====
+  { id:"401", name:"학술정보관", aliases:["Academic Information Center","Library"], url:"", x:40.67, y:34.18, legend:["F",0] },
+  { id:"402", name:"체육관", aliases:["Gymnasium"], url:"", x:50.44, y:35.25, legend:["F",1] },
+  { id:"403", name:"콘서트홀", aliases:["ERICA Music Hall"], url:"", x:55.27, y:35.25, legend:["F",2] },
+  { id:"404", name:"대운동장", aliases:["Stadium"], url:"", x:62.79, y:28.16, legend:["F",3] },
+  { id:"405", name:"테니스장", aliases:["Tennis Courts"], url:"", x:50.90, y:23.49, legend:["F",4] },
+
+  // ===== 500번대 =====
+  { id:"501", name:"창의인재원 1관", aliases:["Student Residence Hall I"], url:"", x:50.20, y:7.07, legend:["G",0] },
+  { id:"502", name:"창의인재원 2관", aliases:["Student Residence Hall II"], url:"", x:53.36, y:13.95, legend:["G",1] },
+  { id:"503", name:"창의인재원 3관", aliases:["Student Residence Hall III"], url:"", x:47.97, y:11.84, legend:["G",2] },
+  { id:"504", name:"레지던스홀", aliases:["Residence Hall"], url:"", x:45.97, y:13.46, legend:["G",3] }
+];
+
+/*
+  하단 범례 클릭영역 배치.
+  원본 이미지(2048×1122) 기준이며, 이미지가 비율 유지로 확대/축소되어도 그대로 따라감.
+  이미지 자체를 같은 비율로 이름만 수정하는 정도라면 보통 건드릴 필요 없음.
+*/
+const LEGEND_GROUPS = {
+  A:{ x:1.25, y:85.93, w:13.25, row:1.37 },  // 101~108
+  B:{ x:15.55,y:85.93, w:10.70, row:1.37 },  // 109~112
+  C:{ x:27.15,y:85.93, w:15.50, row:1.37 },  // 201~209
+  D:{ x:42.55,y:85.93, w:12.80, row:1.37 },  // 301~308
+  E:{ x:55.45,y:85.93, w:14.15, row:1.37 },  // 309~318
+  F:{ x:71.50,y:85.93, w:12.00, row:1.37 },  // 401~405
+  G:{ x:71.50,y:92.80, w:12.00, row:1.37 }   // 501~504
+};
+
+const stage = document.getElementById("mapStage");
+const mapScroll = document.getElementById("mapScroll");
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchBtn");
+const clearBtn = document.getElementById("clearBtn");
+const message = document.getElementById("message");
+
+const mapEls = new Map();
+const legendEls = new Map();
+
+function normalize(s){
+  return String(s ?? "")
+    .toLowerCase()
+    .replace(/\s+/g,"")
+    .replace(/[·ㆍ\-_/()[\]]/g,"");
+}
+
+function hasUrl(b){
+  return typeof b.url === "string" && b.url.trim().length > 0;
+}
+
+function openBuilding(b){
+  if(!hasUrl(b)) return;
+  window.open(b.url.trim(), "_blank", "noopener,noreferrer");
+}
+
+function makeMapHotspot(b){
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "map-hotspot" + (hasUrl(b) ? " is-linked" : "");
+  btn.style.left = b.x + "%";
+  btn.style.top = b.y + "%";
+  btn.dataset.id = b.id;
+  btn.dataset.label = `${b.id} ${b.name}`;
+  btn.setAttribute("aria-label", `${b.id} ${b.name}` + (hasUrl(b) ? " 내부 구조도 열기" : " 위치"));
+  btn.title = hasUrl(b) ? `${b.id} ${b.name} · 내부 구조도 보기` : `${b.id} ${b.name}`;
+  btn.addEventListener("click", () => openBuilding(b));
+  stage.appendChild(btn);
+  mapEls.set(b.id, btn);
+}
+
+function makeLegendHotspot(b){
+  if(!b.legend) return;
+  const [groupKey, rowIndex] = b.legend;
+  const g = LEGEND_GROUPS[groupKey];
+  if(!g) return;
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "legend-hotspot" + (hasUrl(b) ? " is-linked" : "");
+  btn.style.left = g.x + "%";
+  btn.style.top = (g.y + g.row * rowIndex) + "%";
+  btn.style.width = g.w + "%";
+  btn.style.height = (g.row * .90) + "%";
+  btn.dataset.id = b.id;
+  btn.setAttribute("aria-label", `${b.id} ${b.name}` + (hasUrl(b) ? " 내부 구조도 열기" : " 위치"));
+  btn.title = hasUrl(b) ? `${b.id} ${b.name} · 내부 구조도 보기` : `${b.id} ${b.name}`;
+  btn.addEventListener("click", () => openBuilding(b));
+  stage.appendChild(btn);
+  legendEls.set(b.id, btn);
+}
+
+BUILDINGS.forEach(b => {
+  makeMapHotspot(b);
+  makeLegendHotspot(b);
+});
+
+function clearHighlights(){
+  document.querySelectorAll(".search-hit").forEach(el => el.classList.remove("search-hit"));
+}
+
+function highlightBuilding(b, shouldScroll=true){
+  const m = mapEls.get(b.id);
+  const l = legendEls.get(b.id);
+  if(m){
+    /* 애니메이션을 검색할 때마다 다시 재생 */
+    m.classList.remove("search-hit");
+    void m.offsetWidth;
+    m.classList.add("search-hit");
+  }
+  if(l){
+    l.classList.remove("search-hit");
+    void l.offsetWidth;
+    l.classList.add("search-hit");
+  }
+
+  if(shouldScroll && m){
+    const left = m.offsetLeft - mapScroll.clientWidth / 2;
+    const top  = m.offsetTop  - mapScroll.clientHeight / 2;
+    mapScroll.scrollTo({
+      left: Math.max(0,left),
+      top: Math.max(0,top),
+      behavior:"smooth"
+    });
+  }
+}
+
+function searchBuildings(){
+  const raw = searchInput.value.trim();
+  clearHighlights();
+
+  if(!raw){
+    message.textContent = "";
+    clearBtn.style.display = "none";
+    return;
+  }
+
+  clearBtn.style.display = "block";
+  const q = normalize(raw);
+
+  let results = BUILDINGS.filter(b => {
+    const fields = [b.id,b.name,...(b.aliases || [])].map(normalize);
+    return fields.some(v => v.includes(q));
+  });
+
+  /* 건물번호 완전일치가 있으면 그것을 최우선으로 */
+  const exactId = BUILDINGS.find(b => normalize(b.id) === q);
+  if(exactId) results = [exactId];
+
+  if(results.length === 0){
+    message.innerHTML = `‘<strong>${escapeHtml(raw)}</strong>’에 해당하는 건물을 찾지 못했습니다.`;
+    return;
+  }
+
+  results.forEach((b,i) => highlightBuilding(b, i === 0));
+
+  if(results.length === 1){
+    const b = results[0];
+    message.innerHTML =
+      `<strong>${b.id} ${escapeHtml(b.name)}</strong> 위치를 표시했습니다.` +
+      (hasUrl(b) ? ` 지도 번호 또는 하단 건물명을 누르면 내부 구조도가 열립니다.` : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`);
+  }else{
+    message.innerHTML =
+      `<strong>${results.length}개</strong> 건물이 검색되었습니다: ` +
+      results.slice(0,8).map(b => `${b.id} ${escapeHtml(b.name)}`).join(", ") +
+      (results.length > 8 ? "…" : "");
+  }
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+searchBtn.addEventListener("click", searchBuildings);
+searchInput.addEventListener("keydown", e => {
+  if(e.key === "Enter") searchBuildings();
+});
+searchInput.addEventListener("input", () => {
+  clearBtn.style.display = searchInput.value ? "block" : "none";
+});
+clearBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  clearHighlights();
+  message.textContent = "";
+  clearBtn.style.display = "none";
+  searchInput.focus();
+});
+
+/* ?debug=1 : 클릭영역 확인 */
+const params = new URLSearchParams(location.search);
+if(params.get("debug") === "1"){
+  document.body.classList.add("debug");
+  message.innerHTML = "<strong>DEBUG MODE</strong> · 빨강=지도 번호 클릭영역 / 파랑=하단 범례 클릭영역";
+}
+</script>
+</body>
+</html>
