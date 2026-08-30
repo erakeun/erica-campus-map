@@ -10,11 +10,13 @@
     :root{
       --blue:#0b5cab;
       --blue-dark:#073c73;
+      --blue-soft:#eaf3fc;
       --ink:#152238;
       --muted:#6b7280;
       --line:#dbe3ec;
       --bg:#f5f7fa;
       --card:#ffffff;
+      --disabled:#98a2b3;
       --shadow:0 12px 40px rgba(21,34,56,.10);
     }
 
@@ -27,8 +29,10 @@
       background:var(--bg);
     }
 
+    button,input{font:inherit}
+
     .page{
-      width:min(1600px,100%);
+      width:min(1800px,100%);
       margin:0 auto;
       padding:24px;
     }
@@ -43,7 +47,7 @@
 
     .title-wrap h1{
       margin:0 0 7px;
-      font-size:clamp(24px,3vw,38px);
+      font-size:clamp(25px,3vw,39px);
       letter-spacing:-.045em;
     }
 
@@ -55,7 +59,7 @@
     }
 
     .search-panel{
-      flex:0 1 520px;
+      flex:0 1 560px;
       display:flex;
       gap:8px;
       align-items:center;
@@ -99,6 +103,7 @@
       border-radius:50%;
       display:none;
     }
+
     .clear-btn:hover{background:#eef3f8}
 
     .search-btn{
@@ -108,10 +113,11 @@
       border-radius:14px;
       background:var(--blue);
       color:#fff;
-      font-weight:750;
+      font-weight:800;
       cursor:pointer;
       white-space:nowrap;
     }
+
     .search-btn:hover{background:var(--blue-dark)}
 
     .message{
@@ -120,29 +126,85 @@
       color:#52606d;
       font-size:14px;
     }
+
     .message strong{color:var(--blue-dark)}
 
     .map-card{
-      position:relative;
-      background:var(--card);
+      background:#fff;
       border:1px solid var(--line);
       border-radius:20px;
       overflow:hidden;
       box-shadow:var(--shadow);
     }
 
-    .map-scroll{
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
-      background:#fff;
+    .map-toolbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:11px 14px;
+      border-bottom:1px solid var(--line);
+      background:#fbfcfe;
     }
 
-    /* 모바일에서는 이미지가 너무 작아지지 않게 최소 폭을 둔다. */
+    .map-toolbar .label{
+      color:#697586;
+      font-size:13px;
+      line-height:1.4;
+    }
+
+    .zoom-controls{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-shrink:0;
+    }
+
+    .zoom-btn{
+      height:36px;
+      min-width:36px;
+      padding:0 11px;
+      border:1px solid #ccd7e3;
+      border-radius:10px;
+      background:#fff;
+      color:#344054;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .zoom-btn:hover:not(:disabled){
+      border-color:#8db9e6;
+      background:#f3f8fe;
+      color:var(--blue-dark);
+    }
+
+    .zoom-btn:disabled{
+      cursor:not-allowed;
+      opacity:.38;
+    }
+
+    .zoom-value{
+      min-width:58px;
+      text-align:center;
+      color:#344054;
+      font-weight:800;
+      font-size:13px;
+    }
+
+    .map-scroll{
+      width:100%;
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+      background:#0d2537;
+      max-height:78vh;
+    }
+
     .map-stage{
       position:relative;
       width:100%;
-      min-width:900px;
+      min-width:860px;
       line-height:0;
+      transform-origin:top left;
     }
 
     .map-stage img{
@@ -151,16 +213,13 @@
       height:auto;
       user-select:none;
       -webkit-user-drag:none;
+      image-rendering:auto;
     }
 
-    /*
-      지도 위 번호 클릭 영역.
-      URL이 비어 있어도 검색 강조는 가능하지만, 클릭 이동은 하지 않는다.
-    */
     .map-hotspot{
       position:absolute;
-      width:clamp(26px,2.15vw,38px);
-      aspect-ratio:1/1;
+      width:38px;
+      height:38px;
       transform:translate(-50%,-50%);
       border-radius:999px;
       border:0;
@@ -171,40 +230,27 @@
     }
 
     .map-hotspot.is-linked{cursor:pointer}
+
     .map-hotspot.is-linked:hover{
-      background:rgba(255,255,255,.20);
-      box-shadow:0 0 0 3px rgba(255,255,255,.92),0 0 0 7px rgba(11,92,171,.55);
+      background:rgba(255,255,255,.22);
+      box-shadow:
+        0 0 0 3px rgba(255,255,255,.92),
+        0 0 0 7px rgba(11,92,171,.62);
     }
 
-    /* 하단 범례(이미지 속 건물명) 위에 얹는 투명 클릭 영역 */
-    .legend-hotspot{
-      position:absolute;
-      z-index:9;
-      border:0;
-      background:transparent;
-      border-radius:5px;
-      padding:0;
-      cursor:default;
-    }
-
-    .legend-hotspot.is-linked{cursor:pointer}
-    .legend-hotspot.is-linked:hover{
-      background:rgba(11,92,171,.10);
-      outline:2px solid rgba(11,92,171,.30);
-    }
-
-    /* 검색 시 지도 번호 + 하단 건물명 모두 번쩍 */
-    .search-hit{
-      z-index:30 !important;
+    .map-hotspot.search-hit{
+      z-index:30!important;
     }
 
     .map-hotspot.search-hit::before{
       content:"";
       position:absolute;
-      inset:-9px;
+      inset:-10px;
       border:4px solid #ff2d55;
       border-radius:999px;
-      box-shadow:0 0 0 7px rgba(255,255,255,.92), 0 0 26px rgba(255,45,85,.95);
+      box-shadow:
+        0 0 0 7px rgba(255,255,255,.94),
+        0 0 28px rgba(255,45,85,.95);
       animation:flashRing .58s ease-in-out 6 alternate;
       pointer-events:none;
     }
@@ -213,12 +259,12 @@
       content:attr(data-label);
       position:absolute;
       left:50%;
-      top:-40px;
+      top:-43px;
       transform:translateX(-50%);
       background:#111827;
       color:#fff;
       line-height:1;
-      padding:8px 10px;
+      padding:9px 11px;
       border-radius:9px;
       white-space:nowrap;
       font-size:12px;
@@ -227,24 +273,12 @@
       pointer-events:none;
     }
 
-    .legend-hotspot.search-hit{
-      background:rgba(255,230,0,.28);
-      outline:3px solid #ff2d55;
-      box-shadow:0 0 18px rgba(255,45,85,.42);
-      animation:legendFlash .58s ease-in-out 6 alternate;
-    }
-
     @keyframes flashRing{
-      from{opacity:.2; transform:scale(.80)}
-      to{opacity:1; transform:scale(1.16)}
+      from{opacity:.25;transform:scale(.80)}
+      to{opacity:1;transform:scale(1.18)}
     }
 
-    @keyframes legendFlash{
-      from{opacity:.35}
-      to{opacity:1}
-    }
-
-    .hint{
+    .map-hint{
       display:flex;
       flex-wrap:wrap;
       gap:10px 18px;
@@ -254,7 +288,7 @@
       background:#fbfcfe;
       color:#697586;
       font-size:13px;
-      line-height:1.4;
+      line-height:1.45;
     }
 
     .dot{
@@ -266,6 +300,153 @@
       background:var(--blue);
     }
 
+    .directory{
+      margin-top:24px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .directory-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:20px;
+      padding:22px 24px 18px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .directory-head h2{
+      margin:0 0 5px;
+      font-size:22px;
+      letter-spacing:-.035em;
+    }
+
+    .directory-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .directory-legend{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      color:#667085;
+      font-size:12px;
+    }
+
+    .directory-body{
+      padding:20px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:18px;
+    }
+
+    .building-group{
+      min-width:0;
+      border:1px solid #e5ebf2;
+      border-radius:15px;
+      overflow:hidden;
+      background:#fff;
+    }
+
+    .building-group h3{
+      margin:0;
+      padding:11px 14px;
+      background:#f6f8fb;
+      border-bottom:1px solid #e5ebf2;
+      font-size:13px;
+      color:#475467;
+      letter-spacing:.01em;
+    }
+
+    .building-list{
+      display:flex;
+      flex-direction:column;
+    }
+
+    .building-row{
+      position:relative;
+      display:grid;
+      grid-template-columns:48px minmax(0,1fr) auto;
+      gap:10px;
+      align-items:center;
+      min-height:45px;
+      padding:8px 12px;
+      border-bottom:1px solid #eef2f6;
+      color:inherit;
+      text-decoration:none;
+      background:#fff;
+      transition:.16s ease;
+    }
+
+    .building-row:last-child{border-bottom:0}
+
+    .building-row.is-linked{
+      cursor:pointer;
+    }
+
+    .building-row.is-linked:hover{
+      background:#f5f9fe;
+    }
+
+    .building-row.is-unlinked{
+      color:#7a8492;
+      cursor:default;
+    }
+
+    .building-id{
+      font-weight:900;
+      color:var(--blue-dark);
+      font-variant-numeric:tabular-nums;
+    }
+
+    .is-unlinked .building-id{color:#778396}
+
+    .building-name{
+      min-width:0;
+      font-size:13px;
+      font-weight:700;
+      line-height:1.35;
+      word-break:keep-all;
+    }
+
+    .building-status{
+      flex-shrink:0;
+      border-radius:999px;
+      padding:5px 8px;
+      font-size:10px;
+      font-weight:800;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .is-linked .building-status{
+      background:var(--blue-soft);
+      color:var(--blue-dark);
+    }
+
+    .is-unlinked .building-status{
+      background:#f1f3f5;
+      color:#8a94a3;
+    }
+
+    .building-row.search-hit{
+      z-index:2;
+      background:#fff8cb;
+      box-shadow:inset 0 0 0 3px #ff2d55;
+      animation:listFlash .58s ease-in-out 6 alternate;
+    }
+
+    @keyframes listFlash{
+      from{filter:brightness(.96)}
+      to{filter:brightness(1.08)}
+    }
+
     .footer{
       margin:14px 2px 0;
       color:#8a94a3;
@@ -273,29 +454,33 @@
       line-height:1.6;
     }
 
-    /* 디버그 모드: 주소 뒤에 ?debug=1 을 붙이면 클릭 영역이 보인다. */
     body.debug .map-hotspot{
-      background:rgba(255,0,0,.22);
-      box-shadow:inset 0 0 0 2px rgba(255,0,0,.75);
+      background:rgba(255,0,0,.25);
+      box-shadow:inset 0 0 0 2px rgba(255,0,0,.78);
     }
-    body.debug .legend-hotspot{
-      background:rgba(0,110,255,.14);
-      outline:1px solid rgba(0,110,255,.65);
+
+    @media (max-width:1200px){
+      .directory-body{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:900px){
       .page{padding:14px}
       .hero{align-items:stretch;flex-direction:column;gap:14px}
       .search-panel{flex-basis:auto;width:100%}
-      .map-card{border-radius:14px}
+      .map-card,.directory{border-radius:14px}
       .map-stage{min-width:1050px}
+      .map-scroll{max-height:72vh}
+      .map-toolbar{align-items:flex-start;flex-direction:column}
+      .zoom-controls{width:100%;justify-content:flex-end}
+      .directory-body{grid-template-columns:1fr;padding:13px}
+      .directory-head{align-items:flex-start;flex-direction:column;padding:18px}
       .title-wrap p{font-size:13px}
     }
 
     @media (prefers-reduced-motion:reduce){
       *{scroll-behavior:auto!important}
       .map-hotspot.search-hit::before,
-      .legend-hotspot.search-hit{animation:none}
+      .building-row.search-hit{animation:none}
     }
   </style>
 </head>
@@ -307,7 +492,7 @@
         <h1>ERICA 캠퍼스 내부구조도 안내</h1>
         <p>
           건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>
-          내부 구조도가 연결된 건물은 지도 번호 또는 하단 건물명을 눌러 확인할 수 있습니다.
+          내부 구조도가 연결된 건물은 지도 번호 또는 아래 건물명을 눌러 확인할 수 있습니다.
         </p>
       </div>
 
@@ -329,51 +514,68 @@
     <div class="message" id="message" aria-live="polite"></div>
 
     <section class="map-card">
+      <div class="map-toolbar">
+        <div class="label">
+          지도를 확대하면 건물 번호를 더 선명하게 확인할 수 있습니다. 확대 후 마우스/트랙패드로 지도를 이동할 수 있습니다.
+        </div>
+
+        <div class="zoom-controls" aria-label="지도 확대 축소">
+          <button class="zoom-btn" id="zoomOut" type="button" aria-label="축소">−</button>
+          <span class="zoom-value" id="zoomValue">100%</span>
+          <button class="zoom-btn" id="zoomIn" type="button" aria-label="확대">＋</button>
+          <button class="zoom-btn" id="zoomReset" type="button">100%</button>
+        </div>
+      </div>
+
       <div class="map-scroll" id="mapScroll">
         <div class="map-stage" id="mapStage">
           <img
             id="campusMap"
             src="assets/erica-map.jpg"
-            alt="한양대학교 ERICA 캠퍼스 항공 지도 및 건물 안내"
-            width="2048"
-            height="1122"
+            alt="한양대학교 ERICA 캠퍼스 항공 지도"
+            width="4096"
+            height="1860"
           />
         </div>
       </div>
 
-      <div class="hint">
+      <div class="map-hint">
         <span><i class="dot"></i>마우스를 올렸을 때 반응하는 건물은 내부 구조도가 연결된 건물입니다.</span>
         <span>검색은 구조도 연결 여부와 관계없이 건물 위치를 표시합니다.</span>
       </div>
     </section>
 
+    <section class="directory" id="directory">
+      <div class="directory-head">
+        <div>
+          <h2>건물 목록</h2>
+          <p>내부 구조도가 있는 건물은 건물명을 누르면 새 탭에서 열립니다.</p>
+        </div>
+        <div class="directory-legend">
+          <span>● 내부 구조도 연결</span>
+          <span>○ 준비중</span>
+        </div>
+      </div>
+
+      <div class="directory-body" id="directoryBody"></div>
+    </section>
+
     <p class="footer">
-      ※ 지도 이미지의 표기와 현재 건물 명칭이 다른 경우, 아래 BUILDINGS 설정의 name/aliases를 수정하면 검색어를 추가할 수 있습니다.
+      ※ 건물명과 내부 구조도 링크는 아래 BUILDINGS 배열에서 수정할 수 있습니다.
     </p>
   </main>
 
 <script>
 /* ============================================================
-   ★ 여기만 수정하면 됨 ★
+   ★ 유지보수는 BUILDINGS 배열만 보면 됨 ★
 
-   1) 각 건물의 url: "" 안에 블로그 주소를 넣는다.
-      예) url: "https://blog.naver.com/xxxxx/123456789"
+   - name  : 화면에 표시할 현재 건물명
+   - aliases: 검색에 함께 사용할 다른 명칭
+   - url   : 내부 구조도 주소. 빈 문자열이면 클릭 불가
+   - x / y : 기존 전체 지도 이미지(2048×1122) 기준 좌표
 
-   2) URL이 빈 문자열("")이면
-      - 지도 번호 검색/번쩍임: 됨
-      - 지도 번호 클릭 이동: 안 됨
-      - 하단 건물명 클릭 이동: 안 됨
-
-   3) 지도 이미지에 적힌 명칭이 바뀐 경우
-      name과 aliases만 바꿔도 검색에는 새 명칭을 쓸 수 있다.
-      (이미지 자체 글자는 원본 이미지를 수정해야 바뀜)
-
-   4) 202·204는 현재 제공된 지도 이미지의 구명칭을 그대로 넣어둠.
-      나중에 실제 새 명칭을 name 또는 aliases에 추가하면 됨.
-
-   5) 좌표가 어긋나는지 확인하고 싶으면
-      사이트 주소 뒤에 ?debug=1
-      예) https://아이디.github.io/저장소/?debug=1
+   이번 V2는 지도 하단 범례를 잘라냈기 때문에,
+   y 좌표는 JavaScript가 자동으로 새 이미지 높이에 맞춰 변환함.
    ============================================================ */
 
 const BUILDINGS = [
@@ -437,20 +639,8 @@ const BUILDINGS = [
   { id:"504", name:"창의인재교육관", aliases:["Residence Hall"], url:"", x:45.97, y:13.46, legend:["G",3] }
 ];
 
-/*
-  하단 범례 클릭영역 배치.
-  원본 이미지(2048×1122) 기준이며, 이미지가 비율 유지로 확대/축소되어도 그대로 따라감.
-  이미지 자체를 같은 비율로 이름만 수정하는 정도라면 보통 건드릴 필요 없음.
-*/
-const LEGEND_GROUPS = {
-  A:{ x:1.25, y:85.93, w:13.25, row:1.37 },  // 101~108
-  B:{ x:15.55,y:85.93, w:10.70, row:1.37 },  // 109~112
-  C:{ x:27.15,y:85.93, w:15.50, row:1.37 },  // 201~209
-  D:{ x:42.55,y:85.93, w:12.80, row:1.37 },  // 301~308
-  E:{ x:55.45,y:85.93, w:14.15, row:1.37 },  // 309~318
-  F:{ x:71.50,y:85.93, w:12.00, row:1.37 },  // 401~405
-  G:{ x:71.50,y:92.80, w:12.00, row:1.37 }   // 501~504
-};
+const ORIGINAL_MAP_HEIGHT = 1122;
+const CROPPED_MAP_HEIGHT = 930;
 
 const stage = document.getElementById("mapStage");
 const mapScroll = document.getElementById("mapScroll");
@@ -458,9 +648,20 @@ const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 const clearBtn = document.getElementById("clearBtn");
 const message = document.getElementById("message");
+const directoryBody = document.getElementById("directoryBody");
+
+const zoomOut = document.getElementById("zoomOut");
+const zoomIn = document.getElementById("zoomIn");
+const zoomReset = document.getElementById("zoomReset");
+const zoomValue = document.getElementById("zoomValue");
 
 const mapEls = new Map();
-const legendEls = new Map();
+const rowEls = new Map();
+
+let zoom = 1;
+const ZOOM_MIN = 1;
+const ZOOM_MAX = 3;
+const ZOOM_STEP = .25;
 
 function normalize(s){
   return String(s ?? "")
@@ -473,6 +674,19 @@ function hasUrl(b){
   return typeof b.url === "string" && b.url.trim().length > 0;
 }
 
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function convertedY(originalPercent){
+  return originalPercent * ORIGINAL_MAP_HEIGHT / CROPPED_MAP_HEIGHT;
+}
+
 function openBuilding(b){
   if(!hasUrl(b)) return;
   window.open(b.url.trim(), "_blank", "noopener,noreferrer");
@@ -483,67 +697,161 @@ function makeMapHotspot(b){
   btn.type = "button";
   btn.className = "map-hotspot" + (hasUrl(b) ? " is-linked" : "");
   btn.style.left = b.x + "%";
-  btn.style.top = b.y + "%";
+  btn.style.top = convertedY(b.y) + "%";
   btn.dataset.id = b.id;
   btn.dataset.label = `${b.id} ${b.name}`;
-  btn.setAttribute("aria-label", `${b.id} ${b.name}` + (hasUrl(b) ? " 내부 구조도 열기" : " 위치"));
-  btn.title = hasUrl(b) ? `${b.id} ${b.name} · 내부 구조도 보기` : `${b.id} ${b.name}`;
+  btn.setAttribute(
+    "aria-label",
+    `${b.id} ${b.name}` + (hasUrl(b) ? " 내부 구조도 열기" : " 위치")
+  );
+  btn.title = hasUrl(b)
+    ? `${b.id} ${b.name} · 내부 구조도 보기`
+    : `${b.id} ${b.name}`;
+
   btn.addEventListener("click", () => openBuilding(b));
   stage.appendChild(btn);
   mapEls.set(b.id, btn);
 }
 
-function makeLegendHotspot(b){
-  if(!b.legend) return;
-  const [groupKey, rowIndex] = b.legend;
-  const g = LEGEND_GROUPS[groupKey];
-  if(!g) return;
-
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "legend-hotspot" + (hasUrl(b) ? " is-linked" : "");
-  btn.style.left = g.x + "%";
-  btn.style.top = (g.y + g.row * rowIndex) + "%";
-  btn.style.width = g.w + "%";
-  btn.style.height = (g.row * .90) + "%";
-  btn.dataset.id = b.id;
-  btn.setAttribute("aria-label", `${b.id} ${b.name}` + (hasUrl(b) ? " 내부 구조도 열기" : " 위치"));
-  btn.title = hasUrl(b) ? `${b.id} ${b.name} · 내부 구조도 보기` : `${b.id} ${b.name}`;
-  btn.addEventListener("click", () => openBuilding(b));
-  stage.appendChild(btn);
-  legendEls.set(b.id, btn);
+function groupKey(b){
+  return `${b.id.charAt(0)}00번대`;
 }
 
-BUILDINGS.forEach(b => {
-  makeMapHotspot(b);
-  makeLegendHotspot(b);
+function renderDirectory(){
+  const groups = new Map();
+
+  BUILDINGS.forEach(b => {
+    const key = groupKey(b);
+    if(!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(b);
+  });
+
+  groups.forEach((items, label) => {
+    const group = document.createElement("section");
+    group.className = "building-group";
+
+    const h3 = document.createElement("h3");
+    h3.textContent = label;
+    group.appendChild(h3);
+
+    const list = document.createElement("div");
+    list.className = "building-list";
+
+    items.forEach(b => {
+      const row = document.createElement(hasUrl(b) ? "a" : "div");
+      row.className = "building-row " + (hasUrl(b) ? "is-linked" : "is-unlinked");
+      row.dataset.id = b.id;
+
+      if(hasUrl(b)){
+        row.href = b.url.trim();
+        row.target = "_blank";
+        row.rel = "noopener noreferrer";
+        row.title = `${b.id} ${b.name} 내부 구조도 보기`;
+      }
+
+      row.innerHTML = `
+        <span class="building-id">${escapeHtml(b.id)}</span>
+        <span class="building-name">${escapeHtml(b.name)}</span>
+        <span class="building-status">${hasUrl(b) ? "구조도 보기" : "준비중"}</span>
+      `;
+
+      list.appendChild(row);
+      rowEls.set(b.id, row);
+    });
+
+    group.appendChild(list);
+    directoryBody.appendChild(group);
+  });
+}
+
+BUILDINGS.forEach(makeMapHotspot);
+renderDirectory();
+
+function updateZoom(nextZoom, focusX=.5, focusY=.5){
+  const oldZoom = zoom;
+  zoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, nextZoom));
+
+  if(zoom === oldZoom){
+    updateZoomControls();
+    return;
+  }
+
+  const oldWidth = stage.scrollWidth;
+  const oldHeight = stage.scrollHeight;
+  const viewportW = mapScroll.clientWidth;
+  const viewportH = mapScroll.clientHeight;
+
+  const contentX = (mapScroll.scrollLeft + viewportW * focusX) / Math.max(oldWidth,1);
+  const contentY = (mapScroll.scrollTop + viewportH * focusY) / Math.max(oldHeight,1);
+
+  stage.style.width = (zoom * 100) + "%";
+
+  requestAnimationFrame(() => {
+    const newWidth = stage.scrollWidth;
+    const newHeight = stage.scrollHeight;
+
+    mapScroll.scrollLeft = Math.max(0, contentX * newWidth - viewportW * focusX);
+    mapScroll.scrollTop = Math.max(0, contentY * newHeight - viewportH * focusY);
+
+    updateZoomControls();
+  });
+}
+
+function updateZoomControls(){
+  zoomValue.textContent = Math.round(zoom * 100) + "%";
+  zoomOut.disabled = zoom <= ZOOM_MIN;
+  zoomIn.disabled = zoom >= ZOOM_MAX;
+}
+
+zoomOut.addEventListener("click", () => updateZoom(zoom - ZOOM_STEP));
+zoomIn.addEventListener("click", () => updateZoom(zoom + ZOOM_STEP));
+zoomReset.addEventListener("click", () => {
+  zoom = 1;
+  stage.style.width = "100%";
+  mapScroll.scrollTo({left:0,top:0,behavior:"smooth"});
+  updateZoomControls();
 });
+updateZoomControls();
+
+/* Ctrl/Cmd + 휠로도 확대/축소 */
+mapScroll.addEventListener("wheel", e => {
+  if(!(e.ctrlKey || e.metaKey)) return;
+  e.preventDefault();
+
+  const rect = mapScroll.getBoundingClientRect();
+  const fx = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+  const fy = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+
+  updateZoom(zoom + (e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP), fx, fy);
+}, {passive:false});
 
 function clearHighlights(){
   document.querySelectorAll(".search-hit").forEach(el => el.classList.remove("search-hit"));
 }
 
 function highlightBuilding(b, shouldScroll=true){
-  const m = mapEls.get(b.id);
-  const l = legendEls.get(b.id);
-  if(m){
-    /* 애니메이션을 검색할 때마다 다시 재생 */
-    m.classList.remove("search-hit");
-    void m.offsetWidth;
-    m.classList.add("search-hit");
-  }
-  if(l){
-    l.classList.remove("search-hit");
-    void l.offsetWidth;
-    l.classList.add("search-hit");
+  const mapEl = mapEls.get(b.id);
+  const rowEl = rowEls.get(b.id);
+
+  if(mapEl){
+    mapEl.classList.remove("search-hit");
+    void mapEl.offsetWidth;
+    mapEl.classList.add("search-hit");
   }
 
-  if(shouldScroll && m){
-    const left = m.offsetLeft - mapScroll.clientWidth / 2;
-    const top  = m.offsetTop  - mapScroll.clientHeight / 2;
+  if(rowEl){
+    rowEl.classList.remove("search-hit");
+    void rowEl.offsetWidth;
+    rowEl.classList.add("search-hit");
+  }
+
+  if(shouldScroll && mapEl){
+    const left = mapEl.offsetLeft - mapScroll.clientWidth / 2;
+    const top  = mapEl.offsetTop  - mapScroll.clientHeight / 2;
+
     mapScroll.scrollTo({
-      left: Math.max(0,left),
-      top: Math.max(0,top),
+      left:Math.max(0,left),
+      top:Math.max(0,top),
       behavior:"smooth"
     });
   }
@@ -567,7 +875,6 @@ function searchBuildings(){
     return fields.some(v => v.includes(q));
   });
 
-  /* 건물번호 완전일치가 있으면 그것을 최우선으로 */
   const exactId = BUILDINGS.find(b => normalize(b.id) === q);
   if(exactId) results = [exactId];
 
@@ -582,7 +889,9 @@ function searchBuildings(){
     const b = results[0];
     message.innerHTML =
       `<strong>${b.id} ${escapeHtml(b.name)}</strong> 위치를 표시했습니다.` +
-      (hasUrl(b) ? ` 지도 번호 또는 하단 건물명을 누르면 내부 구조도가 열립니다.` : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`);
+      (hasUrl(b)
+        ? ` 지도 번호 또는 아래 건물명을 누르면 내부 구조도가 열립니다.`
+        : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`);
   }else{
     message.innerHTML =
       `<strong>${results.length}개</strong> 건물이 검색되었습니다: ` +
@@ -591,22 +900,16 @@ function searchBuildings(){
   }
 }
 
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
 searchBtn.addEventListener("click", searchBuildings);
+
 searchInput.addEventListener("keydown", e => {
   if(e.key === "Enter") searchBuildings();
 });
+
 searchInput.addEventListener("input", () => {
   clearBtn.style.display = searchInput.value ? "block" : "none";
 });
+
 clearBtn.addEventListener("click", () => {
   searchInput.value = "";
   clearHighlights();
@@ -615,11 +918,11 @@ clearBtn.addEventListener("click", () => {
   searchInput.focus();
 });
 
-/* ?debug=1 : 클릭영역 확인 */
+/* ?debug=1 : 지도 번호 클릭 영역 확인 */
 const params = new URLSearchParams(location.search);
 if(params.get("debug") === "1"){
   document.body.classList.add("debug");
-  message.innerHTML = "<strong>DEBUG MODE</strong> · 빨강=지도 번호 클릭영역 / 파랑=하단 범례 클릭영역";
+  message.innerHTML = "<strong>DEBUG MODE</strong> · 빨간 원은 지도 번호 클릭 영역입니다.";
 }
 </script>
 </body>
