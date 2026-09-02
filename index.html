@@ -784,7 +784,8 @@ function updateZoom(nextZoom, focusX=.5, focusY=.5){
   const contentX = (mapScroll.scrollLeft + viewportW * focusX) / Math.max(oldWidth,1);
   const contentY = (mapScroll.scrollTop + viewportH * focusY) / Math.max(oldHeight,1);
 
-  stage.style.width = (zoom * 100) + "%";
+  const minStageWidth = parseFloat(getComputedStyle(stage).minWidth) || 0;
+  stage.style.width = `max(${zoom * 100}%, ${zoom * minStageWidth}px)`;
 
   requestAnimationFrame(() => {
     const newWidth = stage.scrollWidth;
