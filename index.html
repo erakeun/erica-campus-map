@@ -23,7 +23,7 @@
     html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Segoe UI",Arial,sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Noto Sans SC","Microsoft YaHei","PingFang SC","Segoe UI",Arial,sans-serif;
       color:var(--ink);
       background:var(--bg);
     }
@@ -68,6 +68,7 @@
     }
 
     html[lang="en"] .title-wrap h1{letter-spacing:-.025em}
+    html[lang="zh-CN"] .title-wrap h1{letter-spacing:-.02em}
 
     .title-wrap p{
       margin:0;
@@ -85,7 +86,7 @@
 
     .language-switch{
       display:inline-grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:repeat(3,1fr);
       gap:3px;
       padding:3px;
       border:1px solid #d3dce7;
@@ -95,7 +96,7 @@
     }
 
     .language-btn{
-      min-width:84px;
+      min-width:78px;
       height:34px;
       padding:0 13px;
       border:0;
@@ -726,6 +727,7 @@
     }
 
     html[lang="en"] .facility-popup-name{letter-spacing:-.01em}
+    html[lang="zh-CN"] .facility-popup-name{letter-spacing:0}
 
     .facility-popup-location{
       color:#667085;
@@ -789,6 +791,7 @@
     }
 
     html[lang="en"] .directory-head h2{letter-spacing:-.015em}
+    html[lang="zh-CN"] .directory-head h2{letter-spacing:0}
 
     .directory-head p{
       margin:0;
@@ -945,10 +948,12 @@
 
     @media (max-width:520px){
       .search-btn{padding:0 15px}
-      .language-btn{min-width:76px}
+      .language-btn{min-width:68px}
       .building-row{grid-template-columns:43px minmax(0,1fr) auto;padding:8px 10px}
       html[lang="en"] .building-row{grid-template-columns:43px minmax(0,1fr)}
       html[lang="en"] .building-status{grid-column:2;justify-self:start;margin-top:1px}
+      html[lang="zh-CN"] .building-row{grid-template-columns:43px minmax(0,1fr)}
+      html[lang="zh-CN"] .building-status{grid-column:2;justify-self:start;margin-top:1px}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -963,7 +968,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.3.1 · SMART FACILITY SEARCH</div>
+        <div class="version">V2.4.0 · TRILINGUAL SMART MAP</div>
         <h1 id="pageTitle">ERICA 캠퍼스 내부구조도 안내</h1>
         <p id="pageDescription"></p>
       </div>
@@ -972,6 +977,7 @@
         <div class="language-switch" id="languageSwitch" role="group" aria-label="언어 선택">
           <button class="language-btn" type="button" data-lang="ko" aria-pressed="true">한국어</button>
           <button class="language-btn" type="button" data-lang="en" aria-pressed="false">English</button>
+          <button class="language-btn" type="button" data-lang="zh" aria-pressed="false">中文</button>
         </div>
 
         <div class="search-panel">
@@ -1022,7 +1028,7 @@
 
       <div class="map-scroll" id="mapScroll">
         <div class="map-stage" id="mapStage">
-          <img id="campusMap" src="assets/erica-map-ko.jpg" width="4096" height="1860" />
+          <img id="campusMap" src="assets/erica-map-ko.jpg" alt="한양대학교 ERICA 캠퍼스 항공 지도" width="4096" height="1860" />
           <div class="hotspot-layer" id="hotspotLayer"></div>
           <div class="facility-layer" id="facilityLayer"></div>
           <div class="facility-popup" id="facilityPopup" hidden></div>
@@ -1052,7 +1058,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.3.1 · SMART FACILITY SEARCH</span>
+      <span class="footer-version">V2.4.0 · TRILINGUAL SMART MAP</span>
     </footer>
   </main>
 
@@ -1060,13 +1066,13 @@
 /* ============================================================
    유지보수 핵심
 
-   - nameKo / nameEn : 한국어·영문 건물명
-   - aliasesKo / aliasesEn : 검색용 이전 명칭·별칭
-   - urlKo : 현재 한국어 내부구조도 링크
-   - urlEn : 향후 영문 내부구조도 링크
+   - nameKo / nameEn / nameZh : 한국어·영문·중문 건물명
+   - aliasesKo / aliasesEn / aliasesZh : 검색용 이전 명칭·별칭
+   - urlKo / urlEn / urlZh : 언어별 내부구조도 링크
 
-   현재는 urlEn이 비어 있으면 영문 화면에서도 urlKo로 이동한다.
-   영문 구조도 게시물이 생기면 해당 건물의 urlEn만 채우면 된다.
+   현재는 urlEn 또는 urlZh가 비어 있으면 해당 언어 화면에서도
+   urlKo로 이동한다. 영문·중문 구조도 게시물이 생기면
+   해당 건물의 urlEn 또는 urlZh만 채우면 된다.
    ============================================================ */
 
 const BUILDINGS = [
@@ -1079,7 +1085,13 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223049804440",
     "urlEn": "",
     "x": 41.71,
-    "y": 57.05
+    "y": 57.05,
+    "nameZh": "本馆",
+    "aliasesZh": [
+      "行政馆",
+      "大学本部"
+    ],
+    "urlZh": ""
   },
   {
     "id": "102",
@@ -1090,7 +1102,12 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 38.77,
-    "y": 44.74
+    "y": 44.74,
+    "nameZh": "学生福祉馆",
+    "aliasesZh": [
+      "学生福利馆"
+    ],
+    "urlZh": ""
   },
   {
     "id": "103",
@@ -1101,7 +1118,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/224300297233",
     "urlEn": "",
     "x": 39.35,
-    "y": 38.84
+    "y": 38.84,
+    "nameZh": "学生会馆",
+    "aliasesZh": [
+      "学生中心"
+    ],
+    "urlZh": ""
   },
   {
     "id": "104",
@@ -1112,7 +1134,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223853310438",
     "urlEn": "",
     "x": 50.79,
-    "y": 41.85
+    "y": 41.85,
+    "nameZh": "第二工学馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "105",
@@ -1123,7 +1148,10 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 54.54,
-    "y": 41.84
+    "y": 41.84,
+    "nameZh": "建筑设计馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "106",
@@ -1134,7 +1162,10 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 56.73,
-    "y": 41.58
+    "y": 41.58,
+    "nameZh": "超大型结构实验栋",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "107",
@@ -1145,7 +1176,10 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 58.92,
-    "y": 40.41
+    "y": 40.41,
+    "nameZh": "风环境实验馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "108",
@@ -1156,7 +1190,10 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 61.15,
-    "y": 40.27
+    "y": 40.27,
+    "nameZh": "水理实验栋",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "109",
@@ -1167,7 +1204,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/221979384718",
     "urlEn": "",
     "x": 60.66,
-    "y": 44.44
+    "y": 44.44,
+    "nameZh": "设计文化馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "110",
@@ -1178,7 +1218,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/221979390315",
     "urlEn": "",
     "x": 64.26,
-    "y": 45.86
+    "y": 45.86,
+    "nameZh": "设计教育馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "111",
@@ -1189,7 +1232,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/221979390264",
     "urlEn": "",
     "x": 57.05,
-    "y": 46.68
+    "y": 46.68,
+    "nameZh": "设计研究馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "112",
@@ -1200,7 +1246,10 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 59.95,
-    "y": 39.01
+    "y": 39.01,
+    "nameZh": "智能建筑馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "201",
@@ -1211,7 +1260,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/221979346320",
     "urlEn": "",
     "x": 18.95,
-    "y": 54.48
+    "y": 54.48,
+    "nameZh": "经商馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "202",
@@ -1226,7 +1278,14 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/224222414158",
     "urlEn": "",
     "x": 26.53,
-    "y": 54.48
+    "y": 54.48,
+    "nameZh": "率性馆",
+    "aliasesZh": [
+      "全球文化通商馆",
+      "Solseonggwan",
+      "率性"
+    ],
+    "urlZh": ""
   },
   {
     "id": "203",
@@ -1242,7 +1301,13 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223112595570",
     "urlEn": "",
     "x": 27.43,
-    "y": 62.01
+    "y": 62.01,
+    "nameZh": "社会教育馆",
+    "aliasesZh": [
+      "学军团",
+      "ROTC馆"
+    ],
+    "urlZh": ""
   },
   {
     "id": "204",
@@ -1257,7 +1322,15 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/224198406802",
     "urlEn": "",
     "x": 21.25,
-    "y": 64.2
+    "y": 64.2,
+    "nameZh": "日新斋",
+    "aliasesZh": [
+      "舆论信息馆",
+      "言论信息馆",
+      "Ilsinjae",
+      "日新"
+    ],
+    "urlZh": ""
   },
   {
     "id": "205",
@@ -1268,7 +1341,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223123297127",
     "urlEn": "",
     "x": 27.32,
-    "y": 44.68
+    "y": 44.68,
+    "nameZh": "第一科学技术馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "206",
@@ -1279,7 +1355,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223067448279",
     "urlEn": "",
     "x": 20.08,
-    "y": 43.89
+    "y": 43.89,
+    "nameZh": "会议厅",
+    "aliasesZh": [
+      "Conference Hall"
+    ],
+    "urlZh": ""
   },
   {
     "id": "207",
@@ -1290,7 +1371,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223099314751",
     "urlEn": "",
     "x": 21.96,
-    "y": 39.51
+    "y": 39.51,
+    "nameZh": "第二科学技术馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "208",
@@ -1303,7 +1387,12 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 26.02,
-    "y": 42.23
+    "y": 42.23,
+    "nameZh": "汉阳定制医药研究院",
+    "aliasesZh": [
+      "汉阳精准医疗研究院"
+    ],
+    "urlZh": ""
   },
   {
     "id": "209",
@@ -1318,7 +1407,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/222530122646",
     "urlEn": "",
     "x": 30.4,
-    "y": 41.91
+    "y": 41.91,
+    "nameZh": "第一学术馆",
+    "aliasesZh": [
+      "第一教育馆"
+    ],
+    "urlZh": ""
   },
   {
     "id": "301",
@@ -1329,7 +1423,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223500059046",
     "urlEn": "",
     "x": 26.72,
-    "y": 34.07
+    "y": 34.07,
+    "nameZh": "第一工学馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "302",
@@ -1344,7 +1441,12 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 31.84,
-    "y": 32.45
+    "y": 32.45,
+    "nameZh": "废水处理场管理栋",
+    "aliasesZh": [
+      "设施管理馆"
+    ],
+    "urlZh": ""
   },
   {
     "id": "303",
@@ -1355,7 +1457,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223853348067",
     "urlEn": "",
     "x": 31.72,
-    "y": 34.57
+    "y": 34.57,
+    "nameZh": "第三工学馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "304",
@@ -1366,7 +1471,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223853371399",
     "urlEn": "",
     "x": 35.37,
-    "y": 29.76
+    "y": 29.76,
+    "nameZh": "第四工学馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "305",
@@ -1377,7 +1485,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/221968763531",
     "urlEn": "",
     "x": 30.07,
-    "y": 28.58
+    "y": 28.58,
+    "nameZh": "第五工学馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "306",
@@ -1388,7 +1499,14 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 16.98,
-    "y": 38.67
+    "y": 38.67,
+    "nameZh": "校车乘降所",
+    "aliasesZh": [
+      "校车站",
+      "巴士站",
+      "学生休息室"
+    ],
+    "urlZh": ""
   },
   {
     "id": "307",
@@ -1399,7 +1517,13 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 16.07,
-    "y": 30.28
+    "y": 30.28,
+    "nameZh": "ERICA会议中心",
+    "aliasesZh": [
+      "ERICA会展中心",
+      "ERICA Convention Center"
+    ],
+    "urlZh": ""
   },
   {
     "id": "308",
@@ -1410,7 +1534,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/222477550067",
     "urlEn": "",
     "x": 35.6,
-    "y": 22.28
+    "y": 22.28,
+    "nameZh": "创业孵化中心",
+    "aliasesZh": [
+      "创业保育中心"
+    ],
+    "urlZh": ""
   },
   {
     "id": "309",
@@ -1421,7 +1550,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/222065775499",
     "urlEn": "",
     "x": 29.42,
-    "y": 25.04
+    "y": 25.04,
+    "nameZh": "药学馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "310",
@@ -1432,7 +1564,10 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 31.92,
-    "y": 24.87
+    "y": 24.87,
+    "nameZh": "动物实验楼",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "311",
@@ -1443,7 +1578,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/221989816476",
     "urlEn": "",
     "x": 26.23,
-    "y": 23.11
+    "y": 23.11,
+    "nameZh": "产学研集群支援中心",
+    "aliasesZh": [
+      "ERICA支援中心"
+    ],
+    "urlZh": ""
   },
   {
     "id": "312",
@@ -1454,7 +1594,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223097372134",
     "urlEn": "",
     "x": 23.15,
-    "y": 24.01
+    "y": 24.01,
+    "nameZh": "产学研合作馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "313",
@@ -1467,7 +1610,12 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 20.22,
-    "y": 24.61
+    "y": 24.61,
+    "nameZh": "铺装加速实验栋",
+    "aliasesZh": [
+      "路面加速实验栋"
+    ],
+    "urlZh": ""
   },
   {
     "id": "314",
@@ -1480,7 +1628,12 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 22.08,
-    "y": 22.27
+    "y": 22.27,
+    "nameZh": "融合电气技术应用研究中心",
+    "aliasesZh": [
+      "EFT中心"
+    ],
+    "urlZh": ""
   },
   {
     "id": "315",
@@ -1491,7 +1644,10 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 19.61,
-    "y": 21.99
+    "y": 21.99,
+    "nameZh": "BMR中心",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "316",
@@ -1502,7 +1658,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223098368609",
     "urlEn": "",
     "x": 20.06,
-    "y": 18.49
+    "y": 18.49,
+    "nameZh": "Lion's Hall",
+    "aliasesZh": [
+      "狮子馆"
+    ],
+    "urlZh": ""
   },
   {
     "id": "317",
@@ -1515,7 +1676,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/224154699165",
     "urlEn": "",
     "x": 32.39,
-    "y": 20.8
+    "y": 20.8,
+    "nameZh": "融合教育馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "318",
@@ -1526,7 +1690,14 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 14.61,
-    "y": 29.13
+    "y": 29.13,
+    "nameZh": "汉阳大学ERICA教会",
+    "aliasesZh": [
+      "多索姆馆",
+      "礼拜中心",
+      "ERICA教会"
+    ],
+    "urlZh": ""
   },
   {
     "id": "401",
@@ -1541,7 +1712,15 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/223067480585",
     "urlEn": "",
     "x": 40.67,
-    "y": 34.18
+    "y": 34.18,
+    "nameZh": "学术信息馆（职业发展中心）",
+    "aliasesZh": [
+      "ERICA学术信息馆",
+      "图书馆",
+      "职业发展中心",
+      "全球职业发展中心"
+    ],
+    "urlZh": ""
   },
   {
     "id": "402",
@@ -1552,7 +1731,10 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/222003749695",
     "urlEn": "",
     "x": 50.44,
-    "y": 35.25
+    "y": 35.25,
+    "nameZh": "体育馆",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "403",
@@ -1567,7 +1749,13 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 55.27,
-    "y": 35.25
+    "y": 35.25,
+    "nameZh": "实用音乐馆（Muse Hall）",
+    "aliasesZh": [
+      "音乐厅",
+      "Muse Hall"
+    ],
+    "urlZh": ""
   },
   {
     "id": "404",
@@ -1578,7 +1766,13 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 62.79,
-    "y": 28.16
+    "y": 28.16,
+    "nameZh": "人造草坪运动场",
+    "aliasesZh": [
+      "大运动场",
+      "体育场"
+    ],
+    "urlZh": ""
   },
   {
     "id": "405",
@@ -1589,7 +1783,10 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 50.9,
-    "y": 23.49
+    "y": 23.49,
+    "nameZh": "网球场",
+    "aliasesZh": [],
+    "urlZh": ""
   },
   {
     "id": "501",
@@ -1602,7 +1799,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/222482376806",
     "urlEn": "",
     "x": 50.2,
-    "y": 7.07
+    "y": 7.07,
+    "nameZh": "创意馆",
+    "aliasesZh": [
+      "学生宿舍一馆"
+    ],
+    "urlZh": ""
   },
   {
     "id": "502",
@@ -1615,7 +1817,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/222522154951",
     "urlEn": "",
     "x": 53.36,
-    "y": 13.95
+    "y": 13.95,
+    "nameZh": "人才馆",
+    "aliasesZh": [
+      "学生宿舍二馆"
+    ],
+    "urlZh": ""
   },
   {
     "id": "503",
@@ -1628,7 +1835,12 @@ const BUILDINGS = [
     "urlKo": "https://blog.naver.com/hyerica4473/222483594808",
     "urlEn": "",
     "x": 47.97,
-    "y": 11.84
+    "y": 11.84,
+    "nameZh": "幸福馆",
+    "aliasesZh": [
+      "学生宿舍三馆"
+    ],
+    "urlZh": ""
   },
   {
     "id": "504",
@@ -1643,7 +1855,12 @@ const BUILDINGS = [
     "urlKo": "",
     "urlEn": "",
     "x": 45.97,
-    "y": 13.46
+    "y": 13.46,
+    "nameZh": "创意人才教育馆",
+    "aliasesZh": [
+      "Residential College"
+    ],
+    "urlZh": ""
   }
 ];
 
@@ -1652,89 +1869,826 @@ const BUILDINGS = [
 
    - category   : admin / support / convenience / cafe / restaurant / welfare
    - buildingId : BUILDINGS의 건물번호와 연결
-   - floorKo/En : 층 표기
-   - nameKo/En  : 시설명
+   - floorKo/En/Zh : 언어별 층 표기
+   - nameKo/En/Zh  : 언어별 시설명
 
    같은 건물에 시설이 여러 개 있어도, 현재 켜진 항목 수에 맞춰
    지도 위 마커가 자동으로 원형 배치되어 서로 겹치지 않게 표시된다.
    ============================================================ */
 
 const FACILITY_CATEGORIES = {
-  admin:       { icon:"🏢", color:"#6f42c1", ko:"단과대학 행정팀", en:"College Administration Offices", aliasesKo:["행정팀","행정실","단과대학","대학 행정팀"], aliasesEn:["administration","administration office","college office"] },
-  support:     { icon:"🧭", color:"#0e7490", ko:"학생·행정 지원", en:"Student & Administrative Services", aliasesKo:["학생지원","학생 서비스","행정 지원"], aliasesEn:["student services","administrative services"] },
-  convenience: { icon:"🛒", color:"#0f8b8d", ko:"편의점", en:"Convenience Stores", aliasesKo:["편의","매점","무인편의점"], aliasesEn:["convenience","convenience store","store"] },
-  cafe:        { icon:"☕", color:"#a16207", ko:"카페", en:"Cafes", aliasesKo:["커피","커피숍","음료"], aliasesEn:["cafe","cafes","coffee","coffee shop"] },
-  restaurant:  { icon:"🍴", color:"#c2410c", ko:"식당", en:"Restaurants", aliasesKo:["학생식당","교직원식당","푸드코트","밥","식사"], aliasesEn:["restaurant","cafeteria","food court","dining","meal"] },
-  welfare:     { icon:"★",  color:"#2563eb", ko:"기타 복지시설", en:"Other Amenities", aliasesKo:["복지시설","복지"], aliasesEn:["amenities","welfare"] }
+  "admin": {
+    "icon": "🏢",
+    "color": "#6f42c1",
+    "ko": "단과대학 행정팀",
+    "en": "College Administration Offices",
+    "aliasesKo": [
+      "행정팀",
+      "행정실",
+      "단과대학",
+      "대학 행정팀"
+    ],
+    "aliasesEn": [
+      "administration",
+      "administration office",
+      "college office"
+    ],
+    "zh": "学院行政办公室",
+    "aliasesZh": [
+      "行政办公室",
+      "学院办公室",
+      "行政组",
+      "行政团队"
+    ]
+  },
+  "support": {
+    "icon": "🧭",
+    "color": "#0e7490",
+    "ko": "학생·행정 지원",
+    "en": "Student & Administrative Services",
+    "aliasesKo": [
+      "학생지원",
+      "학생 서비스",
+      "행정 지원"
+    ],
+    "aliasesEn": [
+      "student services",
+      "administrative services"
+    ],
+    "zh": "学生及行政服务",
+    "aliasesZh": [
+      "学生服务",
+      "行政服务",
+      "学生支援",
+      "学生事务"
+    ]
+  },
+  "convenience": {
+    "icon": "🛒",
+    "color": "#0f8b8d",
+    "ko": "편의점",
+    "en": "Convenience Stores",
+    "aliasesKo": [
+      "편의",
+      "매점",
+      "무인편의점"
+    ],
+    "aliasesEn": [
+      "convenience",
+      "convenience store",
+      "store"
+    ],
+    "zh": "便利店",
+    "aliasesZh": [
+      "商店",
+      "便利设施",
+      "无人便利店",
+      "小卖部"
+    ]
+  },
+  "cafe": {
+    "icon": "☕",
+    "color": "#a16207",
+    "ko": "카페",
+    "en": "Cafes",
+    "aliasesKo": [
+      "커피",
+      "커피숍",
+      "음료"
+    ],
+    "aliasesEn": [
+      "cafe",
+      "cafes",
+      "coffee",
+      "coffee shop"
+    ],
+    "zh": "咖啡厅",
+    "aliasesZh": [
+      "咖啡",
+      "咖啡馆",
+      "饮品",
+      "咖啡店"
+    ]
+  },
+  "restaurant": {
+    "icon": "🍴",
+    "color": "#c2410c",
+    "ko": "식당",
+    "en": "Restaurants",
+    "aliasesKo": [
+      "학생식당",
+      "교직원식당",
+      "푸드코트",
+      "밥",
+      "식사"
+    ],
+    "aliasesEn": [
+      "restaurant",
+      "cafeteria",
+      "food court",
+      "dining",
+      "meal"
+    ],
+    "zh": "餐厅",
+    "aliasesZh": [
+      "食堂",
+      "学生食堂",
+      "教职员食堂",
+      "美食中心",
+      "餐饮"
+    ]
+  },
+  "welfare": {
+    "icon": "★",
+    "color": "#2563eb",
+    "ko": "기타 복지시설",
+    "en": "Other Amenities",
+    "aliasesKo": [
+      "복지시설",
+      "복지"
+    ],
+    "aliasesEn": [
+      "amenities",
+      "welfare"
+    ],
+    "zh": "其他福利设施",
+    "aliasesZh": [
+      "福利设施",
+      "生活服务",
+      "其他设施",
+      "便民设施"
+    ]
+  }
 };
 
 const FACILITIES = [
-  // ===== 단과대학 행정팀 =====
-  { id:"admin-engineering", category:"admin", buildingId:"303", floorKo:"2층", floorEn:"2F", nameKo:"공학대학 행정팀", nameEn:"College of Engineering Sciences Administration Office" },
-  { id:"admin-computing", category:"admin", buildingId:"317", floorKo:"6층", floorEn:"6F", nameKo:"소프트웨어융합대학 행정팀", nameEn:"College of Computing Administration Office" },
-  { id:"admin-pharmacy", category:"admin", buildingId:"309", floorKo:"2층", floorEn:"2F", nameKo:"약학대학 행정팀", nameEn:"College of Pharmacy Administration Office" },
-  { id:"admin-advanced", category:"admin", buildingId:"207", floorKo:"1층", floorEn:"1F", nameKo:"첨단융합대학 행정팀", nameEn:"College of Advanced Technology & Convergence Administration Office" },
-  { id:"admin-languages-communication", category:"admin", buildingId:"202", floorKo:"2층", floorEn:"2F", nameKo:"글로벌문화통상대학/커뮤니케이션&컬처대학 행정팀", nameEn:"College of Languages & Cultures / College of Communication Administration Office" },
-  { id:"admin-business", category:"admin", buildingId:"201", floorKo:"4층", floorEn:"4F", nameKo:"경상대학 행정팀", nameEn:"College of Business & Economics Administration Office" },
-  { id:"admin-design", category:"admin", buildingId:"111", floorKo:"3층", floorEn:"3F", nameKo:"디자인대학 행정팀", nameEn:"College of Design Administration Office" },
-  { id:"admin-sport", category:"admin", buildingId:"402", floorKo:"1층", floorEn:"1F", nameKo:"예체능대학 행정팀", nameEn:"College of Sport & Arts Administration Office" },
-  { id:"admin-lions", category:"admin", buildingId:"317", floorKo:"1층", floorEn:"1F", nameKo:"LIONS칼리지 행정팀", nameEn:"LIONS College of Liberal Arts Administration Office" },
-
-  // ===== 편의점 =====
-  { id:"store-welfare-7eleven", category:"convenience", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"세븐일레븐", nameEn:"7-Eleven", brandLogo:"https://images.contentstack.io/v3/assets/blt79dc99fad342cc45/bltaea3ad03c180ee64/633f08d845693810d212c437/7_Eleven_Horizontal_2022_RGB_thumb_1639377127_8824.png", brandText:"7-ELEVEN", brandBg:"#ffffff", brandFg:"#087b55" },
-  { id:"store-bus-emart24", category:"convenience", buildingId:"306", floorKo:"1층", floorEn:"1F", nameKo:"이마트24", nameEn:"emart24", brandLogo:"https://emart24.co.kr/assets/assets/imgs/brandResourceCenter/brandColor_img_02.png", brandText:"emart24", brandClass:"brand-emart24", brandBg:"#57585b", brandFg:"#ffb71b", brandCrop:"emart24" },
-  { id:"store-eng3-7eleven", category:"convenience", buildingId:"303", floorKo:"지하 1층", floorEn:"B1", nameKo:"세븐일레븐", nameEn:"7-Eleven", brandLogo:"https://images.contentstack.io/v3/assets/blt79dc99fad342cc45/bltaea3ad03c180ee64/633f08d845693810d212c437/7_Eleven_Horizontal_2022_RGB_thumb_1639377127_8824.png", brandText:"7-ELEVEN", brandBg:"#ffffff", brandFg:"#087b55" },
-  { id:"store-changui-cu", category:"convenience", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"CU", nameEn:"CU", brandLogo:"https://upload.wikimedia.org/wikipedia/commons/1/1a/CU_BI_%282017%29.svg", brandText:"CU", brandBg:"#ffffff", brandFg:"#5a2c82" },
-  { id:"store-library-unmanned", category:"convenience", buildingId:"401", floorKo:"2층", floorEn:"2F", nameKo:"무인편의점", nameEn:"Unmanned Convenience Store" },
-
-  // ===== 카페 =====
-  { id:"cafe-business-blueport", category:"cafe", buildingId:"201", floorKo:"1층", floorEn:"1F", nameKo:"카페 블루포트", nameEn:"Cafe BluePot", brandText:"BLUEPOT", brandClass:"brand-bluepot" },
-  { id:"cafe-welfare-ing", category:"cafe", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"카페ING", nameEn:"Cafe ING", brandText:"cafe Ing", brandClass:"brand-ing" },
-  { id:"cafe-welfare-starbucks", category:"cafe", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"스타벅스", nameEn:"Starbucks", brandLogo:"https://www.starbucks.co.kr/common/img/common/logo.png", brandText:"STARBUCKS", brandBg:"#ffffff", brandFg:"#00754a" },
-  { id:"cafe-welfare-dailybeetle", category:"cafe", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"데일리비틀주스", nameEn:"Daily Beetle Juice", brandText:"DAILY\nBEETLE", brandClass:"brand-dailybeetle" },
-  { id:"cafe-welfare-ripple", category:"cafe", buildingId:"102", floorKo:"1층", floorEn:"1F", nameKo:"리플커피", nameEn:"Ripple Coffee", brandText:"RIPPLE", brandClass:"brand-ripple" },
-  { id:"cafe-bus-ogada", category:"cafe", buildingId:"306", floorKo:"1층", floorEn:"1F", nameKo:"카페 오가다", nameEn:"Cafe Ogada", brandText:"오가다\nOGADA", brandClass:"brand-ogada" },
-  { id:"cafe-convention-barva", category:"cafe", buildingId:"307", floorKo:"1층", floorEn:"1F", nameKo:"바르바커피", nameEn:"BARVA Coffee", brandText:"BARVA", brandClass:"brand-barva" },
-  { id:"cafe-multidisciplinary-thebake", category:"cafe", buildingId:"317", floorKo:"1층", floorEn:"1F", nameKo:"더베이크", nameEn:"The Bake", brandText:"THE BAKE", brandClass:"brand-thebake" },
-  { id:"cafe-incubator-hanyangbakery", category:"cafe", buildingId:"308", floorKo:"1층", floorEn:"1F", nameKo:"한양베이커리", nameEn:"Hanyang Bakery", brandText:"HANYANG\nBAKERY", brandClass:"brand-hanyangbakery" },
-  { id:"cafe-changui-grazie", category:"cafe", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"그라찌에", nameEn:"Grazie", brandLogo:"https://cdn.imweb.me/upload/S20250729e3587ccf5ab03/1d033f93cfe4a.png", brandText:"Grazie", brandClass:"brand-grazie", brandBg:"#ffffff", brandFg:"#694a31" },
-
-
-  // ===== 학생·행정 지원 =====
-  { id:"support-student-card", category:"support", buildingId:"103", floorKo:"4층", floorEn:"4F", nameKo:"학생지원팀", nameEn:"Student Support Team", detailKo:"학생증 발급", detailEn:"Student ID services" },
-  { id:"support-holmz-photo", category:"support", buildingId:"401", floorKo:"4층", floorEn:"4F", nameKo:"노상일HOLMZ", nameEn:"Roh Sang-il HOLMZ", detailKo:"증명사진 촬영", detailEn:"ID photo service" },
-  { id:"support-health-center", category:"support", buildingId:"103", floorKo:"3층", floorEn:"3F", nameKo:"한양보건센터", nameEn:"Health Care Center" },
-  { id:"support-residence-admin", category:"support", buildingId:"501", floorKo:"2층", floorEn:"2F", nameKo:"창의인재원 행정팀", nameEn:"Residence Hall Administrative Affairs Team" },
-  { id:"support-admissions", category:"support", buildingId:"101", floorKo:"1층", floorEn:"1F", nameKo:"입학팀", nameEn:"ERICA Admissions Team" },
-  { id:"support-career", category:"support", buildingId:"401", floorKo:"1층", floorEn:"1F", nameKo:"커리어개발팀", nameEn:"Career Development Team" },
-
-  // ===== 식당 =====
-  { id:"food-welfare-staff", category:"restaurant", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"교직원식당", nameEn:"Faculty & Staff Cafeteria" },
-  { id:"food-welfare-student", category:"restaurant", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"학생식당", nameEn:"Student Cafeteria" },
-  { id:"food-welfare-foodcourt", category:"restaurant", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"푸드코트", nameEn:"Food Court" },
-  { id:"food-incubator", category:"restaurant", buildingId:"308", floorKo:"지하 1층", floorEn:"B1", nameKo:"창업보육센터 식당", nameEn:"Business Incubator Cafeteria" },
-  { id:"food-changui-dorm", category:"restaurant", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"기숙사 식당", nameEn:"Residence Hall Cafeteria" },
-
-  // ===== 기타 복지시설 =====
-  { id:"welfare-optical", category:"welfare", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"안경점", nameEn:"Optical Shop" },
-  { id:"welfare-bookstore", category:"welfare", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"대학서적", nameEn:"University Bookstore" },
-  { id:"welfare-computer", category:"welfare", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"컴퓨터 매장", nameEn:"Computer Store" },
-  { id:"welfare-stationery", category:"welfare", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"문구점", nameEn:"Stationery Store" }
+  {
+    "id": "admin-engineering",
+    "category": "admin",
+    "buildingId": "303",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "공학대학 행정팀",
+    "nameEn": "College of Engineering Sciences Administration Office",
+    "floorZh": "2层",
+    "nameZh": "工学院行政办公室",
+    "aliasesZh": [
+      "工学院行政组",
+      "工程学院行政办公室"
+    ]
+  },
+  {
+    "id": "admin-computing",
+    "category": "admin",
+    "buildingId": "317",
+    "floorKo": "6층",
+    "floorEn": "6F",
+    "nameKo": "소프트웨어융합대학 행정팀",
+    "nameEn": "College of Computing Administration Office",
+    "floorZh": "6层",
+    "nameZh": "软件融合学院行政办公室",
+    "aliasesZh": [
+      "计算机学院行政办公室",
+      "软件学院行政办公室"
+    ]
+  },
+  {
+    "id": "admin-pharmacy",
+    "category": "admin",
+    "buildingId": "309",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "약학대학 행정팀",
+    "nameEn": "College of Pharmacy Administration Office",
+    "floorZh": "2层",
+    "nameZh": "药学院行政办公室",
+    "aliasesZh": [
+      "药学院行政组"
+    ]
+  },
+  {
+    "id": "admin-advanced",
+    "category": "admin",
+    "buildingId": "207",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "첨단융합대학 행정팀",
+    "nameEn": "College of Advanced Technology & Convergence Administration Office",
+    "floorZh": "1层",
+    "nameZh": "尖端融合学院行政办公室",
+    "aliasesZh": [
+      "先进融合学院行政办公室"
+    ]
+  },
+  {
+    "id": "admin-languages-communication",
+    "category": "admin",
+    "buildingId": "202",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "글로벌문화통상대학/커뮤니케이션&컬처대학 행정팀",
+    "nameEn": "College of Languages & Cultures / College of Communication Administration Office",
+    "floorZh": "2层",
+    "nameZh": "全球文化通商学院／传播与文化学院行政办公室",
+    "aliasesZh": [
+      "全球文化通商学院",
+      "传播与文化学院",
+      "文化传播学院行政办公室"
+    ]
+  },
+  {
+    "id": "admin-business",
+    "category": "admin",
+    "buildingId": "201",
+    "floorKo": "4층",
+    "floorEn": "4F",
+    "nameKo": "경상대학 행정팀",
+    "nameEn": "College of Business & Economics Administration Office",
+    "floorZh": "4层",
+    "nameZh": "经商学院行政办公室",
+    "aliasesZh": [
+      "经营学院行政办公室",
+      "商学院行政办公室"
+    ]
+  },
+  {
+    "id": "admin-design",
+    "category": "admin",
+    "buildingId": "111",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "nameKo": "디자인대학 행정팀",
+    "nameEn": "College of Design Administration Office",
+    "floorZh": "3层",
+    "nameZh": "设计学院行政办公室",
+    "aliasesZh": [
+      "设计学院行政组"
+    ]
+  },
+  {
+    "id": "admin-sport",
+    "category": "admin",
+    "buildingId": "402",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "예체능대학 행정팀",
+    "nameEn": "College of Sport & Arts Administration Office",
+    "floorZh": "1层",
+    "nameZh": "艺体能学院行政办公室",
+    "aliasesZh": [
+      "体育艺术学院行政办公室"
+    ]
+  },
+  {
+    "id": "admin-lions",
+    "category": "admin",
+    "buildingId": "317",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "LIONS칼리지 행정팀",
+    "nameEn": "LIONS College of Liberal Arts Administration Office",
+    "floorZh": "1层",
+    "nameZh": "LIONS学院行政办公室",
+    "aliasesZh": [
+      "LIONS学院行政组"
+    ]
+  },
+  {
+    "id": "store-welfare-7eleven",
+    "category": "convenience",
+    "buildingId": "102",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "세븐일레븐",
+    "nameEn": "7-Eleven",
+    "brandLogo": "https://images.contentstack.io/v3/assets/blt79dc99fad342cc45/bltaea3ad03c180ee64/633f08d845693810d212c437/7_Eleven_Horizontal_2022_RGB_thumb_1639377127_8824.png",
+    "brandText": "7-ELEVEN",
+    "brandBg": "#ffffff",
+    "brandFg": "#087b55",
+    "floorZh": "2层",
+    "nameZh": "7-Eleven",
+    "aliasesZh": [
+      "7-11",
+      "便利店"
+    ]
+  },
+  {
+    "id": "store-bus-emart24",
+    "category": "convenience",
+    "buildingId": "306",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "이마트24",
+    "nameEn": "emart24",
+    "brandLogo": "https://emart24.co.kr/assets/assets/imgs/brandResourceCenter/brandColor_img_02.png",
+    "brandText": "emart24",
+    "brandClass": "brand-emart24",
+    "brandBg": "#57585b",
+    "brandFg": "#ffb71b",
+    "brandCrop": "emart24",
+    "floorZh": "1层",
+    "nameZh": "emart24",
+    "aliasesZh": [
+      "易买得24",
+      "便利店"
+    ]
+  },
+  {
+    "id": "store-eng3-7eleven",
+    "category": "convenience",
+    "buildingId": "303",
+    "floorKo": "지하 1층",
+    "floorEn": "B1",
+    "nameKo": "세븐일레븐",
+    "nameEn": "7-Eleven",
+    "brandLogo": "https://images.contentstack.io/v3/assets/blt79dc99fad342cc45/bltaea3ad03c180ee64/633f08d845693810d212c437/7_Eleven_Horizontal_2022_RGB_thumb_1639377127_8824.png",
+    "brandText": "7-ELEVEN",
+    "brandBg": "#ffffff",
+    "brandFg": "#087b55",
+    "floorZh": "地下1层",
+    "nameZh": "7-Eleven",
+    "aliasesZh": [
+      "7-11",
+      "便利店"
+    ]
+  },
+  {
+    "id": "store-changui-cu",
+    "category": "convenience",
+    "buildingId": "501",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "CU",
+    "nameEn": "CU",
+    "brandLogo": "https://upload.wikimedia.org/wikipedia/commons/1/1a/CU_BI_%282017%29.svg",
+    "brandText": "CU",
+    "brandBg": "#ffffff",
+    "brandFg": "#5a2c82",
+    "floorZh": "1层",
+    "nameZh": "CU",
+    "aliasesZh": [
+      "便利店"
+    ]
+  },
+  {
+    "id": "store-library-unmanned",
+    "category": "convenience",
+    "buildingId": "401",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "무인편의점",
+    "nameEn": "Unmanned Convenience Store",
+    "floorZh": "2层",
+    "nameZh": "无人便利店",
+    "aliasesZh": [
+      "自助便利店",
+      "无人商店"
+    ]
+  },
+  {
+    "id": "cafe-business-blueport",
+    "category": "cafe",
+    "buildingId": "201",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "카페 블루포트",
+    "nameEn": "Cafe BluePot",
+    "brandText": "BLUEPOT",
+    "brandClass": "brand-bluepot",
+    "floorZh": "1层",
+    "nameZh": "BLUEPOT咖啡",
+    "aliasesZh": [
+      "蓝港咖啡",
+      "BluePot",
+      "咖啡"
+    ]
+  },
+  {
+    "id": "cafe-welfare-ing",
+    "category": "cafe",
+    "buildingId": "102",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "nameKo": "카페ING",
+    "nameEn": "Cafe ING",
+    "brandText": "cafe Ing",
+    "brandClass": "brand-ing",
+    "floorZh": "3层",
+    "nameZh": "ING咖啡",
+    "aliasesZh": [
+      "Cafe ING",
+      "咖啡"
+    ]
+  },
+  {
+    "id": "cafe-welfare-starbucks",
+    "category": "cafe",
+    "buildingId": "102",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "스타벅스",
+    "nameEn": "Starbucks",
+    "brandLogo": "https://www.starbucks.co.kr/common/img/common/logo.png",
+    "brandText": "STARBUCKS",
+    "brandBg": "#ffffff",
+    "brandFg": "#00754a",
+    "floorZh": "2层",
+    "nameZh": "星巴克",
+    "aliasesZh": [
+      "Starbucks",
+      "咖啡"
+    ]
+  },
+  {
+    "id": "cafe-welfare-dailybeetle",
+    "category": "cafe",
+    "buildingId": "102",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "데일리비틀주스",
+    "nameEn": "Daily Beetle Juice",
+    "brandText": "DAILY\nBEETLE",
+    "brandClass": "brand-dailybeetle",
+    "floorZh": "2层",
+    "nameZh": "Daily Beetle Juice",
+    "aliasesZh": [
+      "果汁",
+      "饮品",
+      "Daily Beetle"
+    ]
+  },
+  {
+    "id": "cafe-welfare-ripple",
+    "category": "cafe",
+    "buildingId": "102",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "리플커피",
+    "nameEn": "Ripple Coffee",
+    "brandText": "RIPPLE",
+    "brandClass": "brand-ripple",
+    "floorZh": "1层",
+    "nameZh": "Ripple Coffee",
+    "aliasesZh": [
+      "Ripple咖啡",
+      "咖啡"
+    ]
+  },
+  {
+    "id": "cafe-bus-ogada",
+    "category": "cafe",
+    "buildingId": "306",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "카페 오가다",
+    "nameEn": "Cafe Ogada",
+    "brandText": "오가다\nOGADA",
+    "brandClass": "brand-ogada",
+    "floorZh": "1层",
+    "nameZh": "OGADA咖啡",
+    "aliasesZh": [
+      "五嘉茶",
+      "Ogada",
+      "咖啡"
+    ]
+  },
+  {
+    "id": "cafe-convention-barva",
+    "category": "cafe",
+    "buildingId": "307",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "바르바커피",
+    "nameEn": "BARVA Coffee",
+    "brandText": "BARVA",
+    "brandClass": "brand-barva",
+    "floorZh": "1层",
+    "nameZh": "BARVA咖啡",
+    "aliasesZh": [
+      "Barva Coffee",
+      "咖啡"
+    ]
+  },
+  {
+    "id": "cafe-multidisciplinary-thebake",
+    "category": "cafe",
+    "buildingId": "317",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "더베이크",
+    "nameEn": "The Bake",
+    "brandText": "THE BAKE",
+    "brandClass": "brand-thebake",
+    "floorZh": "1层",
+    "nameZh": "THE BAKE",
+    "aliasesZh": [
+      "烘焙店",
+      "面包店"
+    ]
+  },
+  {
+    "id": "cafe-incubator-hanyangbakery",
+    "category": "cafe",
+    "buildingId": "308",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "한양베이커리",
+    "nameEn": "Hanyang Bakery",
+    "brandText": "HANYANG\nBAKERY",
+    "brandClass": "brand-hanyangbakery",
+    "floorZh": "1层",
+    "nameZh": "汉阳面包店",
+    "aliasesZh": [
+      "Hanyang Bakery",
+      "面包店",
+      "烘焙店"
+    ]
+  },
+  {
+    "id": "cafe-changui-grazie",
+    "category": "cafe",
+    "buildingId": "501",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "그라찌에",
+    "nameEn": "Grazie",
+    "brandLogo": "https://cdn.imweb.me/upload/S20250729e3587ccf5ab03/1d033f93cfe4a.png",
+    "brandText": "Grazie",
+    "brandClass": "brand-grazie",
+    "brandBg": "#ffffff",
+    "brandFg": "#694a31",
+    "floorZh": "1层",
+    "nameZh": "Grazie",
+    "aliasesZh": [
+      "咖啡",
+      "格拉齐耶"
+    ]
+  },
+  {
+    "id": "support-student-card",
+    "category": "support",
+    "buildingId": "103",
+    "floorKo": "4층",
+    "floorEn": "4F",
+    "nameKo": "학생지원팀",
+    "nameEn": "Student Support Team",
+    "detailKo": "학생증 발급",
+    "detailEn": "Student ID services",
+    "floorZh": "4层",
+    "nameZh": "学生支援组",
+    "detailZh": "学生证办理",
+    "aliasesZh": [
+      "学生证",
+      "学生卡",
+      "校园卡",
+      "学生证发放",
+      "学生事务"
+    ]
+  },
+  {
+    "id": "support-holmz-photo",
+    "category": "support",
+    "buildingId": "401",
+    "floorKo": "4층",
+    "floorEn": "4F",
+    "nameKo": "노상일HOLMZ",
+    "nameEn": "Roh Sang-il HOLMZ",
+    "detailKo": "증명사진 촬영",
+    "detailEn": "ID photo service",
+    "floorZh": "4层",
+    "nameZh": "Roh Sang-il HOLMZ",
+    "detailZh": "证件照拍摄",
+    "aliasesZh": [
+      "证件照",
+      "照片",
+      "拍照",
+      "摄影"
+    ]
+  },
+  {
+    "id": "support-health-center",
+    "category": "support",
+    "buildingId": "103",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "nameKo": "한양보건센터",
+    "nameEn": "Health Care Center",
+    "floorZh": "3层",
+    "nameZh": "汉阳保健中心",
+    "aliasesZh": [
+      "保健中心",
+      "医务室",
+      "健康中心",
+      "校医院"
+    ]
+  },
+  {
+    "id": "support-residence-admin",
+    "category": "support",
+    "buildingId": "501",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "창의인재원 행정팀",
+    "nameEn": "Residence Hall Administrative Affairs Team",
+    "floorZh": "2层",
+    "nameZh": "创意人才院行政办公室",
+    "aliasesZh": [
+      "宿舍行政办公室",
+      "宿舍办公室",
+      "创意人才院"
+    ]
+  },
+  {
+    "id": "support-admissions",
+    "category": "support",
+    "buildingId": "101",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "입학팀",
+    "nameEn": "ERICA Admissions Team",
+    "floorZh": "1层",
+    "nameZh": "ERICA入学组",
+    "aliasesZh": [
+      "入学",
+      "招生",
+      "入学咨询",
+      "招生办公室"
+    ]
+  },
+  {
+    "id": "support-career",
+    "category": "support",
+    "buildingId": "401",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "커리어개발팀",
+    "nameEn": "Career Development Team",
+    "floorZh": "1层",
+    "nameZh": "职业发展组",
+    "aliasesZh": [
+      "职业",
+      "就业",
+      "求职",
+      "就业支援",
+      "职业规划"
+    ]
+  },
+  {
+    "id": "food-welfare-staff",
+    "category": "restaurant",
+    "buildingId": "102",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "nameKo": "교직원식당",
+    "nameEn": "Faculty & Staff Cafeteria",
+    "floorZh": "3层",
+    "nameZh": "教职员食堂",
+    "aliasesZh": [
+      "教工食堂",
+      "餐厅"
+    ]
+  },
+  {
+    "id": "food-welfare-student",
+    "category": "restaurant",
+    "buildingId": "102",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "학생식당",
+    "nameEn": "Student Cafeteria",
+    "floorZh": "2层",
+    "nameZh": "学生食堂",
+    "aliasesZh": [
+      "学生餐厅",
+      "餐厅"
+    ]
+  },
+  {
+    "id": "food-welfare-foodcourt",
+    "category": "restaurant",
+    "buildingId": "102",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "nameKo": "푸드코트",
+    "nameEn": "Food Court",
+    "floorZh": "2层",
+    "nameZh": "美食中心",
+    "aliasesZh": [
+      "美食广场",
+      "Food Court",
+      "餐厅"
+    ]
+  },
+  {
+    "id": "food-incubator",
+    "category": "restaurant",
+    "buildingId": "308",
+    "floorKo": "지하 1층",
+    "floorEn": "B1",
+    "nameKo": "창업보육센터 식당",
+    "nameEn": "Business Incubator Cafeteria",
+    "floorZh": "地下1层",
+    "nameZh": "创业保育中心食堂",
+    "aliasesZh": [
+      "创业孵化中心食堂",
+      "餐厅"
+    ]
+  },
+  {
+    "id": "food-changui-dorm",
+    "category": "restaurant",
+    "buildingId": "501",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "기숙사 식당",
+    "nameEn": "Residence Hall Cafeteria",
+    "floorZh": "1层",
+    "nameZh": "创意人才院食堂",
+    "aliasesZh": [
+      "宿舍食堂",
+      "宿舍餐厅",
+      "餐厅"
+    ]
+  },
+  {
+    "id": "welfare-optical",
+    "category": "welfare",
+    "buildingId": "102",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "nameKo": "안경점",
+    "nameEn": "Optical Shop",
+    "floorZh": "3层",
+    "nameZh": "眼镜店",
+    "aliasesZh": [
+      "眼镜",
+      "配镜"
+    ]
+  },
+  {
+    "id": "welfare-bookstore",
+    "category": "welfare",
+    "buildingId": "102",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "nameKo": "대학서적",
+    "nameEn": "University Bookstore",
+    "floorZh": "3层",
+    "nameZh": "大学书店",
+    "aliasesZh": [
+      "书店",
+      "教材",
+      "图书"
+    ]
+  },
+  {
+    "id": "welfare-computer",
+    "category": "welfare",
+    "buildingId": "102",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "nameKo": "컴퓨터 매장",
+    "nameEn": "Computer Store",
+    "floorZh": "3层",
+    "nameZh": "电脑商店",
+    "aliasesZh": [
+      "电脑店",
+      "计算机商店",
+      "电子产品"
+    ]
+  },
+  {
+    "id": "welfare-stationery",
+    "category": "welfare",
+    "buildingId": "501",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "nameKo": "문구점",
+    "nameEn": "Stationery Store",
+    "floorZh": "1层",
+    "nameZh": "文具店",
+    "aliasesZh": [
+      "文具",
+      "办公用品"
+    ]
+  }
 ];
 
 const SETTINGS = {
-  version: "V2.3.1 · SMART FACILITY SEARCH",
+  version: "V2.4.0 · TRILINGUAL SMART MAP",
   englishUrlFallbackToKorean: true,
+  chineseUrlFallbackToKorean: true,
   mapImages: {
     ko: "assets/erica-map-ko.jpg",
-    en: "assets/erica-map-en.jpg"
+    en: "assets/erica-map-en.jpg",
+    zh: "assets/erica-map-zh.jpg"
   }
 };
 
 const UI = {
   ko: {
     title: "ERICA 캠퍼스 내부구조도 안내",
-    metaDescription: "ERICA 캠퍼스 건물을 검색하고 내부 구조도를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
+    metaDescription: "ERICA 캠퍼스의 건물·시설·서비스를 검색하고 내부 구조도를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
     description: "건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>내부 구조도가 연결된 건물은 지도 번호 또는 아래 건물명을 눌러 확인할 수 있습니다.",
     languageLabel: "언어 선택",
     searchPlaceholder: "건물·시설·서비스 검색 (예: 101, 학생증, 카페)",
@@ -1743,6 +2697,8 @@ const UI = {
     searchButton: "찾기",
     toolbar: "지도를 확대하면 건물 번호를 더 선명하게 확인할 수 있습니다. 확대 후 마우스·트랙패드로 지도를 이동할 수 있습니다.",
     facilityMaster: "시설 보기",
+    facilityMasterAria: "전체 시설 표시 전환",
+    facilityMasterTitle: "전체 시설 레이어 켜기 또는 끄기",
     facilityPanelTitle: "행정팀·학생지원·편의시설 지도 표시",
     facilityPanelHelp: "시설 필터는 항상 표시됩니다. 원하는 항목을 개별로 켜거나 끌 수 있고, 같은 건물의 여러 시설은 자동으로 펼쳐집니다.",
     facilityAllOn: "전체 켜기",
@@ -1770,16 +2726,16 @@ const UI = {
     openAria: (id,name) => `${id} ${name} 내부 구조도 열기`,
     noResult: q => `‘<strong>${q}</strong>’에 해당하는 건물·시설·서비스를 찾지 못했습니다.`,
     oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> 위치를 표시했습니다.` + (linked ? ` 지도 번호 또는 아래 건물명을 누르면 내부 구조도가 열립니다.` : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`),
-    manyResults: (items) => `<strong>${items.length}개</strong> 건물이 검색되었습니다: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
+    manyResults: items => `<strong>${items.length}개</strong> 건물이 검색되었습니다: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
     oneFacilityResult: (f,b) => `<strong>${escapeHtml(facilityDisplayName(f))}${facilityDetail(f) ? ` · ${escapeHtml(facilityDetail(f))}` : ""}</strong>을(를) 지도에 표시했습니다. <strong>${escapeHtml(displayName(b))} · ${escapeHtml(facilityFloor(f))}</strong>`,
-    manyFacilityResults: (items) => `<strong>${items.length}개</strong> 시설·서비스가 검색되어 지도에 표시되었습니다: ` + items.slice(0,8).map(f => escapeHtml(facilityDisplayName(f))).join(", ") + (items.length > 8 ? "…" : ""),
+    manyFacilityResults: items => `<strong>${items.length}개</strong> 시설·서비스가 검색되어 지도에 표시되었습니다: ` + items.slice(0,8).map(f => escapeHtml(facilityDisplayName(f))).join(", ") + (items.length > 8 ? "…" : ""),
     mixedResults: (buildings,facilities) => `<strong>건물 ${buildings.length}개 · 시설/서비스 ${facilities.length}개</strong>가 검색되어 지도에 표시되었습니다.`,
     footer: "※ 건물명·구조도 링크는 BUILDINGS, 행정팀·학생지원·편의시설은 FACILITIES 배열에서 수정할 수 있습니다.",
     debug: "<strong>DEBUG MODE</strong> · 빨간 원은 지도 번호 클릭 영역입니다."
   },
   en: {
     title: "ERICA Campus Building Floor Plan Guide",
-    metaDescription: "Search ERICA campus buildings and open linked building floor plans from an interactive campus map.",
+    metaDescription: "Search ERICA campus buildings, facilities and services, and open linked building floor plans from an interactive campus map.",
     description: "Search by building number or name to locate it on the map.<br>Select a linked building number or name below to view its floor plan.",
     languageLabel: "Language selection",
     searchPlaceholder: "Search buildings, facilities or services (e.g., 101, Student ID, Cafe)",
@@ -1788,6 +2744,8 @@ const UI = {
     searchButton: "Search",
     toolbar: "Zoom in to view building numbers more clearly. After zooming, drag or use a trackpad to move around the map.",
     facilityMaster: "Facilities",
+    facilityMasterAria: "Toggle all facility layers",
+    facilityMasterTitle: "Show or hide all facility layers",
     facilityPanelTitle: "Campus offices, student services & amenities",
     facilityPanelHelp: "Facility filters are always visible. Turn categories on or off individually; multiple facilities in the same building are automatically spread around the building marker.",
     facilityAllOn: "Show all",
@@ -1815,12 +2773,59 @@ const UI = {
     openAria: (id,name) => `Open the floor plan for ${id} ${name}`,
     noResult: q => `No building, facility or service matched ‘<strong>${q}</strong>’.`,
     oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> has been highlighted on the map.` + (linked ? ` Select its map marker or directory entry to open the floor plan.` : ` A floor plan link is not available yet.`),
-    manyResults: (items) => `<strong>${items.length}</strong> buildings matched: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
+    manyResults: items => `<strong>${items.length}</strong> buildings matched: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
     oneFacilityResult: (f,b) => `<strong>${escapeHtml(facilityDisplayName(f))}${facilityDetail(f) ? ` · ${escapeHtml(facilityDetail(f))}` : ""}</strong> has been highlighted. <strong>${escapeHtml(displayName(b))} · ${escapeHtml(facilityFloor(f))}</strong>`,
-    manyFacilityResults: (items) => `<strong>${items.length}</strong> facilities or services matched and are now shown on the map: ` + items.slice(0,8).map(f => escapeHtml(facilityDisplayName(f))).join(", ") + (items.length > 8 ? "…" : ""),
+    manyFacilityResults: items => `<strong>${items.length}</strong> facilities or services matched and are now shown on the map: ` + items.slice(0,8).map(f => escapeHtml(facilityDisplayName(f))).join(", ") + (items.length > 8 ? "…" : ""),
     mixedResults: (buildings,facilities) => `<strong>${buildings.length} building(s) · ${facilities.length} facility/service result(s)</strong> matched and are now shown on the map.`,
     footer: "Edit building names and floor-plan links in BUILDINGS, and campus offices/student services/amenities in FACILITIES.",
     debug: "<strong>DEBUG MODE</strong> · Red circles show the clickable building-number areas."
+  },
+  zh: {
+    title: "ERICA校园建筑平面图指南",
+    metaDescription: "可搜索ERICA校园建筑、设施和服务，并通过交互式校园地图查看建筑位置及已连接的内部平面图。",
+    description: "输入建筑编号或名称，即可在地图上查看其位置。<br>已连接内部平面图的建筑，可点击地图编号或下方建筑名称查看。",
+    languageLabel: "语言选择",
+    searchPlaceholder: "搜索建筑、设施或服务（例：101、学生证、咖啡厅）",
+    searchAria: "搜索建筑、设施或服务",
+    clearAria: "清除搜索内容",
+    searchButton: "搜索",
+    toolbar: "放大地图可更清楚地查看建筑编号。放大后可使用鼠标或触控板移动地图。",
+    facilityMaster: "设施显示",
+    facilityMasterAria: "切换全部设施图层",
+    facilityMasterTitle: "显示或隐藏全部设施图层",
+    facilityPanelTitle: "行政办公室、学生服务及便利设施地图显示",
+    facilityPanelHelp: "设施筛选区始终显示。可单独开启或关闭各类别；同一建筑内的多个设施会自动展开。",
+    facilityAllOn: "全部开启",
+    facilityAllOff: "全部关闭",
+    facilityCategoryAria: name => `切换${name}显示`,
+    facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
+    facilityFloorPlan: "查看建筑平面图 →",
+    facilityCloseAria: "关闭设施信息",
+    zoomAria: "地图缩放控制",
+    zoomOutAria: "缩小地图",
+    zoomInAria: "放大地图",
+    resetAria: "将地图缩放重置为100%",
+    mapAlt: "汉阳大学ERICA校园航拍地图",
+    hintLinked: "鼠标悬停时有反应的建筑已连接内部平面图。",
+    hintSearch: "无论是否已连接平面图，搜索都会标示建筑位置。",
+    directoryTitle: "建筑列表",
+    directoryDescription: "已有内部平面图的建筑，点击名称即可在新标签页中打开。",
+    legendLinked: "● 可查看内部平面图",
+    legendPending: "○ 准备中",
+    view: "查看平面图",
+    pending: "准备中",
+    group: n => `${n}00号段`,
+    openTitle: (id,name) => `查看${id} ${name}的建筑平面图`,
+    locationAria: (id,name) => `${id} ${name}的位置`,
+    openAria: (id,name) => `打开${id} ${name}的建筑平面图`,
+    noResult: q => `未找到与“<strong>${q}</strong>”匹配的建筑、设施或服务。`,
+    oneResult: (b,linked) => `已在地图上标示<strong>${b.id} ${escapeHtml(displayName(b))}</strong>。` + (linked ? ` 点击地图编号或下方建筑名称即可打开内部平面图。` : ` 目前尚未连接内部平面图。`),
+    manyResults: items => `共找到<strong>${items.length}</strong>栋建筑：` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join("、") + (items.length > 8 ? "…" : ""),
+    oneFacilityResult: (f,b) => `已在地图上标示<strong>${escapeHtml(facilityDisplayName(f))}${facilityDetail(f) ? ` · ${escapeHtml(facilityDetail(f))}` : ""}</strong>。<strong>${escapeHtml(displayName(b))} · ${escapeHtml(facilityFloor(f))}</strong>`,
+    manyFacilityResults: items => `共找到<strong>${items.length}</strong>项设施或服务，并已显示在地图上：` + items.slice(0,8).map(f => escapeHtml(facilityDisplayName(f))).join("、") + (items.length > 8 ? "…" : ""),
+    mixedResults: (buildings,facilities) => `共找到<strong>${buildings.length}栋建筑 · ${facilities.length}项设施/服务</strong>，并已显示在地图上。`,
+    footer: "※ 可在BUILDINGS数组中修改建筑名称和内部平面图链接，在FACILITIES数组中修改行政办公室、学生服务及便利设施。",
+    debug: "<strong>DEBUG MODE</strong> · 红色圆圈表示可点击的建筑编号区域。"
   }
 };
 
@@ -1877,10 +2882,19 @@ function saveLanguage(lang){
   catch {}
 }
 
-const savedLang = readSavedLanguage();
-let currentLang = ["ko","en"].includes(params.get("lang"))
-  ? params.get("lang")
-  : (["ko","en"].includes(savedLang) ? savedLang : "ko");
+const SUPPORTED_LANGUAGES = ["ko","en","zh"];
+function normalizeLanguageCode(lang){
+  if(!lang) return null;
+  const value = String(lang).toLowerCase();
+  if(value === "zh-cn" || value === "zh-hans") return "zh";
+  return value;
+}
+
+const requestedLang = normalizeLanguageCode(params.get("lang"));
+const savedLang = normalizeLanguageCode(readSavedLanguage());
+let currentLang = SUPPORTED_LANGUAGES.includes(requestedLang)
+  ? requestedLang
+  : (SUPPORTED_LANGUAGES.includes(savedLang) ? savedLang : "ko");
 
 const mapEls = new Map();
 const rowEls = new Map();
@@ -1893,11 +2907,18 @@ const facilityMarkerEls = new Map();
 let facilityPanelOpen = true;
 let selectedFacilityId = null;
 
-function t(){ return UI[currentLang]; }
-function displayName(b){ return currentLang === "en" ? b.nameEn : b.nameKo; }
-function facilityDisplayName(f){ return currentLang === "en" ? f.nameEn : f.nameKo; }
-function facilityFloor(f){ return currentLang === "en" ? f.floorEn : f.floorKo; }
-function facilityDetail(f){ return currentLang === "en" ? (f.detailEn || "") : (f.detailKo || ""); }
+const LANGUAGE_SUFFIX = {ko:"Ko",en:"En",zh:"Zh"};
+function t(){ return UI[currentLang] || UI.ko; }
+function localizedValue(obj,prefix){
+  const suffix = LANGUAGE_SUFFIX[currentLang] || "Ko";
+  const value = obj?.[`${prefix}${suffix}`];
+  if(value !== undefined && value !== null && String(value).trim() !== "") return value;
+  return obj?.[`${prefix}Ko`] || "";
+}
+function displayName(b){ return localizedValue(b,"name"); }
+function facilityDisplayName(f){ return localizedValue(f,"name"); }
+function facilityFloor(f){ return localizedValue(f,"floor"); }
+function facilityDetail(f){ return localizedValue(f,"detail"); }
 
 function facilityBrandMarkup(f,c){
   if(f.brandLogo){
@@ -1917,15 +2938,24 @@ function facilityBrandMarkup(f,c){
 }
 function facilityCategoryLabel(key){
   const c = FACILITY_CATEGORIES[key];
-  return currentLang === "en" ? c.en : c.ko;
+  return c?.[currentLang] || c?.ko || key;
 }
 function buildingById(id){ return BUILDINGS.find(b => b.id === id); }
 
 function buildingUrl(b){
-  if(currentLang === "ko") return (b.urlKo || "").trim();
-  const englishUrl = (b.urlEn || "").trim();
-  if(englishUrl) return englishUrl;
-  return SETTINGS.englishUrlFallbackToKorean ? (b.urlKo || "").trim() : "";
+  const koreanUrl = (b.urlKo || "").trim();
+  if(currentLang === "ko") return koreanUrl;
+  if(currentLang === "en"){
+    const englishUrl = (b.urlEn || "").trim();
+    if(englishUrl) return englishUrl;
+    return SETTINGS.englishUrlFallbackToKorean ? koreanUrl : "";
+  }
+  if(currentLang === "zh"){
+    const chineseUrl = (b.urlZh || "").trim();
+    if(chineseUrl) return chineseUrl;
+    return SETTINGS.chineseUrlFallbackToKorean ? koreanUrl : "";
+  }
+  return koreanUrl;
 }
 
 function hasUrl(b){ return buildingUrl(b).length > 0; }
@@ -1952,8 +2982,8 @@ function convertedY(originalPercent){
 
 function updateUrlLanguage(){
   const next = new URL(location.href);
-  if(currentLang === "en") next.searchParams.set("lang","en");
-  else next.searchParams.delete("lang");
+  if(currentLang === "ko") next.searchParams.delete("lang");
+  else next.searchParams.set("lang",currentLang);
   history.replaceState(null,"",next);
 }
 
@@ -1994,8 +3024,8 @@ function renderFacilityControls(){
   facilityPanelOpen = true;
   facilityMasterBtn.setAttribute("aria-expanded","true");
   facilityMasterBtn.classList.add("is-open");
-  facilityMasterBtn.setAttribute("aria-label",currentLang === "en" ? "Toggle all facility layers" : "전체 시설 표시 전환");
-  facilityMasterBtn.title = currentLang === "en" ? "Show or hide all facility layers" : "전체 시설 레이어 켜기/끄기";
+  facilityMasterBtn.setAttribute("aria-label",t().facilityMasterAria);
+  facilityMasterBtn.title = t().facilityMasterTitle;
 
   facilityCategoryButtons.replaceChildren();
   Object.entries(FACILITY_CATEGORIES).forEach(([key,c]) => {
@@ -2240,7 +3270,7 @@ function renderDirectory(){
 
 function applyLanguage({preserveSearch=true,updateUrl=true}={}){
   const ui = t();
-  document.documentElement.lang = currentLang;
+  document.documentElement.lang = currentLang === "zh" ? "zh-CN" : currentLang;
   document.title = ui.title;
   document.querySelector('meta[name="description"]').setAttribute("content",ui.metaDescription);
 
@@ -2402,10 +3432,13 @@ function facilityDirectSearchFields(f){
     f.id,
     f.nameKo,
     f.nameEn,
+    f.nameZh,
     f.detailKo || "",
     f.detailEn || "",
+    f.detailZh || "",
     ...(f.aliasesKo || []),
-    ...(f.aliasesEn || [])
+    ...(f.aliasesEn || []),
+    ...(f.aliasesZh || [])
   ];
 }
 
@@ -2414,8 +3447,10 @@ function facilityCategorySearchFields(f){
   return [
     c?.ko || "",
     c?.en || "",
+    c?.zh || "",
     ...(c?.aliasesKo || []),
-    ...(c?.aliasesEn || [])
+    ...(c?.aliasesEn || []),
+    ...(c?.aliasesZh || [])
   ];
 }
 
@@ -2494,7 +3529,7 @@ function searchBuildings(shouldScroll=true){
   const q = normalize(raw);
 
   let buildingResults = BUILDINGS.filter(b => {
-    const fields = [b.id,b.nameKo,b.nameEn,...(b.aliasesKo || []),...(b.aliasesEn || [])].map(normalize);
+    const fields = [b.id,b.nameKo,b.nameEn,b.nameZh,...(b.aliasesKo || []),...(b.aliasesEn || []),...(b.aliasesZh || [])].map(normalize);
     return fields.some(v => v.includes(q));
   });
 
