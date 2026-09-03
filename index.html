@@ -16,7 +16,6 @@
       --line:#dbe3ec;
       --bg:#f5f7fa;
       --card:#ffffff;
-      --disabled:#98a2b3;
       --shadow:0 12px 40px rgba(21,34,56,.10);
     }
 
@@ -24,12 +23,13 @@
     html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Segoe UI",sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Segoe UI",Arial,sans-serif;
       color:var(--ink);
       background:var(--bg);
     }
 
     button,input{font:inherit}
+    button{-webkit-tap-highlight-color:transparent}
 
     .page{
       width:min(1800px,100%);
@@ -38,18 +38,36 @@
     }
 
     .hero{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:24px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(420px,560px);
+      gap:28px;
+      align-items:end;
       margin-bottom:16px;
+    }
+
+    .version{
+      display:inline-flex;
+      align-items:center;
+      min-height:25px;
+      margin-bottom:8px;
+      padding:5px 9px;
+      border:1px solid #cfe0f1;
+      border-radius:999px;
+      background:#eef6fe;
+      color:var(--blue-dark);
+      font-size:11px;
+      font-weight:850;
+      letter-spacing:.035em;
     }
 
     .title-wrap h1{
       margin:0 0 7px;
       font-size:clamp(25px,3vw,39px);
       letter-spacing:-.045em;
+      line-height:1.15;
     }
+
+    html[lang="en"] .title-wrap h1{letter-spacing:-.025em}
 
     .title-wrap p{
       margin:0;
@@ -58,17 +76,54 @@
       font-size:14px;
     }
 
+    .hero-controls{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:10px;
+    }
+
+    .language-switch{
+      display:inline-grid;
+      grid-template-columns:1fr 1fr;
+      gap:3px;
+      padding:3px;
+      border:1px solid #d3dce7;
+      border-radius:12px;
+      background:#e9eef4;
+      box-shadow:0 4px 12px rgba(21,34,56,.05);
+    }
+
+    .language-btn{
+      min-width:84px;
+      height:34px;
+      padding:0 13px;
+      border:0;
+      border-radius:9px;
+      background:transparent;
+      color:#667085;
+      font-size:13px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.16s ease;
+    }
+
+    .language-btn:hover{color:var(--blue-dark)}
+
+    .language-btn.is-active{
+      background:#fff;
+      color:var(--blue-dark);
+      box-shadow:0 2px 8px rgba(21,34,56,.11);
+    }
+
     .search-panel{
-      flex:0 1 560px;
+      width:100%;
       display:flex;
       gap:8px;
       align-items:center;
     }
 
-    .search-box{
-      position:relative;
-      flex:1;
-    }
+    .search-box{position:relative;flex:1}
 
     .search-box input{
       width:100%;
@@ -178,10 +233,7 @@
       color:var(--blue-dark);
     }
 
-    .zoom-btn:disabled{
-      cursor:not-allowed;
-      opacity:.38;
-    }
+    .zoom-btn:disabled{cursor:not-allowed;opacity:.38}
 
     .zoom-value{
       min-width:58px;
@@ -197,7 +249,11 @@
       -webkit-overflow-scrolling:touch;
       background:#0d2537;
       max-height:78vh;
+      overscroll-behavior:contain;
     }
+
+    .map-scroll.can-pan{cursor:grab}
+    .map-scroll.is-panning{cursor:grabbing;user-select:none}
 
     .map-stage{
       position:relative;
@@ -216,6 +272,8 @@
       image-rendering:auto;
     }
 
+    .hotspot-layer{position:absolute;inset:0;pointer-events:none}
+
     .map-hotspot{
       position:absolute;
       width:38px;
@@ -227,20 +285,17 @@
       background:transparent;
       z-index:10;
       cursor:default;
+      pointer-events:auto;
     }
 
     .map-hotspot.is-linked{cursor:pointer}
 
     .map-hotspot.is-linked:hover{
       background:rgba(255,255,255,.22);
-      box-shadow:
-        0 0 0 3px rgba(255,255,255,.92),
-        0 0 0 7px rgba(11,92,171,.62);
+      box-shadow:0 0 0 3px rgba(255,255,255,.92),0 0 0 7px rgba(11,92,171,.62);
     }
 
-    .map-hotspot.search-hit{
-      z-index:30!important;
-    }
+    .map-hotspot.search-hit{z-index:30!important}
 
     .map-hotspot.search-hit::before{
       content:"";
@@ -248,9 +303,7 @@
       inset:-10px;
       border:4px solid #ff2d55;
       border-radius:999px;
-      box-shadow:
-        0 0 0 7px rgba(255,255,255,.94),
-        0 0 28px rgba(255,45,85,.95);
+      box-shadow:0 0 0 7px rgba(255,255,255,.94),0 0 28px rgba(255,45,85,.95);
       animation:flashRing .58s ease-in-out 6 alternate;
       pointer-events:none;
     }
@@ -324,6 +377,8 @@
       letter-spacing:-.035em;
     }
 
+    html[lang="en"] .directory-head h2{letter-spacing:-.015em}
+
     .directory-head p{
       margin:0;
       color:var(--muted);
@@ -364,10 +419,7 @@
       letter-spacing:.01em;
     }
 
-    .building-list{
-      display:flex;
-      flex-direction:column;
-    }
+    .building-list{display:flex;flex-direction:column}
 
     .building-row{
       position:relative;
@@ -385,19 +437,9 @@
     }
 
     .building-row:last-child{border-bottom:0}
-
-    .building-row.is-linked{
-      cursor:pointer;
-    }
-
-    .building-row.is-linked:hover{
-      background:#f5f9fe;
-    }
-
-    .building-row.is-unlinked{
-      color:#7a8492;
-      cursor:default;
-    }
+    .building-row.is-linked{cursor:pointer}
+    .building-row.is-linked:hover{background:#f5f9fe}
+    .building-row.is-unlinked{color:#7a8492;cursor:default}
 
     .building-id{
       font-weight:900;
@@ -413,6 +455,7 @@
       font-weight:700;
       line-height:1.35;
       word-break:keep-all;
+      overflow-wrap:anywhere;
     }
 
     .building-status{
@@ -425,15 +468,8 @@
       white-space:nowrap;
     }
 
-    .is-linked .building-status{
-      background:var(--blue-soft);
-      color:var(--blue-dark);
-    }
-
-    .is-unlinked .building-status{
-      background:#f1f3f5;
-      color:#8a94a3;
-    }
+    .is-linked .building-status{background:var(--blue-soft);color:var(--blue-dark)}
+    .is-unlinked .building-status{background:#f1f3f5;color:#8a94a3}
 
     .building-row.search-hit{
       z-index:2;
@@ -448,11 +484,16 @@
     }
 
     .footer{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
       margin:14px 2px 0;
       color:#8a94a3;
       font-size:12px;
       line-height:1.6;
     }
+
+    .footer-version{white-space:nowrap;font-weight:750}
 
     body.debug .map-hotspot{
       background:rgba(255,0,0,.25);
@@ -465,8 +506,10 @@
 
     @media (max-width:900px){
       .page{padding:14px}
-      .hero{align-items:stretch;flex-direction:column;gap:14px}
-      .search-panel{flex-basis:auto;width:100%}
+      .hero{grid-template-columns:1fr;gap:14px}
+      .hero-controls{align-items:stretch}
+      .language-switch{align-self:flex-end}
+      .search-panel{width:100%}
       .map-card,.directory{border-radius:14px}
       .map-stage{min-width:1050px}
       .map-scroll{max-height:72vh}
@@ -475,12 +518,20 @@
       .directory-body{grid-template-columns:1fr;padding:13px}
       .directory-head{align-items:flex-start;flex-direction:column;padding:18px}
       .title-wrap p{font-size:13px}
+      .footer{flex-direction:column}
+    }
+
+    @media (max-width:520px){
+      .search-btn{padding:0 15px}
+      .language-btn{min-width:76px}
+      .building-row{grid-template-columns:43px minmax(0,1fr) auto;padding:8px 10px}
+      html[lang="en"] .building-row{grid-template-columns:43px minmax(0,1fr)}
+      html[lang="en"] .building-status{grid-column:2;justify-self:start;margin-top:1px}
     }
 
     @media (prefers-reduced-motion:reduce){
       *{scroll-behavior:auto!important}
-      .map-hotspot.search-hit::before,
-      .building-row.search-hit{animation:none}
+      .map-hotspot.search-hit::before,.building-row.search-hit{animation:none}
     }
   </style>
 </head>
@@ -489,25 +540,24 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <h1>ERICA 캠퍼스 내부구조도 안내</h1>
-        <p>
-          건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>
-          내부 구조도가 연결된 건물은 지도 번호 또는 아래 건물명을 눌러 확인할 수 있습니다.
-        </p>
+        <div class="version">V2.1.0 · BILINGUAL MAP</div>
+        <h1 id="pageTitle">ERICA 캠퍼스 내부구조도 안내</h1>
+        <p id="pageDescription"></p>
       </div>
 
-      <div class="search-panel">
-        <div class="search-box">
-          <input
-            id="searchInput"
-            type="search"
-            autocomplete="off"
-            placeholder="건물 번호·건물명 검색 (예: 101, 본관)"
-            aria-label="건물 번호 또는 건물명 검색"
-          />
-          <button class="clear-btn" id="clearBtn" type="button" aria-label="검색어 지우기">×</button>
+      <div class="hero-controls">
+        <div class="language-switch" id="languageSwitch" role="group" aria-label="언어 선택">
+          <button class="language-btn" type="button" data-lang="ko" aria-pressed="true">한국어</button>
+          <button class="language-btn" type="button" data-lang="en" aria-pressed="false">English</button>
         </div>
-        <button class="search-btn" id="searchBtn" type="button">찾기</button>
+
+        <div class="search-panel">
+          <div class="search-box">
+            <input id="searchInput" type="search" autocomplete="off" />
+            <button class="clear-btn" id="clearBtn" type="button">×</button>
+          </div>
+          <button class="search-btn" id="searchBtn" type="button"></button>
+        </div>
       </div>
     </section>
 
@@ -515,163 +565,790 @@
 
     <section class="map-card">
       <div class="map-toolbar">
-        <div class="label">
-          지도를 확대하면 건물 번호를 더 선명하게 확인할 수 있습니다. 확대 후 마우스/트랙패드로 지도를 이동할 수 있습니다.
-        </div>
+        <div class="label" id="mapToolbarLabel"></div>
 
-        <div class="zoom-controls" aria-label="지도 확대 축소">
-          <button class="zoom-btn" id="zoomOut" type="button" aria-label="축소">−</button>
+        <div class="zoom-controls" id="zoomControls">
+          <button class="zoom-btn" id="zoomOut" type="button">−</button>
           <span class="zoom-value" id="zoomValue">100%</span>
-          <button class="zoom-btn" id="zoomIn" type="button" aria-label="확대">＋</button>
+          <button class="zoom-btn" id="zoomIn" type="button">＋</button>
           <button class="zoom-btn" id="zoomReset" type="button">100%</button>
         </div>
       </div>
 
       <div class="map-scroll" id="mapScroll">
         <div class="map-stage" id="mapStage">
-          <img
-            id="campusMap"
-            src="assets/erica-map.jpg"
-            alt="한양대학교 ERICA 캠퍼스 항공 지도"
-            width="4096"
-            height="1860"
-          />
+          <img id="campusMap" src="assets/erica-map-ko.jpg" width="4096" height="1860" />
+          <div class="hotspot-layer" id="hotspotLayer"></div>
         </div>
       </div>
 
       <div class="map-hint">
-        <span><i class="dot"></i>마우스를 올렸을 때 반응하는 건물은 내부 구조도가 연결된 건물입니다.</span>
-        <span>검색은 구조도 연결 여부와 관계없이 건물 위치를 표시합니다.</span>
+        <span id="hintLinked"><i class="dot"></i><span></span></span>
+        <span id="hintSearch"></span>
       </div>
     </section>
 
     <section class="directory" id="directory">
       <div class="directory-head">
         <div>
-          <h2>건물 목록</h2>
-          <p>내부 구조도가 있는 건물은 건물명을 누르면 새 탭에서 열립니다.</p>
+          <h2 id="directoryTitle"></h2>
+          <p id="directoryDescription"></p>
         </div>
         <div class="directory-legend">
-          <span>● 내부 구조도 연결</span>
-          <span>○ 준비중</span>
+          <span id="legendLinked"></span>
+          <span id="legendPending"></span>
         </div>
       </div>
 
       <div class="directory-body" id="directoryBody"></div>
     </section>
 
-    <p class="footer">
-      ※ 건물명과 내부 구조도 링크는 아래 BUILDINGS 배열에서 수정할 수 있습니다.
-    </p>
+    <footer class="footer">
+      <span id="footerText"></span>
+      <span class="footer-version">V2.1.0 · BILINGUAL MAP</span>
+    </footer>
   </main>
 
 <script>
 /* ============================================================
-   ★ 유지보수는 BUILDINGS 배열만 보면 됨 ★
+   유지보수 핵심
 
-   - name  : 화면에 표시할 현재 건물명
-   - aliases: 검색에 함께 사용할 다른 명칭
-   - url   : 내부 구조도 주소. 빈 문자열이면 클릭 불가
-   - x / y : 기존 전체 지도 이미지(2048×1122) 기준 좌표
+   - nameKo / nameEn : 한국어·영문 건물명
+   - aliasesKo / aliasesEn : 검색용 이전 명칭·별칭
+   - urlKo : 현재 한국어 내부구조도 링크
+   - urlEn : 향후 영문 내부구조도 링크
 
-   이번 V2는 지도 하단 범례를 잘라냈기 때문에,
-   y 좌표는 JavaScript가 자동으로 새 이미지 높이에 맞춰 변환함.
+   현재는 urlEn이 비어 있으면 영문 화면에서도 urlKo로 이동한다.
+   영문 구조도 게시물이 생기면 해당 건물의 urlEn만 채우면 된다.
    ============================================================ */
 
 const BUILDINGS = [
-  // ===== 100번대 =====
-  { id:"101", name:"본관", aliases:["Administration Building"], url:"https://blog.naver.com/hyerica4473/223049804440", x:41.71, y:57.05, legend:["A",0] },
-  { id:"102", name:"학생복지관", aliases:["Student Welfare Building"], url:"", x:38.77, y:44.74, legend:["A",1] },
-  { id:"103", name:"학생회관", aliases:["Student Union"], url:"https://blog.naver.com/hyerica4473/224300297233", x:39.35, y:38.84, legend:["A",2] },
-  { id:"104", name:"제2공학관", aliases:["Engineering Building II"], url:"https://blog.naver.com/hyerica4473/223853310438", x:50.79, y:41.85, legend:["A",3] },
-  { id:"105", name:"건축디자인관", aliases:["Architectural Design Hall"], url:"", x:54.54, y:41.84, legend:["A",4] },
-  { id:"106", name:"초대형구조실험동", aliases:["Structural Experiment Laboratory"], url:"", x:56.73, y:41.58, legend:["A",5] },
-  { id:"107", name:"풍환경실험관", aliases:["Environment Experiment Center"], url:"", x:58.92, y:40.41, legend:["A",6] },
-  { id:"108", name:"수리실험동", aliases:["Hydraulics Lab"], url:"", x:61.15, y:40.27, legend:["A",7] },
-  { id:"109", name:"디자인문화관", aliases:["Design Culture Hall"], url:"https://blog.naver.com/hyerica4473/221979384718", x:60.66, y:44.44, legend:["B",0] },
-  { id:"110", name:"디자인교육관", aliases:["Design Education Hall"], url:"https://blog.naver.com/hyerica4473/221979390315", x:64.26, y:45.86, legend:["B",1] },
-  { id:"111", name:"디자인연구관", aliases:["Design Research Hall"], url:"https://blog.naver.com/hyerica4473/221979390264", x:57.05, y:46.68, legend:["B",2] },
-  { id:"112", name:"스마트건축관", aliases:["Smart Architecture Building"], url:"", x:59.95, y:39.01, legend:["B",3] },
-
-  // ===== 200번대 =====
-  { id:"201", name:"경상관", aliases:["Business and Economics Hall"], url:"https://blog.naver.com/hyerica4473/221979346320", x:18.95, y:54.48, legend:["C",0] },
-  { id:"202", name:"솔성관", aliases:["Global Culture and Commerce Building"], url:"https://blog.naver.com/hyerica4473/224222414158", x:26.53, y:54.48, legend:["C",1] },
-  { id:"203", name:"사회교육관", aliases:["Education Building","ROTC Building"], url:"https://blog.naver.com/hyerica4473/223112595570", x:27.43, y:62.01, legend:["C",2] },
-  { id:"204", name:"일신재", aliases:["Communication and Social Sciences Hall"], url:"https://blog.naver.com/hyerica4473/224198406802", x:21.25, y:64.20, legend:["C",3] },
-  { id:"205", name:"제1과학기술관", aliases:["Sciences and Technology Building I"], url:"https://blog.naver.com/hyerica4473/223123297127", x:27.32, y:44.68, legend:["C",4] },
-  { id:"206", name:"컨퍼런스홀", aliases:["Conference Hall"], url:"https://blog.naver.com/hyerica4473/223067448279", x:20.08, y:43.89, legend:["C",5] },
-  { id:"207", name:"제2과학기술관", aliases:["Sciences and Technology Building II"], url:"https://blog.naver.com/hyerica4473/223099314751", x:21.96, y:39.51, legend:["C",6] },
-  { id:"208", name:"한양맞춤의약연구원", aliases:["Hanyang Institute for Precision Therapeutics"], url:"", x:26.02, y:42.23, legend:["C",7] },
-  { id:"209", name:"제1학술관", aliases:["Educational Building I"], url:"https://blog.naver.com/hyerica4473/222530122646", x:30.40, y:41.91, legend:["C",8] },
-
-  // ===== 300번대 =====
-  { id:"301", name:"제1공학관", aliases:["Engineering Building I"], url:"https://blog.naver.com/hyerica4473/223500059046", x:26.72, y:34.07, legend:["D",0] },
-  { id:"302", name:"폐수처리장관리동", aliases:["Facilities Management Building"], url:"", x:31.84, y:32.45, legend:["D",1] },
-  { id:"303", name:"제3공학관", aliases:["Engineering Building III"], url:"https://blog.naver.com/hyerica4473/223853348067", x:31.72, y:34.57, legend:["D",2] },
-  { id:"304", name:"제4공학관", aliases:["Engineering Building IV"], url:"https://blog.naver.com/hyerica4473/223853371399", x:35.37, y:29.76, legend:["D",3] },
-  { id:"305", name:"제5공학관", aliases:["Engineering Building V"], url:"https://blog.naver.com/hyerica4473/221968763531", x:30.07, y:28.58, legend:["D",4] },
-  { id:"306", name:"버스승강장 및 학생휴게실", aliases:["Bus Stop and Student Lounge"], url:"", x:16.98, y:38.67, legend:["D",5] },
-  { id:"307", name:"ERICA컨벤션센터", aliases:["ERICA Convention Center"], url:"", x:16.07, y:30.28, legend:["D",6] },
-  { id:"308", name:"창업보육센터", aliases:["Hanyang Business Incubator"], url:"https://blog.naver.com/hyerica4473/222477550067", x:35.60, y:22.28, legend:["D",7] },
-
-  { id:"309", name:"약학관", aliases:["Pharmacy Building"], url:"https://blog.naver.com/hyerica4473/222065775499", x:29.42, y:25.04, legend:["E",0] },
-  { id:"310", name:"동물실험동", aliases:["Laboratory Animal Research Center"], url:"", x:31.92, y:24.87, legend:["E",1] },
-  { id:"311", name:"학연산클러스터지원센터", aliases:["ERICA Support Center"], url:"https://blog.naver.com/hyerica4473/221989816476", x:26.23, y:23.11, legend:["E",2] },
-  { id:"312", name:"산학연협력관", aliases:["Industry-University-Research Cooperation Building"], url:"https://blog.naver.com/hyerica4473/223097372134", x:23.15, y:24.01, legend:["E",3] },
-  { id:"313", name:"포장가속실험동", aliases:["Hanyang Accelerated Pavement Testing Building"], url:"", x:20.22, y:24.61, legend:["E",4] },
-  { id:"314", name:"퓨전전기기술응용연구센터", aliases:["EFT Center"], url:"", x:22.08, y:22.27, legend:["E",5] },
-  { id:"315", name:"BMR센터", aliases:["BMR Center"], url:"", x:19.61, y:21.99, legend:["E",6] },
-  { id:"316", name:"라이온스홀", aliases:["Lion's Hall"], url:"https://blog.naver.com/hyerica4473/223098368609", x:20.06, y:18.49, legend:["E",7] },
-  { id:"317", name:"융합교육관", aliases:["Multidisciplinary Lecture Hall"], url:"https://blog.naver.com/hyerica4473/224154699165", x:32.39, y:20.80, legend:["E",8] },
-  { id:"318", name:"다솜관", aliases:["Hanyang University ERICA Church"], url:"", x:14.61, y:29.13, legend:["E",9] },
-
-  // ===== 400번대 =====
-  { id:"401", name:"학술정보관", aliases:["Academic Information Center","Library"], url:"https://blog.naver.com/hyerica4473/223067480585", x:40.67, y:34.18, legend:["F",0] },
-  { id:"402", name:"체육관", aliases:["Gymnasium"], url:"https://blog.naver.com/hyerica4473/222003749695", x:50.44, y:35.25, legend:["F",1] },
-  { id:"403", name:"실용음악관", aliases:["ERICA Music Hall"], url:"", x:55.27, y:35.25, legend:["F",2] },
-  { id:"404", name:"대운동장", aliases:["Stadium"], url:"", x:62.79, y:28.16, legend:["F",3] },
-  { id:"405", name:"테니스장", aliases:["Tennis Courts"], url:"", x:50.90, y:23.49, legend:["F",4] },
-
-  // ===== 500번대 =====
-  { id:"501", name:"창의관", aliases:["Student Residence Hall I"], url:"https://blog.naver.com/hyerica4473/222482376806", x:50.20, y:7.07, legend:["G",0] },
-  { id:"502", name:"인재관", aliases:["Student Residence Hall II"], url:"https://blog.naver.com/hyerica4473/222522154951", x:53.36, y:13.95, legend:["G",1] },
-  { id:"503", name:"행복관", aliases:["Student Residence Hall III"], url:"https://blog.naver.com/hyerica4473/222483594808", x:47.97, y:11.84, legend:["G",2] },
-  { id:"504", name:"창의인재교육관", aliases:["Residence Hall"], url:"", x:45.97, y:13.46, legend:["G",3] }
+  {
+    "id": "101",
+    "nameKo": "본관",
+    "nameEn": "Administration Building",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223049804440",
+    "urlEn": "",
+    "x": 41.71,
+    "y": 57.05
+  },
+  {
+    "id": "102",
+    "nameKo": "학생복지관",
+    "nameEn": "Student Welfare Building",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 38.77,
+    "y": 44.74
+  },
+  {
+    "id": "103",
+    "nameKo": "학생회관",
+    "nameEn": "Student Union",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/224300297233",
+    "urlEn": "",
+    "x": 39.35,
+    "y": 38.84
+  },
+  {
+    "id": "104",
+    "nameKo": "제2공학관",
+    "nameEn": "Engineering Building II",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223853310438",
+    "urlEn": "",
+    "x": 50.79,
+    "y": 41.85
+  },
+  {
+    "id": "105",
+    "nameKo": "건축디자인관",
+    "nameEn": "Architectural Design Hall",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 54.54,
+    "y": 41.84
+  },
+  {
+    "id": "106",
+    "nameKo": "초대형구조실험동",
+    "nameEn": "Structural Experiment Laboratory",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 56.73,
+    "y": 41.58
+  },
+  {
+    "id": "107",
+    "nameKo": "풍환경실험관",
+    "nameEn": "Environment Experiment Center",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 58.92,
+    "y": 40.41
+  },
+  {
+    "id": "108",
+    "nameKo": "수리실험동",
+    "nameEn": "Hydraulics Lab",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 61.15,
+    "y": 40.27
+  },
+  {
+    "id": "109",
+    "nameKo": "디자인문화관",
+    "nameEn": "Design Culture Hall",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/221979384718",
+    "urlEn": "",
+    "x": 60.66,
+    "y": 44.44
+  },
+  {
+    "id": "110",
+    "nameKo": "디자인교육관",
+    "nameEn": "Design Education Hall",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/221979390315",
+    "urlEn": "",
+    "x": 64.26,
+    "y": 45.86
+  },
+  {
+    "id": "111",
+    "nameKo": "디자인연구관",
+    "nameEn": "Design Research Hall",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/221979390264",
+    "urlEn": "",
+    "x": 57.05,
+    "y": 46.68
+  },
+  {
+    "id": "112",
+    "nameKo": "스마트건축관",
+    "nameEn": "Smart Architecture Building",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 59.95,
+    "y": 39.01
+  },
+  {
+    "id": "201",
+    "nameKo": "경상관",
+    "nameEn": "Business and Economics Hall",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/221979346320",
+    "urlEn": "",
+    "x": 18.95,
+    "y": 54.48
+  },
+  {
+    "id": "202",
+    "nameKo": "솔성관",
+    "nameEn": "Solseonggwan",
+    "aliasesKo": [
+      "글로벌문화통상관"
+    ],
+    "aliasesEn": [
+      "Global Culture and Commerce Building"
+    ],
+    "urlKo": "https://blog.naver.com/hyerica4473/224222414158",
+    "urlEn": "",
+    "x": 26.53,
+    "y": 54.48
+  },
+  {
+    "id": "203",
+    "nameKo": "사회교육관",
+    "nameEn": "Education Building & ROTC Building",
+    "aliasesKo": [
+      "학군단"
+    ],
+    "aliasesEn": [
+      "Education Building",
+      "ROTC Building"
+    ],
+    "urlKo": "https://blog.naver.com/hyerica4473/223112595570",
+    "urlEn": "",
+    "x": 27.43,
+    "y": 62.01
+  },
+  {
+    "id": "204",
+    "nameKo": "일신재",
+    "nameEn": "Ilsinjae",
+    "aliasesKo": [
+      "언론정보관"
+    ],
+    "aliasesEn": [
+      "Communication and Social Sciences Hall"
+    ],
+    "urlKo": "https://blog.naver.com/hyerica4473/224198406802",
+    "urlEn": "",
+    "x": 21.25,
+    "y": 64.2
+  },
+  {
+    "id": "205",
+    "nameKo": "제1과학기술관",
+    "nameEn": "Sciences and Technology Building I",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223123297127",
+    "urlEn": "",
+    "x": 27.32,
+    "y": 44.68
+  },
+  {
+    "id": "206",
+    "nameKo": "컨퍼런스홀",
+    "nameEn": "Conference Hall",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223067448279",
+    "urlEn": "",
+    "x": 20.08,
+    "y": 43.89
+  },
+  {
+    "id": "207",
+    "nameKo": "제2과학기술관",
+    "nameEn": "Sciences and Technology Building II",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223099314751",
+    "urlEn": "",
+    "x": 21.96,
+    "y": 39.51
+  },
+  {
+    "id": "208",
+    "nameKo": "한양맞춤의약연구원",
+    "nameEn": "Hanyang Institute for Precision Therapeutics",
+    "aliasesKo": [],
+    "aliasesEn": [
+      "HY-IPT"
+    ],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 26.02,
+    "y": 42.23
+  },
+  {
+    "id": "209",
+    "nameKo": "제1학술관",
+    "nameEn": "Educational Building I",
+    "aliasesKo": [
+      "제1교육관"
+    ],
+    "aliasesEn": [
+      "Education Building I"
+    ],
+    "urlKo": "https://blog.naver.com/hyerica4473/222530122646",
+    "urlEn": "",
+    "x": 30.4,
+    "y": 41.91
+  },
+  {
+    "id": "301",
+    "nameKo": "제1공학관",
+    "nameEn": "Engineering Building I",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223500059046",
+    "urlEn": "",
+    "x": 26.72,
+    "y": 34.07
+  },
+  {
+    "id": "302",
+    "nameKo": "폐수처리장관리동",
+    "nameEn": "Facilities Management Building",
+    "aliasesKo": [
+      "시설관리관"
+    ],
+    "aliasesEn": [
+      "Wastewater Treatment Plant Management Building"
+    ],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 31.84,
+    "y": 32.45
+  },
+  {
+    "id": "303",
+    "nameKo": "제3공학관",
+    "nameEn": "Engineering Building III",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223853348067",
+    "urlEn": "",
+    "x": 31.72,
+    "y": 34.57
+  },
+  {
+    "id": "304",
+    "nameKo": "제4공학관",
+    "nameEn": "Engineering Building IV",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223853371399",
+    "urlEn": "",
+    "x": 35.37,
+    "y": 29.76
+  },
+  {
+    "id": "305",
+    "nameKo": "제5공학관",
+    "nameEn": "Engineering Building V",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/221968763531",
+    "urlEn": "",
+    "x": 30.07,
+    "y": 28.58
+  },
+  {
+    "id": "306",
+    "nameKo": "버스승강장 및 학생휴게실",
+    "nameEn": "Bus Stop and Student Lounge",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 16.98,
+    "y": 38.67
+  },
+  {
+    "id": "307",
+    "nameKo": "ERICA컨벤션센터",
+    "nameEn": "ERICA Convention Center",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 16.07,
+    "y": 30.28
+  },
+  {
+    "id": "308",
+    "nameKo": "창업보육센터",
+    "nameEn": "Hanyang Business Incubator",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/222477550067",
+    "urlEn": "",
+    "x": 35.6,
+    "y": 22.28
+  },
+  {
+    "id": "309",
+    "nameKo": "약학관",
+    "nameEn": "Pharmacy Building",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/222065775499",
+    "urlEn": "",
+    "x": 29.42,
+    "y": 25.04
+  },
+  {
+    "id": "310",
+    "nameKo": "동물실험동",
+    "nameEn": "Laboratory Animal Research Center",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 31.92,
+    "y": 24.87
+  },
+  {
+    "id": "311",
+    "nameKo": "학연산클러스터지원센터",
+    "nameEn": "ERICA Support Center",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/221989816476",
+    "urlEn": "",
+    "x": 26.23,
+    "y": 23.11
+  },
+  {
+    "id": "312",
+    "nameKo": "산학연협력관",
+    "nameEn": "Industry-University-Research Cooperation Building",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223097372134",
+    "urlEn": "",
+    "x": 23.15,
+    "y": 24.01
+  },
+  {
+    "id": "313",
+    "nameKo": "포장가속실험동",
+    "nameEn": "Hanyang Accelerated Pavement Testing Building",
+    "aliasesKo": [
+      "초고기능시험동"
+    ],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 20.22,
+    "y": 24.61
+  },
+  {
+    "id": "314",
+    "nameKo": "퓨전전기기술응용연구센터",
+    "nameEn": "Applied Research Center for Electro-Fusion Technology (EFT Center)",
+    "aliasesKo": [],
+    "aliasesEn": [
+      "EFT Center"
+    ],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 22.08,
+    "y": 22.27
+  },
+  {
+    "id": "315",
+    "nameKo": "BMR센터",
+    "nameEn": "BMR Center",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 19.61,
+    "y": 21.99
+  },
+  {
+    "id": "316",
+    "nameKo": "라이온스홀",
+    "nameEn": "Lion's Hall",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/223098368609",
+    "urlEn": "",
+    "x": 20.06,
+    "y": 18.49
+  },
+  {
+    "id": "317",
+    "nameKo": "융합교육관",
+    "nameEn": "Multidisciplinary Lecture Hall",
+    "aliasesKo": [
+      "종합교육관"
+    ],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/224154699165",
+    "urlEn": "",
+    "x": 32.39,
+    "y": 20.8
+  },
+  {
+    "id": "318",
+    "nameKo": "다솜관",
+    "nameEn": "Hanyang University ERICA Church",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 14.61,
+    "y": 29.13
+  },
+  {
+    "id": "401",
+    "nameKo": "학술정보관",
+    "nameEn": "Academic Information Center and Library (Global Career Development Center)",
+    "aliasesKo": [],
+    "aliasesEn": [
+      "Academic Information Center",
+      "Library",
+      "Global Career Development Center"
+    ],
+    "urlKo": "https://blog.naver.com/hyerica4473/223067480585",
+    "urlEn": "",
+    "x": 40.67,
+    "y": 34.18
+  },
+  {
+    "id": "402",
+    "nameKo": "체육관",
+    "nameEn": "Gymnasium",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/222003749695",
+    "urlEn": "",
+    "x": 50.44,
+    "y": 35.25
+  },
+  {
+    "id": "403",
+    "nameKo": "실용음악관",
+    "nameEn": "ERICA Music Hall",
+    "aliasesKo": [
+      "콘서트홀"
+    ],
+    "aliasesEn": [
+      "Concert Hall"
+    ],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 55.27,
+    "y": 35.25
+  },
+  {
+    "id": "404",
+    "nameKo": "대운동장",
+    "nameEn": "Stadium",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 62.79,
+    "y": 28.16
+  },
+  {
+    "id": "405",
+    "nameKo": "테니스장",
+    "nameEn": "Tennis Courts",
+    "aliasesKo": [],
+    "aliasesEn": [],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 50.9,
+    "y": 23.49
+  },
+  {
+    "id": "501",
+    "nameKo": "창의관",
+    "nameEn": "Student Residence Hall I",
+    "aliasesKo": [
+      "창의인재원 1관"
+    ],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/222482376806",
+    "urlEn": "",
+    "x": 50.2,
+    "y": 7.07
+  },
+  {
+    "id": "502",
+    "nameKo": "인재관",
+    "nameEn": "Student Residence Hall II",
+    "aliasesKo": [
+      "창의인재원 2관"
+    ],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/222522154951",
+    "urlEn": "",
+    "x": 53.36,
+    "y": 13.95
+  },
+  {
+    "id": "503",
+    "nameKo": "행복관",
+    "nameEn": "Student Residence Hall III",
+    "aliasesKo": [
+      "창의인재원 3관"
+    ],
+    "aliasesEn": [],
+    "urlKo": "https://blog.naver.com/hyerica4473/222483594808",
+    "urlEn": "",
+    "x": 47.97,
+    "y": 11.84
+  },
+  {
+    "id": "504",
+    "nameKo": "창의인재교육관",
+    "nameEn": "Residential College",
+    "aliasesKo": [
+      "레지던스홀"
+    ],
+    "aliasesEn": [
+      "Residence Hall"
+    ],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 45.97,
+    "y": 13.46
+  }
 ];
+
+const SETTINGS = {
+  version: "V2.1.0 · BILINGUAL MAP",
+  englishUrlFallbackToKorean: true,
+  mapImages: {
+    ko: "assets/erica-map-ko.jpg",
+    en: "assets/erica-map-en.jpg"
+  }
+};
+
+const UI = {
+  ko: {
+    title: "ERICA 캠퍼스 내부구조도 안내",
+    metaDescription: "ERICA 캠퍼스 건물을 검색하고 내부 구조도를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
+    description: "건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>내부 구조도가 연결된 건물은 지도 번호 또는 아래 건물명을 눌러 확인할 수 있습니다.",
+    languageLabel: "언어 선택",
+    searchPlaceholder: "건물 번호·건물명 검색 (예: 101, 본관)",
+    searchAria: "건물 번호 또는 건물명 검색",
+    clearAria: "검색어 지우기",
+    searchButton: "찾기",
+    toolbar: "지도를 확대하면 건물 번호를 더 선명하게 확인할 수 있습니다. 확대 후 마우스·트랙패드로 지도를 이동할 수 있습니다.",
+    zoomAria: "지도 확대 축소",
+    zoomOutAria: "지도 축소",
+    zoomInAria: "지도 확대",
+    resetAria: "지도 배율 100%로 초기화",
+    mapAlt: "한양대학교 ERICA 캠퍼스 항공 지도",
+    hintLinked: "마우스를 올렸을 때 반응하는 건물은 내부 구조도가 연결된 건물입니다.",
+    hintSearch: "검색은 구조도 연결 여부와 관계없이 건물 위치를 표시합니다.",
+    directoryTitle: "건물 목록",
+    directoryDescription: "내부 구조도가 있는 건물은 건물명을 누르면 새 탭에서 열립니다.",
+    legendLinked: "● 내부 구조도 연결",
+    legendPending: "○ 준비중",
+    view: "구조도 보기",
+    pending: "준비중",
+    group: n => `${n}00번대`,
+    openTitle: (id,name) => `${id} ${name} 내부 구조도 보기`,
+    locationAria: (id,name) => `${id} ${name} 위치`,
+    openAria: (id,name) => `${id} ${name} 내부 구조도 열기`,
+    noResult: q => `‘<strong>${q}</strong>’에 해당하는 건물을 찾지 못했습니다.`,
+    oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> 위치를 표시했습니다.` + (linked ? ` 지도 번호 또는 아래 건물명을 누르면 내부 구조도가 열립니다.` : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`),
+    manyResults: (items) => `<strong>${items.length}개</strong> 건물이 검색되었습니다: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
+    footer: "※ 건물명과 한국어·영문 내부 구조도 링크는 BUILDINGS 배열에서 수정할 수 있습니다.",
+    debug: "<strong>DEBUG MODE</strong> · 빨간 원은 지도 번호 클릭 영역입니다."
+  },
+  en: {
+    title: "ERICA Campus Building Floor Plan Guide",
+    metaDescription: "Search ERICA campus buildings and open linked building floor plans from an interactive campus map.",
+    description: "Search by building number or name to locate it on the map.<br>Select a linked building number or name below to view its floor plan.",
+    languageLabel: "Language selection",
+    searchPlaceholder: "Search by number or building name (e.g., 101, Administration Building)",
+    searchAria: "Search by building number or name",
+    clearAria: "Clear search",
+    searchButton: "Search",
+    toolbar: "Zoom in to view building numbers more clearly. After zooming, drag or use a trackpad to move around the map.",
+    zoomAria: "Map zoom controls",
+    zoomOutAria: "Zoom out",
+    zoomInAria: "Zoom in",
+    resetAria: "Reset map zoom to 100%",
+    mapAlt: "Aerial map of Hanyang University ERICA Campus",
+    hintLinked: "Buildings that respond on hover have a linked floor plan.",
+    hintSearch: "Search locates a building whether or not its floor plan is linked.",
+    directoryTitle: "Building Directory",
+    directoryDescription: "Select a building with a linked floor plan to open it in a new tab.",
+    legendLinked: "● Floor plan available",
+    legendPending: "○ Coming soon",
+    view: "View floor plan",
+    pending: "Coming soon",
+    group: n => `${n}00 Series`,
+    openTitle: (id,name) => `View the floor plan for ${id} ${name}`,
+    locationAria: (id,name) => `Location of ${id} ${name}`,
+    openAria: (id,name) => `Open the floor plan for ${id} ${name}`,
+    noResult: q => `No building matched ‘<strong>${q}</strong>’.`,
+    oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> has been highlighted on the map.` + (linked ? ` Select its map marker or directory entry to open the floor plan.` : ` A floor plan link is not available yet.`),
+    manyResults: (items) => `<strong>${items.length}</strong> buildings matched: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
+    footer: "Building names and Korean/English floor plan links can be edited in the BUILDINGS array.",
+    debug: "<strong>DEBUG MODE</strong> · Red circles show the clickable building-number areas."
+  }
+};
 
 const ORIGINAL_MAP_HEIGHT = 1122;
 const CROPPED_MAP_HEIGHT = 930;
 
-const stage = document.getElementById("mapStage");
-const mapScroll = document.getElementById("mapScroll");
+const pageTitle = document.getElementById("pageTitle");
+const pageDescription = document.getElementById("pageDescription");
+const languageSwitch = document.getElementById("languageSwitch");
+const languageButtons = [...document.querySelectorAll(".language-btn")];
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 const clearBtn = document.getElementById("clearBtn");
 const message = document.getElementById("message");
+const mapToolbarLabel = document.getElementById("mapToolbarLabel");
+const zoomControls = document.getElementById("zoomControls");
+const mapScroll = document.getElementById("mapScroll");
+const stage = document.getElementById("mapStage");
+const campusMap = document.getElementById("campusMap");
+const hotspotLayer = document.getElementById("hotspotLayer");
+const hintLinked = document.querySelector("#hintLinked span");
+const hintSearch = document.getElementById("hintSearch");
+const directoryTitle = document.getElementById("directoryTitle");
+const directoryDescription = document.getElementById("directoryDescription");
+const legendLinked = document.getElementById("legendLinked");
+const legendPending = document.getElementById("legendPending");
 const directoryBody = document.getElementById("directoryBody");
-
+const footerText = document.getElementById("footerText");
 const zoomOut = document.getElementById("zoomOut");
 const zoomIn = document.getElementById("zoomIn");
 const zoomReset = document.getElementById("zoomReset");
 const zoomValue = document.getElementById("zoomValue");
 
+const params = new URLSearchParams(location.search);
+
+function readSavedLanguage(){
+  try { return localStorage.getItem("ericaCampusMapLanguage"); }
+  catch { return null; }
+}
+
+function saveLanguage(lang){
+  try { localStorage.setItem("ericaCampusMapLanguage",lang); }
+  catch {}
+}
+
+const savedLang = readSavedLanguage();
+let currentLang = ["ko","en"].includes(params.get("lang"))
+  ? params.get("lang")
+  : (["ko","en"].includes(savedLang) ? savedLang : "ko");
+
 const mapEls = new Map();
 const rowEls = new Map();
-
 let zoom = 1;
 const ZOOM_MIN = 1;
 const ZOOM_MAX = 3;
 const ZOOM_STEP = .25;
 
+function t(){ return UI[currentLang]; }
+function displayName(b){ return currentLang === "en" ? b.nameEn : b.nameKo; }
+
+function buildingUrl(b){
+  if(currentLang === "ko") return (b.urlKo || "").trim();
+  const englishUrl = (b.urlEn || "").trim();
+  if(englishUrl) return englishUrl;
+  return SETTINGS.englishUrlFallbackToKorean ? (b.urlKo || "").trim() : "";
+}
+
+function hasUrl(b){ return buildingUrl(b).length > 0; }
+
 function normalize(s){
   return String(s ?? "")
     .toLowerCase()
-    .replace(/\s+/g,"")
-    .replace(/[·ㆍ\-_/()[\]]/g,"");
-}
-
-function hasUrl(b){
-  return typeof b.url === "string" && b.url.trim().length > 0;
+    .normalize("NFKC")
+    .replace(/[^\p{L}\p{N}]+/gu,"");
 }
 
 function escapeHtml(str){
@@ -687,76 +1364,86 @@ function convertedY(originalPercent){
   return originalPercent * ORIGINAL_MAP_HEIGHT / CROPPED_MAP_HEIGHT;
 }
 
-function openBuilding(b){
-  if(!hasUrl(b)) return;
-  window.open(b.url.trim(), "_blank", "noopener,noreferrer");
+function updateUrlLanguage(){
+  const next = new URL(location.href);
+  if(currentLang === "en") next.searchParams.set("lang","en");
+  else next.searchParams.delete("lang");
+  history.replaceState(null,"",next);
 }
 
-function makeMapHotspot(b){
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "map-hotspot" + (hasUrl(b) ? " is-linked" : "");
-  btn.style.left = b.x + "%";
-  btn.style.top = convertedY(b.y) + "%";
-  btn.dataset.id = b.id;
-  btn.dataset.label = `${b.id} ${b.name}`;
-  btn.setAttribute(
-    "aria-label",
-    `${b.id} ${b.name}` + (hasUrl(b) ? " 내부 구조도 열기" : " 위치")
-  );
-  btn.title = hasUrl(b)
-    ? `${b.id} ${b.name} · 내부 구조도 보기`
-    : `${b.id} ${b.name}`;
+function renderMapHotspots(){
+  hotspotLayer.replaceChildren();
+  mapEls.clear();
 
-  btn.addEventListener("click", () => openBuilding(b));
-  stage.appendChild(btn);
-  mapEls.set(b.id, btn);
+  BUILDINGS.forEach(b => {
+    const name = displayName(b);
+    const linked = hasUrl(b);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "map-hotspot" + (linked ? " is-linked" : "");
+    btn.style.left = b.x + "%";
+    btn.style.top = convertedY(b.y) + "%";
+    btn.dataset.id = b.id;
+    btn.dataset.label = `${b.id} ${name}`;
+    btn.setAttribute("aria-label", linked ? t().openAria(b.id,name) : t().locationAria(b.id,name));
+    btn.title = linked ? t().openTitle(b.id,name) : `${b.id} ${name}`;
+
+    if(linked){
+      btn.addEventListener("click", () => window.open(buildingUrl(b),"_blank","noopener,noreferrer"));
+    }
+
+    hotspotLayer.appendChild(btn);
+    mapEls.set(b.id,btn);
+  });
 }
 
-function groupKey(b){
-  return `${b.id.charAt(0)}00번대`;
-}
+function groupKey(b){ return b.id.charAt(0); }
 
 function renderDirectory(){
+  directoryBody.replaceChildren();
+  rowEls.clear();
   const groups = new Map();
 
   BUILDINGS.forEach(b => {
     const key = groupKey(b);
-    if(!groups.has(key)) groups.set(key, []);
+    if(!groups.has(key)) groups.set(key,[]);
     groups.get(key).push(b);
   });
 
-  groups.forEach((items, label) => {
+  groups.forEach((items,key) => {
     const group = document.createElement("section");
     group.className = "building-group";
 
     const h3 = document.createElement("h3");
-    h3.textContent = label;
+    h3.textContent = t().group(key);
     group.appendChild(h3);
 
     const list = document.createElement("div");
     list.className = "building-list";
 
     items.forEach(b => {
-      const row = document.createElement(hasUrl(b) ? "a" : "div");
-      row.className = "building-row " + (hasUrl(b) ? "is-linked" : "is-unlinked");
+      const linked = hasUrl(b);
+      const name = displayName(b);
+      const row = document.createElement(linked ? "a" : "div");
+      row.className = "building-row " + (linked ? "is-linked" : "is-unlinked");
       row.dataset.id = b.id;
 
-      if(hasUrl(b)){
-        row.href = b.url.trim();
+      if(linked){
+        row.href = buildingUrl(b);
         row.target = "_blank";
         row.rel = "noopener noreferrer";
-        row.title = `${b.id} ${b.name} 내부 구조도 보기`;
+        row.title = t().openTitle(b.id,name);
+        row.setAttribute("aria-label",t().openAria(b.id,name));
       }
 
       row.innerHTML = `
         <span class="building-id">${escapeHtml(b.id)}</span>
-        <span class="building-name">${escapeHtml(b.name)}</span>
-        <span class="building-status">${hasUrl(b) ? "구조도 보기" : "준비중"}</span>
+        <span class="building-name">${escapeHtml(name)}</span>
+        <span class="building-status">${linked ? t().view : t().pending}</span>
       `;
 
       list.appendChild(row);
-      rowEls.set(b.id, row);
+      rowEls.set(b.id,row);
     });
 
     group.appendChild(list);
@@ -764,36 +1451,81 @@ function renderDirectory(){
   });
 }
 
-BUILDINGS.forEach(makeMapHotspot);
-renderDirectory();
+function applyLanguage({preserveSearch=true,updateUrl=true}={}){
+  const ui = t();
+  document.documentElement.lang = currentLang;
+  document.title = ui.title;
+  document.querySelector('meta[name="description"]').setAttribute("content",ui.metaDescription);
 
-function updateZoom(nextZoom, focusX=.5, focusY=.5){
+  pageTitle.textContent = ui.title;
+  pageDescription.innerHTML = ui.description;
+  languageSwitch.setAttribute("aria-label",ui.languageLabel);
+  searchInput.placeholder = ui.searchPlaceholder;
+  searchInput.setAttribute("aria-label",ui.searchAria);
+  clearBtn.setAttribute("aria-label",ui.clearAria);
+  searchBtn.textContent = ui.searchButton;
+  mapToolbarLabel.textContent = ui.toolbar;
+  zoomControls.setAttribute("aria-label",ui.zoomAria);
+  zoomOut.setAttribute("aria-label",ui.zoomOutAria);
+  zoomIn.setAttribute("aria-label",ui.zoomInAria);
+  zoomReset.setAttribute("aria-label",ui.resetAria);
+  campusMap.src = SETTINGS.mapImages[currentLang];
+  campusMap.alt = ui.mapAlt;
+  hintLinked.textContent = ui.hintLinked;
+  hintSearch.textContent = ui.hintSearch;
+  directoryTitle.textContent = ui.directoryTitle;
+  directoryDescription.textContent = ui.directoryDescription;
+  legendLinked.textContent = ui.legendLinked;
+  legendPending.textContent = ui.legendPending;
+  footerText.textContent = ui.footer;
+
+  languageButtons.forEach(btn => {
+    const active = btn.dataset.lang === currentLang;
+    btn.classList.toggle("is-active",active);
+    btn.setAttribute("aria-pressed",String(active));
+  });
+
+  renderMapHotspots();
+  renderDirectory();
+  clearHighlights();
+
+  if(preserveSearch && searchInput.value.trim()) searchBuildings(false);
+  else if(!params.has("debug")) message.textContent = "";
+
+  saveLanguage(currentLang);
+  if(updateUrl) updateUrlLanguage();
+  if(params.get("debug") === "1") message.innerHTML = ui.debug;
+}
+
+languageButtons.forEach(btn => {
+  btn.addEventListener("click",() => {
+    if(btn.dataset.lang === currentLang) return;
+    currentLang = btn.dataset.lang;
+    applyLanguage();
+  });
+});
+
+function updateZoom(nextZoom,focusX=.5,focusY=.5){
   const oldZoom = zoom;
-  zoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, nextZoom));
+  zoom = Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,nextZoom));
 
-  if(zoom === oldZoom){
-    updateZoomControls();
-    return;
-  }
+  if(zoom === oldZoom){ updateZoomControls(); return; }
 
   const oldWidth = stage.scrollWidth;
   const oldHeight = stage.scrollHeight;
   const viewportW = mapScroll.clientWidth;
   const viewportH = mapScroll.clientHeight;
-
   const contentX = (mapScroll.scrollLeft + viewportW * focusX) / Math.max(oldWidth,1);
   const contentY = (mapScroll.scrollTop + viewportH * focusY) / Math.max(oldHeight,1);
-
   const minStageWidth = parseFloat(getComputedStyle(stage).minWidth) || 0;
+
   stage.style.width = `max(${zoom * 100}%, ${zoom * minStageWidth}px)`;
 
   requestAnimationFrame(() => {
     const newWidth = stage.scrollWidth;
     const newHeight = stage.scrollHeight;
-
-    mapScroll.scrollLeft = Math.max(0, contentX * newWidth - viewportW * focusX);
-    mapScroll.scrollTop = Math.max(0, contentY * newHeight - viewportH * focusY);
-
+    mapScroll.scrollLeft = Math.max(0,contentX * newWidth - viewportW * focusX);
+    mapScroll.scrollTop = Math.max(0,contentY * newHeight - viewportH * focusY);
     updateZoomControls();
   });
 }
@@ -802,35 +1534,52 @@ function updateZoomControls(){
   zoomValue.textContent = Math.round(zoom * 100) + "%";
   zoomOut.disabled = zoom <= ZOOM_MIN;
   zoomIn.disabled = zoom >= ZOOM_MAX;
+  mapScroll.classList.toggle("can-pan",zoom > 1);
 }
 
-zoomOut.addEventListener("click", () => updateZoom(zoom - ZOOM_STEP));
-zoomIn.addEventListener("click", () => updateZoom(zoom + ZOOM_STEP));
-zoomReset.addEventListener("click", () => {
+zoomOut.addEventListener("click",() => updateZoom(zoom - ZOOM_STEP));
+zoomIn.addEventListener("click",() => updateZoom(zoom + ZOOM_STEP));
+zoomReset.addEventListener("click",() => {
   zoom = 1;
-  stage.style.width = "100%";
+  stage.style.width = "";
   mapScroll.scrollTo({left:0,top:0,behavior:"smooth"});
   updateZoomControls();
 });
-updateZoomControls();
 
-/* Ctrl/Cmd + 휠로도 확대/축소 */
-mapScroll.addEventListener("wheel", e => {
+mapScroll.addEventListener("wheel",e => {
   if(!(e.ctrlKey || e.metaKey)) return;
   e.preventDefault();
-
   const rect = mapScroll.getBoundingClientRect();
-  const fx = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-  const fy = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+  const fx = Math.min(1,Math.max(0,(e.clientX - rect.left) / rect.width));
+  const fy = Math.min(1,Math.max(0,(e.clientY - rect.top) / rect.height));
+  updateZoom(zoom + (e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP),fx,fy);
+},{passive:false});
 
-  updateZoom(zoom + (e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP), fx, fy);
-}, {passive:false});
+let panState = null;
+mapScroll.addEventListener("pointerdown",e => {
+  if(zoom <= 1 || e.button !== 0 || e.target.closest(".map-hotspot")) return;
+  panState = {x:e.clientX,y:e.clientY,left:mapScroll.scrollLeft,top:mapScroll.scrollTop,id:e.pointerId};
+  mapScroll.classList.add("is-panning");
+  mapScroll.setPointerCapture(e.pointerId);
+});
+mapScroll.addEventListener("pointermove",e => {
+  if(!panState || panState.id !== e.pointerId) return;
+  mapScroll.scrollLeft = panState.left - (e.clientX - panState.x);
+  mapScroll.scrollTop = panState.top - (e.clientY - panState.y);
+});
+function stopPan(e){
+  if(!panState || (e && panState.id !== e.pointerId)) return;
+  panState = null;
+  mapScroll.classList.remove("is-panning");
+}
+mapScroll.addEventListener("pointerup",stopPan);
+mapScroll.addEventListener("pointercancel",stopPan);
 
 function clearHighlights(){
   document.querySelectorAll(".search-hit").forEach(el => el.classList.remove("search-hit"));
 }
 
-function highlightBuilding(b, shouldScroll=true){
+function highlightBuilding(b,shouldScroll=true){
   const mapEl = mapEls.get(b.id);
   const rowEl = rowEls.get(b.id);
 
@@ -847,18 +1596,15 @@ function highlightBuilding(b, shouldScroll=true){
   }
 
   if(shouldScroll && mapEl){
-    const left = mapEl.offsetLeft - mapScroll.clientWidth / 2;
-    const top  = mapEl.offsetTop  - mapScroll.clientHeight / 2;
-
     mapScroll.scrollTo({
-      left:Math.max(0,left),
-      top:Math.max(0,top),
+      left:Math.max(0,mapEl.offsetLeft - mapScroll.clientWidth / 2),
+      top:Math.max(0,mapEl.offsetTop - mapScroll.clientHeight / 2),
       behavior:"smooth"
     });
   }
 }
 
-function searchBuildings(){
+function searchBuildings(shouldScroll=true){
   const raw = searchInput.value.trim();
   clearHighlights();
 
@@ -872,7 +1618,7 @@ function searchBuildings(){
   const q = normalize(raw);
 
   let results = BUILDINGS.filter(b => {
-    const fields = [b.id,b.name,...(b.aliases || [])].map(normalize);
+    const fields = [b.id,b.nameKo,b.nameEn,...(b.aliasesKo || []),...(b.aliasesEn || [])].map(normalize);
     return fields.some(v => v.includes(q));
   });
 
@@ -880,38 +1626,20 @@ function searchBuildings(){
   if(exactId) results = [exactId];
 
   if(results.length === 0){
-    message.innerHTML = `‘<strong>${escapeHtml(raw)}</strong>’에 해당하는 건물을 찾지 못했습니다.`;
+    message.innerHTML = t().noResult(escapeHtml(raw));
     return;
   }
 
-  results.forEach((b,i) => highlightBuilding(b, i === 0));
-
-  if(results.length === 1){
-    const b = results[0];
-    message.innerHTML =
-      `<strong>${b.id} ${escapeHtml(b.name)}</strong> 위치를 표시했습니다.` +
-      (hasUrl(b)
-        ? ` 지도 번호 또는 아래 건물명을 누르면 내부 구조도가 열립니다.`
-        : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`);
-  }else{
-    message.innerHTML =
-      `<strong>${results.length}개</strong> 건물이 검색되었습니다: ` +
-      results.slice(0,8).map(b => `${b.id} ${escapeHtml(b.name)}`).join(", ") +
-      (results.length > 8 ? "…" : "");
-  }
+  results.forEach((b,i) => highlightBuilding(b,shouldScroll && i === 0));
+  message.innerHTML = results.length === 1
+    ? t().oneResult(results[0],hasUrl(results[0]))
+    : t().manyResults(results);
 }
 
-searchBtn.addEventListener("click", searchBuildings);
-
-searchInput.addEventListener("keydown", e => {
-  if(e.key === "Enter") searchBuildings();
-});
-
-searchInput.addEventListener("input", () => {
-  clearBtn.style.display = searchInput.value ? "block" : "none";
-});
-
-clearBtn.addEventListener("click", () => {
+searchBtn.addEventListener("click",() => searchBuildings(true));
+searchInput.addEventListener("keydown",e => { if(e.key === "Enter") searchBuildings(true); });
+searchInput.addEventListener("input",() => { clearBtn.style.display = searchInput.value ? "block" : "none"; });
+clearBtn.addEventListener("click",() => {
   searchInput.value = "";
   clearHighlights();
   message.textContent = "";
@@ -919,12 +1647,9 @@ clearBtn.addEventListener("click", () => {
   searchInput.focus();
 });
 
-/* ?debug=1 : 지도 번호 클릭 영역 확인 */
-const params = new URLSearchParams(location.search);
-if(params.get("debug") === "1"){
-  document.body.classList.add("debug");
-  message.innerHTML = "<strong>DEBUG MODE</strong> · 빨간 원은 지도 번호 클릭 영역입니다.";
-}
+if(params.get("debug") === "1") document.body.classList.add("debug");
+updateZoomControls();
+applyLanguage({preserveSearch:false,updateUrl:false});
 </script>
 </body>
 </html>
