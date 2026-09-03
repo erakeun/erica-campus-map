@@ -353,6 +353,301 @@
       background:var(--blue);
     }
 
+    .map-toolbar-actions{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-shrink:0;
+    }
+
+    .facility-master-btn{
+      height:36px;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:0 12px;
+      border:1px solid #ccd7e3;
+      border-radius:10px;
+      background:#fff;
+      color:#344054;
+      font-weight:850;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    .facility-master-btn:hover,
+    .facility-master-btn.is-open{
+      border-color:#8db9e6;
+      background:#f3f8fe;
+      color:var(--blue-dark);
+    }
+
+    .facility-master-icon{font-size:15px;line-height:1}
+
+    .facility-master-count{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:23px;
+      height:20px;
+      padding:0 6px;
+      border-radius:999px;
+      background:#eef2f6;
+      color:#667085;
+      font-size:10px;
+      font-weight:900;
+    }
+
+    .facility-master-btn.has-active .facility-master-count{
+      background:#d9ebfc;
+      color:var(--blue-dark);
+    }
+
+    .facility-panel{
+      border-bottom:1px solid var(--line);
+      background:#fff;
+      padding:13px 14px 14px;
+    }
+
+    .facility-panel[hidden]{display:none}
+
+    .facility-panel-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:11px;
+    }
+
+    .facility-panel-title{
+      display:block;
+      margin-bottom:3px;
+      font-size:13px;
+      font-weight:900;
+      color:#344054;
+    }
+
+    .facility-panel-help{
+      color:#7a8492;
+      font-size:11px;
+      line-height:1.45;
+    }
+
+    .facility-all-actions{
+      display:flex;
+      gap:6px;
+      flex-shrink:0;
+    }
+
+    .facility-small-btn{
+      height:30px;
+      padding:0 10px;
+      border:1px solid #d4dde7;
+      border-radius:9px;
+      background:#fff;
+      color:#475467;
+      font-size:11px;
+      font-weight:850;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    .facility-small-btn:hover{background:#f6f8fb;color:#1d2939}
+
+    .facility-category-buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+    }
+
+    .facility-category-btn{
+      --cat:#64748b;
+      min-height:36px;
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:7px 10px;
+      border:1px solid #d7e0e9;
+      border-radius:999px;
+      background:#fff;
+      color:#475467;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .facility-category-btn:hover{
+      border-color:var(--cat);
+      box-shadow:0 0 0 3px color-mix(in srgb,var(--cat) 12%,transparent);
+    }
+
+    .facility-category-btn.is-active{
+      border-color:var(--cat);
+      background:color-mix(in srgb,var(--cat) 10%,white);
+      color:#1f2937;
+    }
+
+    .facility-category-icon{
+      width:22px;
+      height:22px;
+      display:inline-grid;
+      place-items:center;
+      border-radius:50%;
+      background:var(--cat);
+      color:#fff;
+      font-size:12px;
+      line-height:1;
+      box-shadow:0 2px 6px rgba(15,23,42,.16);
+    }
+
+    .facility-category-count{
+      color:#8490a2;
+      font-size:10px;
+      font-weight:900;
+    }
+
+    .facility-layer{
+      position:absolute;
+      inset:0;
+      z-index:40;
+      pointer-events:none;
+    }
+
+    .facility-marker{
+      --cat:#64748b;
+      --dx:0px;
+      --dy:-32px;
+      position:absolute;
+      width:34px;
+      height:34px;
+      display:none;
+      place-items:center;
+      border:2px solid rgba(255,255,255,.96);
+      border-radius:50%;
+      padding:0;
+      background:var(--cat);
+      color:#fff;
+      box-shadow:0 5px 15px rgba(15,23,42,.28),0 0 0 1px rgba(15,23,42,.10);
+      transform:translate(-50%,-50%) translate(var(--dx),var(--dy));
+      transform-origin:center;
+      cursor:pointer;
+      pointer-events:auto;
+      z-index:41;
+      transition:filter .14s ease,box-shadow .14s ease;
+    }
+
+    .facility-marker.is-visible{display:grid}
+
+    .facility-marker:hover,
+    .facility-marker.is-selected{
+      filter:brightness(1.08);
+      box-shadow:0 7px 20px rgba(15,23,42,.34),0 0 0 4px rgba(255,255,255,.86),0 0 0 7px color-mix(in srgb,var(--cat) 45%,transparent);
+      z-index:65;
+    }
+
+    .facility-marker-icon{font-size:16px;line-height:1;pointer-events:none}
+
+    .facility-popup{
+      --popup-dx:0px;
+      --popup-dy:-32px;
+      position:absolute;
+      width:min(300px,calc(100vw - 36px));
+      z-index:90;
+      padding:14px 15px 13px;
+      border:1px solid #dbe3ec;
+      border-radius:14px;
+      background:rgba(255,255,255,.98);
+      color:#172033;
+      box-shadow:0 16px 38px rgba(15,23,42,.24);
+      line-height:1.4;
+      transform:translate(-50%,-100%) translate(var(--popup-dx),calc(var(--popup-dy) - 22px));
+      pointer-events:auto;
+    }
+
+    .facility-popup.is-below{
+      transform:translate(-50%,0) translate(var(--popup-dx),calc(var(--popup-dy) + 22px));
+    }
+
+    .facility-popup[hidden]{display:none}
+
+    .facility-popup-close{
+      position:absolute;
+      top:7px;
+      right:7px;
+      width:28px;
+      height:28px;
+      border:0;
+      border-radius:50%;
+      background:transparent;
+      color:#7a8492;
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    .facility-popup-close:hover{background:#f1f4f7;color:#344054}
+
+    .facility-popup-category{
+      display:flex;
+      align-items:center;
+      gap:7px;
+      margin:0 30px 7px 0;
+      color:#667085;
+      font-size:11px;
+      font-weight:850;
+    }
+
+    .facility-popup-icon{
+      --cat:#64748b;
+      width:24px;
+      height:24px;
+      display:inline-grid;
+      place-items:center;
+      border-radius:50%;
+      background:var(--cat);
+      color:#fff;
+      font-size:12px;
+      box-shadow:0 2px 6px rgba(15,23,42,.15);
+    }
+
+    .facility-popup-name{
+      display:block;
+      padding-right:22px;
+      margin-bottom:6px;
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:-.02em;
+      line-height:1.3;
+    }
+
+    html[lang="en"] .facility-popup-name{letter-spacing:-.01em}
+
+    .facility-popup-location{
+      color:#667085;
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .facility-popup-link{
+      display:inline-flex;
+      align-items:center;
+      margin-top:10px;
+      padding:7px 9px;
+      border-radius:8px;
+      background:#eef6fe;
+      color:var(--blue-dark);
+      text-decoration:none;
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .facility-popup-link:hover{background:#dfeefe}
+
+    body.debug .facility-marker{
+      outline:2px dashed rgba(255,255,255,.95);
+      outline-offset:2px;
+    }
+
     .directory{
       margin-top:24px;
       background:#fff;
@@ -500,6 +795,12 @@
       box-shadow:inset 0 0 0 2px rgba(255,0,0,.78);
     }
 
+    @media (max-width:1050px){
+      .map-toolbar-actions{width:100%;justify-content:space-between}
+      .facility-panel-top{flex-direction:column}
+      .facility-all-actions{align-self:flex-end}
+    }
+
     @media (max-width:1200px){
       .directory-body{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
@@ -514,7 +815,12 @@
       .map-stage{min-width:1050px}
       .map-scroll{max-height:72vh}
       .map-toolbar{align-items:flex-start;flex-direction:column}
-      .zoom-controls{width:100%;justify-content:flex-end}
+      .map-toolbar-actions{width:100%;flex-wrap:wrap}
+      .facility-master-btn{margin-right:auto}
+      .zoom-controls{margin-left:auto}
+      .facility-panel{padding:12px}
+      .facility-category-buttons{gap:6px}
+      .facility-category-btn{font-size:11px;padding:6px 9px}
       .directory-body{grid-template-columns:1fr;padding:13px}
       .directory-head{align-items:flex-start;flex-direction:column;padding:18px}
       .title-wrap p{font-size:13px}
@@ -540,7 +846,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.1.0 · BILINGUAL MAP</div>
+        <div class="version">V2.2.0 · FACILITY LAYERS</div>
         <h1 id="pageTitle">ERICA 캠퍼스 내부구조도 안내</h1>
         <p id="pageDescription"></p>
       </div>
@@ -567,18 +873,42 @@
       <div class="map-toolbar">
         <div class="label" id="mapToolbarLabel"></div>
 
-        <div class="zoom-controls" id="zoomControls">
-          <button class="zoom-btn" id="zoomOut" type="button">−</button>
-          <span class="zoom-value" id="zoomValue">100%</span>
-          <button class="zoom-btn" id="zoomIn" type="button">＋</button>
-          <button class="zoom-btn" id="zoomReset" type="button">100%</button>
+        <div class="map-toolbar-actions">
+          <button class="facility-master-btn" id="facilityMasterBtn" type="button" aria-expanded="false">
+            <span class="facility-master-icon" aria-hidden="true">⌖</span>
+            <span id="facilityMasterLabel"></span>
+            <span class="facility-master-count" id="facilityMasterCount">0</span>
+          </button>
+
+          <div class="zoom-controls" id="zoomControls">
+            <button class="zoom-btn" id="zoomOut" type="button">−</button>
+            <span class="zoom-value" id="zoomValue">100%</span>
+            <button class="zoom-btn" id="zoomIn" type="button">＋</button>
+            <button class="zoom-btn" id="zoomReset" type="button">100%</button>
+          </div>
         </div>
+      </div>
+
+      <div class="facility-panel" id="facilityPanel" hidden>
+        <div class="facility-panel-top">
+          <div>
+            <strong class="facility-panel-title" id="facilityPanelTitle"></strong>
+            <div class="facility-panel-help" id="facilityPanelHelp"></div>
+          </div>
+          <div class="facility-all-actions">
+            <button class="facility-small-btn" id="facilityAllOn" type="button"></button>
+            <button class="facility-small-btn" id="facilityAllOff" type="button"></button>
+          </div>
+        </div>
+        <div class="facility-category-buttons" id="facilityCategoryButtons"></div>
       </div>
 
       <div class="map-scroll" id="mapScroll">
         <div class="map-stage" id="mapStage">
           <img id="campusMap" src="assets/erica-map-ko.jpg" width="4096" height="1860" />
           <div class="hotspot-layer" id="hotspotLayer"></div>
+          <div class="facility-layer" id="facilityLayer"></div>
+          <div class="facility-popup" id="facilityPopup" hidden></div>
         </div>
       </div>
 
@@ -605,7 +935,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.1.0 · BILINGUAL MAP</span>
+      <span class="footer-version">V2.2.0 · FACILITY LAYERS</span>
     </footer>
   </main>
 
@@ -1200,8 +1530,73 @@ const BUILDINGS = [
   }
 ];
 
+/* ============================================================
+   CAMPUS FACILITIES
+
+   - category   : admin / convenience / cafe / restaurant / welfare
+   - buildingId : BUILDINGS의 건물번호와 연결
+   - floorKo/En : 층 표기
+   - nameKo/En  : 시설명
+
+   같은 건물에 시설이 여러 개 있어도, 현재 켜진 항목 수에 맞춰
+   지도 위 마커가 자동으로 원형 배치되어 서로 겹치지 않게 표시된다.
+   ============================================================ */
+
+const FACILITY_CATEGORIES = {
+  admin:       { icon:"🏢", color:"#6f42c1", ko:"단과대학 행정팀", en:"College Administration Offices" },
+  convenience: { icon:"🛒", color:"#0f8b8d", ko:"편의점", en:"Convenience Stores" },
+  cafe:        { icon:"☕", color:"#a16207", ko:"카페", en:"Cafes" },
+  restaurant:  { icon:"🍴", color:"#c2410c", ko:"식당", en:"Restaurants" },
+  welfare:     { icon:"★",  color:"#2563eb", ko:"기타 복지시설", en:"Other Amenities" }
+};
+
+const FACILITIES = [
+  // ===== 단과대학 행정팀 =====
+  { id:"admin-engineering", category:"admin", buildingId:"303", floorKo:"2층", floorEn:"2F", nameKo:"공학대학 행정팀", nameEn:"College of Engineering Sciences Administration Office" },
+  { id:"admin-computing", category:"admin", buildingId:"317", floorKo:"6층", floorEn:"6F", nameKo:"소프트웨어융합대학 행정팀", nameEn:"College of Computing Administration Office" },
+  { id:"admin-pharmacy", category:"admin", buildingId:"309", floorKo:"2층", floorEn:"2F", nameKo:"약학대학 행정팀", nameEn:"College of Pharmacy Administration Office" },
+  { id:"admin-advanced", category:"admin", buildingId:"207", floorKo:"1층", floorEn:"1F", nameKo:"첨단융합대학 행정팀", nameEn:"College of Advanced Technology & Convergence Administration Office" },
+  { id:"admin-languages-communication", category:"admin", buildingId:"202", floorKo:"2층", floorEn:"2F", nameKo:"글로벌문화통상대학/커뮤니케이션&컬처대학 행정팀", nameEn:"College of Languages & Cultures / College of Communication Administration Office" },
+  { id:"admin-business", category:"admin", buildingId:"201", floorKo:"4층", floorEn:"4F", nameKo:"경상대학 행정팀", nameEn:"College of Business & Economics Administration Office" },
+  { id:"admin-design", category:"admin", buildingId:"111", floorKo:"3층", floorEn:"3F", nameKo:"디자인대학 행정팀", nameEn:"College of Design Administration Office" },
+  { id:"admin-sport", category:"admin", buildingId:"402", floorKo:"1층", floorEn:"1F", nameKo:"예체능대학 행정팀", nameEn:"College of Sport & Arts Administration Office" },
+  { id:"admin-lions", category:"admin", buildingId:"317", floorKo:"1층", floorEn:"1F", nameKo:"LIONS칼리지 행정팀", nameEn:"LIONS College of Liberal Arts Administration Office" },
+
+  // ===== 편의점 =====
+  { id:"store-welfare-7eleven", category:"convenience", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"세븐일레븐", nameEn:"7-Eleven" },
+  { id:"store-bus-emart24", category:"convenience", buildingId:"306", floorKo:"1층", floorEn:"1F", nameKo:"이마트24", nameEn:"Emart24" },
+  { id:"store-eng3-7eleven", category:"convenience", buildingId:"303", floorKo:"지하 1층", floorEn:"B1", nameKo:"세븐일레븐", nameEn:"7-Eleven" },
+  { id:"store-changui-cu", category:"convenience", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"CU", nameEn:"CU" },
+  { id:"store-library-unmanned", category:"convenience", buildingId:"401", floorKo:"2층", floorEn:"2F", nameKo:"무인편의점", nameEn:"Unmanned Convenience Store" },
+
+  // ===== 카페 =====
+  { id:"cafe-business-blueport", category:"cafe", buildingId:"201", floorKo:"1층", floorEn:"1F", nameKo:"카페 블루포트", nameEn:"Cafe Blueport" },
+  { id:"cafe-welfare-ing", category:"cafe", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"카페ING", nameEn:"Cafe ING" },
+  { id:"cafe-welfare-starbucks", category:"cafe", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"스타벅스", nameEn:"Starbucks" },
+  { id:"cafe-welfare-dailybeetle", category:"cafe", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"데일리비틀주스", nameEn:"Daily Beetle Juice" },
+  { id:"cafe-welfare-ripple", category:"cafe", buildingId:"102", floorKo:"1층", floorEn:"1F", nameKo:"리플커피", nameEn:"Ripple Coffee" },
+  { id:"cafe-bus-ogada", category:"cafe", buildingId:"306", floorKo:"1층", floorEn:"1F", nameKo:"카페 오가다", nameEn:"Cafe Ogada" },
+  { id:"cafe-convention-barva", category:"cafe", buildingId:"307", floorKo:"1층", floorEn:"1F", nameKo:"바르바커피", nameEn:"BARVA Coffee" },
+  { id:"cafe-multidisciplinary-thebake", category:"cafe", buildingId:"317", floorKo:"1층", floorEn:"1F", nameKo:"더베이크", nameEn:"The Bake" },
+  { id:"cafe-incubator-hanyangbakery", category:"cafe", buildingId:"308", floorKo:"1층", floorEn:"1F", nameKo:"한양베이커리", nameEn:"Hanyang Bakery" },
+  { id:"cafe-changui-grazie", category:"cafe", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"그라찌에", nameEn:"Grazie" },
+
+  // ===== 식당 =====
+  { id:"food-welfare-staff", category:"restaurant", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"교직원식당", nameEn:"Faculty & Staff Cafeteria" },
+  { id:"food-welfare-student", category:"restaurant", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"학생식당", nameEn:"Student Cafeteria" },
+  { id:"food-welfare-foodcourt", category:"restaurant", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"푸드코트", nameEn:"Food Court" },
+  { id:"food-incubator", category:"restaurant", buildingId:"308", floorKo:"지하 1층", floorEn:"B1", nameKo:"창업보육센터 식당", nameEn:"Business Incubator Cafeteria" },
+  { id:"food-changui-dorm", category:"restaurant", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"기숙사 식당", nameEn:"Residence Hall Cafeteria" },
+
+  // ===== 기타 복지시설 =====
+  { id:"welfare-optical", category:"welfare", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"안경점", nameEn:"Optical Shop" },
+  { id:"welfare-bookstore", category:"welfare", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"대학서적", nameEn:"University Bookstore" },
+  { id:"welfare-computer", category:"welfare", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"컴퓨터 매장", nameEn:"Computer Store" },
+  { id:"welfare-stationery", category:"welfare", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"문구점", nameEn:"Stationery Store" }
+];
+
 const SETTINGS = {
-  version: "V2.1.0 · BILINGUAL MAP",
+  version: "V2.2.0 · FACILITY LAYERS",
   englishUrlFallbackToKorean: true,
   mapImages: {
     ko: "assets/erica-map-ko.jpg",
@@ -1220,6 +1615,15 @@ const UI = {
     clearAria: "검색어 지우기",
     searchButton: "찾기",
     toolbar: "지도를 확대하면 건물 번호를 더 선명하게 확인할 수 있습니다. 확대 후 마우스·트랙패드로 지도를 이동할 수 있습니다.",
+    facilityMaster: "시설 보기",
+    facilityPanelTitle: "행정팀·편의시설 지도 표시",
+    facilityPanelHelp: "원하는 항목을 개별로 켜거나 끌 수 있습니다. 같은 건물의 여러 시설은 자동으로 펼쳐서 표시됩니다.",
+    facilityAllOn: "전체 켜기",
+    facilityAllOff: "전체 끄기",
+    facilityCategoryAria: name => `${name} 표시 전환`,
+    facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
+    facilityFloorPlan: "건물 내부 구조도 보기 →",
+    facilityCloseAria: "시설 정보 닫기",
     zoomAria: "지도 확대 축소",
     zoomOutAria: "지도 축소",
     zoomInAria: "지도 확대",
@@ -1240,7 +1644,7 @@ const UI = {
     noResult: q => `‘<strong>${q}</strong>’에 해당하는 건물을 찾지 못했습니다.`,
     oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> 위치를 표시했습니다.` + (linked ? ` 지도 번호 또는 아래 건물명을 누르면 내부 구조도가 열립니다.` : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`),
     manyResults: (items) => `<strong>${items.length}개</strong> 건물이 검색되었습니다: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
-    footer: "※ 건물명과 한국어·영문 내부 구조도 링크는 BUILDINGS 배열에서 수정할 수 있습니다.",
+    footer: "※ 건물명·구조도 링크는 BUILDINGS, 행정팀·편의시설은 FACILITIES 배열에서 수정할 수 있습니다.",
     debug: "<strong>DEBUG MODE</strong> · 빨간 원은 지도 번호 클릭 영역입니다."
   },
   en: {
@@ -1253,6 +1657,15 @@ const UI = {
     clearAria: "Clear search",
     searchButton: "Search",
     toolbar: "Zoom in to view building numbers more clearly. After zooming, drag or use a trackpad to move around the map.",
+    facilityMaster: "Facilities",
+    facilityPanelTitle: "Campus offices & amenities",
+    facilityPanelHelp: "Turn categories on or off individually. Multiple facilities in the same building are automatically spread around the building marker.",
+    facilityAllOn: "Show all",
+    facilityAllOff: "Hide all",
+    facilityCategoryAria: name => `Toggle ${name}`,
+    facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
+    facilityFloorPlan: "View building floor plan →",
+    facilityCloseAria: "Close facility details",
     zoomAria: "Map zoom controls",
     zoomOutAria: "Zoom out",
     zoomInAria: "Zoom in",
@@ -1273,7 +1686,7 @@ const UI = {
     noResult: q => `No building matched ‘<strong>${q}</strong>’.`,
     oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> has been highlighted on the map.` + (linked ? ` Select its map marker or directory entry to open the floor plan.` : ` A floor plan link is not available yet.`),
     manyResults: (items) => `<strong>${items.length}</strong> buildings matched: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
-    footer: "Building names and Korean/English floor plan links can be edited in the BUILDINGS array.",
+    footer: "Edit building names and floor-plan links in BUILDINGS, and campus offices/amenities in FACILITIES.",
     debug: "<strong>DEBUG MODE</strong> · Red circles show the clickable building-number areas."
   }
 };
@@ -1307,6 +1720,17 @@ const zoomOut = document.getElementById("zoomOut");
 const zoomIn = document.getElementById("zoomIn");
 const zoomReset = document.getElementById("zoomReset");
 const zoomValue = document.getElementById("zoomValue");
+const facilityMasterBtn = document.getElementById("facilityMasterBtn");
+const facilityMasterLabel = document.getElementById("facilityMasterLabel");
+const facilityMasterCount = document.getElementById("facilityMasterCount");
+const facilityPanel = document.getElementById("facilityPanel");
+const facilityPanelTitle = document.getElementById("facilityPanelTitle");
+const facilityPanelHelp = document.getElementById("facilityPanelHelp");
+const facilityAllOn = document.getElementById("facilityAllOn");
+const facilityAllOff = document.getElementById("facilityAllOff");
+const facilityCategoryButtons = document.getElementById("facilityCategoryButtons");
+const facilityLayer = document.getElementById("facilityLayer");
+const facilityPopup = document.getElementById("facilityPopup");
 
 const params = new URLSearchParams(location.search);
 
@@ -1331,9 +1755,20 @@ let zoom = 1;
 const ZOOM_MIN = 1;
 const ZOOM_MAX = 3;
 const ZOOM_STEP = .25;
+const activeFacilityCategories = new Set();
+const facilityMarkerEls = new Map();
+let facilityPanelOpen = false;
+let selectedFacilityId = null;
 
 function t(){ return UI[currentLang]; }
 function displayName(b){ return currentLang === "en" ? b.nameEn : b.nameKo; }
+function facilityDisplayName(f){ return currentLang === "en" ? f.nameEn : f.nameKo; }
+function facilityFloor(f){ return currentLang === "en" ? f.floorEn : f.floorKo; }
+function facilityCategoryLabel(key){
+  const c = FACILITY_CATEGORIES[key];
+  return currentLang === "en" ? c.en : c.ko;
+}
+function buildingById(id){ return BUILDINGS.find(b => b.id === id); }
 
 function buildingUrl(b){
   if(currentLang === "ko") return (b.urlKo || "").trim();
@@ -1396,6 +1831,193 @@ function renderMapHotspots(){
     mapEls.set(b.id,btn);
   });
 }
+
+
+function renderFacilityControls(){
+  facilityMasterLabel.textContent = t().facilityMaster;
+  facilityPanelTitle.textContent = t().facilityPanelTitle;
+  facilityPanelHelp.textContent = t().facilityPanelHelp;
+  facilityAllOn.textContent = t().facilityAllOn;
+  facilityAllOff.textContent = t().facilityAllOff;
+  facilityMasterBtn.setAttribute("aria-expanded",String(facilityPanelOpen));
+  facilityMasterBtn.classList.toggle("is-open",facilityPanelOpen);
+
+  facilityCategoryButtons.replaceChildren();
+  Object.entries(FACILITY_CATEGORIES).forEach(([key,c]) => {
+    const count = FACILITIES.filter(f => f.category === key).length;
+    const label = facilityCategoryLabel(key);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "facility-category-btn" + (activeFacilityCategories.has(key) ? " is-active" : "");
+    btn.dataset.category = key;
+    btn.style.setProperty("--cat",c.color);
+    btn.setAttribute("aria-pressed",String(activeFacilityCategories.has(key)));
+    btn.setAttribute("aria-label",t().facilityCategoryAria(label));
+    btn.innerHTML = `<span class="facility-category-icon" aria-hidden="true">${c.icon}</span><span>${escapeHtml(label)}</span><span class="facility-category-count">${count}</span>`;
+    btn.addEventListener("click",() => toggleFacilityCategory(key));
+    facilityCategoryButtons.appendChild(btn);
+  });
+  updateFacilityMasterCount();
+}
+
+function updateFacilityMasterCount(){
+  const active = activeFacilityCategories.size;
+  facilityMasterCount.textContent = String(active);
+  facilityMasterBtn.classList.toggle("has-active",active > 0);
+}
+
+function toggleFacilityPanel(force){
+  facilityPanelOpen = typeof force === "boolean" ? force : !facilityPanelOpen;
+  facilityPanel.hidden = !facilityPanelOpen;
+  facilityMasterBtn.setAttribute("aria-expanded",String(facilityPanelOpen));
+  facilityMasterBtn.classList.toggle("is-open",facilityPanelOpen);
+}
+
+function toggleFacilityCategory(key){
+  if(activeFacilityCategories.has(key)) activeFacilityCategories.delete(key);
+  else activeFacilityCategories.add(key);
+  closeFacilityPopup();
+  renderFacilityControls();
+  updateFacilityVisibility();
+}
+
+function setAllFacilityCategories(on){
+  activeFacilityCategories.clear();
+  if(on) Object.keys(FACILITY_CATEGORIES).forEach(key => activeFacilityCategories.add(key));
+  closeFacilityPopup();
+  renderFacilityControls();
+  updateFacilityVisibility();
+}
+
+function facilityOffsets(count,index){
+  if(count <= 1) return [0,-34];
+  if(count <= 5){
+    const radius = 39;
+    const angle = -Math.PI / 2 + index * (Math.PI * 2 / count);
+    return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
+  }
+  if(count <= 9){
+    const radius = 50;
+    const angle = -Math.PI / 2 + index * (Math.PI * 2 / count);
+    return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
+  }
+  const outerCount = Math.ceil(count * .64);
+  if(index < outerCount){
+    const radius = 58;
+    const angle = -Math.PI / 2 + index * (Math.PI * 2 / outerCount);
+    return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
+  }
+  const innerIndex = index - outerCount;
+  const innerCount = count - outerCount;
+  const radius = 34;
+  const angle = -Math.PI / 2 + innerIndex * (Math.PI * 2 / innerCount) + .35;
+  return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
+}
+
+function renderFacilityMarkers(){
+  facilityLayer.replaceChildren();
+  facilityMarkerEls.clear();
+  selectedFacilityId = null;
+  facilityPopup.hidden = true;
+
+  FACILITIES.forEach(f => {
+    const b = buildingById(f.buildingId);
+    if(!b) return;
+    const c = FACILITY_CATEGORIES[f.category];
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "facility-marker";
+    btn.dataset.facilityId = f.id;
+    btn.dataset.category = f.category;
+    btn.style.left = b.x + "%";
+    btn.style.top = convertedY(b.y) + "%";
+    btn.style.setProperty("--cat",c.color);
+    btn.innerHTML = `<span class="facility-marker-icon" aria-hidden="true">${c.icon}</span>`;
+    const label = `${facilityDisplayName(f)} · ${displayName(b)} ${facilityFloor(f)}`;
+    btn.title = label;
+    btn.setAttribute("aria-label",label);
+    btn.addEventListener("click",e => {
+      e.stopPropagation();
+      openFacilityPopup(f,btn);
+    });
+    facilityLayer.appendChild(btn);
+    facilityMarkerEls.set(f.id,btn);
+  });
+
+  updateFacilityVisibility();
+}
+
+function updateFacilityVisibility(){
+  const visible = FACILITIES.filter(f => activeFacilityCategories.has(f.category));
+  const groups = new Map();
+  visible.forEach(f => {
+    if(!groups.has(f.buildingId)) groups.set(f.buildingId,[]);
+    groups.get(f.buildingId).push(f);
+  });
+
+  FACILITIES.forEach(f => {
+    const el = facilityMarkerEls.get(f.id);
+    if(!el) return;
+    const show = activeFacilityCategories.has(f.category);
+    el.classList.toggle("is-visible",show);
+    if(!show) el.classList.remove("is-selected");
+  });
+
+  groups.forEach(items => {
+    items.forEach((f,index) => {
+      const [dx,dy] = facilityOffsets(items.length,index);
+      const el = facilityMarkerEls.get(f.id);
+      if(!el) return;
+      el.style.setProperty("--dx",dx + "px");
+      el.style.setProperty("--dy",dy + "px");
+      el.dataset.dx = String(dx);
+      el.dataset.dy = String(dy);
+    });
+  });
+
+  updateFacilityMasterCount();
+}
+
+function openFacilityPopup(f,marker){
+  const b = buildingById(f.buildingId);
+  if(!b) return;
+  selectedFacilityId = f.id;
+  facilityMarkerEls.forEach(el => el.classList.toggle("is-selected",el === marker));
+
+  const c = FACILITY_CATEGORIES[f.category];
+  const linked = hasUrl(b);
+  const linkHtml = linked
+    ? `<a class="facility-popup-link" href="${escapeHtml(buildingUrl(b))}" target="_blank" rel="noopener noreferrer">${escapeHtml(t().facilityFloorPlan)}</a>`
+    : "";
+
+  facilityPopup.innerHTML = `
+    <button class="facility-popup-close" type="button" aria-label="${escapeHtml(t().facilityCloseAria)}">×</button>
+    <div class="facility-popup-category"><span class="facility-popup-icon" style="--cat:${c.color}" aria-hidden="true">${c.icon}</span><span>${escapeHtml(facilityCategoryLabel(f.category))}</span></div>
+    <strong class="facility-popup-name">${escapeHtml(facilityDisplayName(f))}</strong>
+    <div class="facility-popup-location">${escapeHtml(t().facilityPopupLocation(displayName(b),facilityFloor(f)))}</div>
+    ${linkHtml}
+  `;
+  facilityPopup.style.left = b.x + "%";
+  facilityPopup.style.top = convertedY(b.y) + "%";
+  facilityPopup.style.setProperty("--popup-dx",(marker.dataset.dx || "0") + "px");
+  facilityPopup.style.setProperty("--popup-dy",(marker.dataset.dy || "-34") + "px");
+  facilityPopup.classList.toggle("is-below",convertedY(b.y) < 24);
+  facilityPopup.hidden = false;
+  facilityPopup.querySelector(".facility-popup-close").addEventListener("click",e => {
+    e.stopPropagation();
+    closeFacilityPopup();
+  });
+}
+
+function closeFacilityPopup(){
+  selectedFacilityId = null;
+  facilityPopup.hidden = true;
+  facilityMarkerEls.forEach(el => el.classList.remove("is-selected"));
+}
+
+facilityMasterBtn.addEventListener("click",() => toggleFacilityPanel());
+facilityAllOn.addEventListener("click",() => setAllFacilityCategories(true));
+facilityAllOff.addEventListener("click",() => setAllFacilityCategories(false));
 
 function groupKey(b){ return b.id.charAt(0); }
 
@@ -1478,6 +2100,8 @@ function applyLanguage({preserveSearch=true,updateUrl=true}={}){
   legendLinked.textContent = ui.legendLinked;
   legendPending.textContent = ui.legendPending;
   footerText.textContent = ui.footer;
+  renderFacilityControls();
+  renderFacilityMarkers();
 
   languageButtons.forEach(btn => {
     const active = btn.dataset.lang === currentLang;
@@ -1557,7 +2181,7 @@ mapScroll.addEventListener("wheel",e => {
 
 let panState = null;
 mapScroll.addEventListener("pointerdown",e => {
-  if(zoom <= 1 || e.button !== 0 || e.target.closest(".map-hotspot")) return;
+  if(zoom <= 1 || e.button !== 0 || e.target.closest(".map-hotspot,.facility-marker,.facility-popup")) return;
   panState = {x:e.clientX,y:e.clientY,left:mapScroll.scrollLeft,top:mapScroll.scrollTop,id:e.pointerId};
   mapScroll.classList.add("is-panning");
   mapScroll.setPointerCapture(e.pointerId);
@@ -1574,6 +2198,10 @@ function stopPan(e){
 }
 mapScroll.addEventListener("pointerup",stopPan);
 mapScroll.addEventListener("pointercancel",stopPan);
+mapScroll.addEventListener("click",e => {
+  if(e.target.closest(".facility-marker,.facility-popup,.map-hotspot")) return;
+  closeFacilityPopup();
+});
 
 function clearHighlights(){
   document.querySelectorAll(".search-hit").forEach(el => el.classList.remove("search-hit"));
