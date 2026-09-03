@@ -546,6 +546,28 @@
       z-index:65;
     }
 
+
+    .facility-marker.search-hit{
+      display:grid;
+      z-index:72;
+      animation:facilitySearchPulse .58s ease-in-out 6 alternate;
+    }
+
+    .facility-marker.search-hit::after{
+      content:"";
+      position:absolute;
+      inset:-8px;
+      border:4px solid #ff2d55;
+      border-radius:16px;
+      box-shadow:0 0 0 6px rgba(255,255,255,.92),0 0 26px rgba(255,45,85,.88);
+      pointer-events:none;
+    }
+
+    @keyframes facilitySearchPulse{
+      from{filter:brightness(.90)}
+      to{filter:brightness(1.15)}
+    }
+
     .facility-marker-icon{font-size:16px;line-height:1;pointer-events:none}
 
     /* 브랜드가 있는 편의점/카페는 작은 로고·워드마크 카드로 표시 */
@@ -931,7 +953,8 @@
 
     @media (prefers-reduced-motion:reduce){
       *{scroll-behavior:auto!important}
-      .map-hotspot.search-hit::before,.building-row.search-hit{animation:none}
+      .map-hotspot.search-hit::before,.building-row.search-hit,
+      .facility-marker.search-hit{animation:none}
     }
   </style>
 </head>
@@ -940,7 +963,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.3.0 · FACILITY & SERVICE LAYERS</div>
+        <div class="version">V2.3.1 · SMART FACILITY SEARCH</div>
         <h1 id="pageTitle">ERICA 캠퍼스 내부구조도 안내</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1029,7 +1052,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.3.0 · FACILITY & SERVICE LAYERS</span>
+      <span class="footer-version">V2.3.1 · SMART FACILITY SEARCH</span>
     </footer>
   </main>
 
@@ -1637,12 +1660,12 @@ const BUILDINGS = [
    ============================================================ */
 
 const FACILITY_CATEGORIES = {
-  admin:       { icon:"🏢", color:"#6f42c1", ko:"단과대학 행정팀", en:"College Administration Offices" },
-  support:     { icon:"🧭", color:"#0e7490", ko:"학생·행정 지원", en:"Student & Administrative Services" },
-  convenience: { icon:"🛒", color:"#0f8b8d", ko:"편의점", en:"Convenience Stores" },
-  cafe:        { icon:"☕", color:"#a16207", ko:"카페", en:"Cafes" },
-  restaurant:  { icon:"🍴", color:"#c2410c", ko:"식당", en:"Restaurants" },
-  welfare:     { icon:"★",  color:"#2563eb", ko:"기타 복지시설", en:"Other Amenities" }
+  admin:       { icon:"🏢", color:"#6f42c1", ko:"단과대학 행정팀", en:"College Administration Offices", aliasesKo:["행정팀","행정실","단과대학","대학 행정팀"], aliasesEn:["administration","administration office","college office"] },
+  support:     { icon:"🧭", color:"#0e7490", ko:"학생·행정 지원", en:"Student & Administrative Services", aliasesKo:["학생지원","학생 서비스","행정 지원"], aliasesEn:["student services","administrative services"] },
+  convenience: { icon:"🛒", color:"#0f8b8d", ko:"편의점", en:"Convenience Stores", aliasesKo:["편의","매점","무인편의점"], aliasesEn:["convenience","convenience store","store"] },
+  cafe:        { icon:"☕", color:"#a16207", ko:"카페", en:"Cafes", aliasesKo:["커피","커피숍","음료"], aliasesEn:["cafe","cafes","coffee","coffee shop"] },
+  restaurant:  { icon:"🍴", color:"#c2410c", ko:"식당", en:"Restaurants", aliasesKo:["학생식당","교직원식당","푸드코트","밥","식사"], aliasesEn:["restaurant","cafeteria","food court","dining","meal"] },
+  welfare:     { icon:"★",  color:"#2563eb", ko:"기타 복지시설", en:"Other Amenities", aliasesKo:["복지시설","복지"], aliasesEn:["amenities","welfare"] }
 };
 
 const FACILITIES = [
@@ -1700,7 +1723,7 @@ const FACILITIES = [
 ];
 
 const SETTINGS = {
-  version: "V2.3.0 · FACILITY & SERVICE LAYERS",
+  version: "V2.3.1 · SMART FACILITY SEARCH",
   englishUrlFallbackToKorean: true,
   mapImages: {
     ko: "assets/erica-map-ko.jpg",
@@ -1714,8 +1737,8 @@ const UI = {
     metaDescription: "ERICA 캠퍼스 건물을 검색하고 내부 구조도를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
     description: "건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>내부 구조도가 연결된 건물은 지도 번호 또는 아래 건물명을 눌러 확인할 수 있습니다.",
     languageLabel: "언어 선택",
-    searchPlaceholder: "건물 번호·건물명 검색 (예: 101, 본관)",
-    searchAria: "건물 번호 또는 건물명 검색",
+    searchPlaceholder: "건물·시설·서비스 검색 (예: 101, 학생증, 카페)",
+    searchAria: "건물, 시설 또는 서비스 검색",
     clearAria: "검색어 지우기",
     searchButton: "찾기",
     toolbar: "지도를 확대하면 건물 번호를 더 선명하게 확인할 수 있습니다. 확대 후 마우스·트랙패드로 지도를 이동할 수 있습니다.",
@@ -1745,9 +1768,12 @@ const UI = {
     openTitle: (id,name) => `${id} ${name} 내부 구조도 보기`,
     locationAria: (id,name) => `${id} ${name} 위치`,
     openAria: (id,name) => `${id} ${name} 내부 구조도 열기`,
-    noResult: q => `‘<strong>${q}</strong>’에 해당하는 건물을 찾지 못했습니다.`,
+    noResult: q => `‘<strong>${q}</strong>’에 해당하는 건물·시설·서비스를 찾지 못했습니다.`,
     oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> 위치를 표시했습니다.` + (linked ? ` 지도 번호 또는 아래 건물명을 누르면 내부 구조도가 열립니다.` : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`),
     manyResults: (items) => `<strong>${items.length}개</strong> 건물이 검색되었습니다: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
+    oneFacilityResult: (f,b) => `<strong>${escapeHtml(facilityDisplayName(f))}${facilityDetail(f) ? ` · ${escapeHtml(facilityDetail(f))}` : ""}</strong>을(를) 지도에 표시했습니다. <strong>${escapeHtml(displayName(b))} · ${escapeHtml(facilityFloor(f))}</strong>`,
+    manyFacilityResults: (items) => `<strong>${items.length}개</strong> 시설·서비스가 검색되어 지도에 표시되었습니다: ` + items.slice(0,8).map(f => escapeHtml(facilityDisplayName(f))).join(", ") + (items.length > 8 ? "…" : ""),
+    mixedResults: (buildings,facilities) => `<strong>건물 ${buildings.length}개 · 시설/서비스 ${facilities.length}개</strong>가 검색되어 지도에 표시되었습니다.`,
     footer: "※ 건물명·구조도 링크는 BUILDINGS, 행정팀·학생지원·편의시설은 FACILITIES 배열에서 수정할 수 있습니다.",
     debug: "<strong>DEBUG MODE</strong> · 빨간 원은 지도 번호 클릭 영역입니다."
   },
@@ -1756,8 +1782,8 @@ const UI = {
     metaDescription: "Search ERICA campus buildings and open linked building floor plans from an interactive campus map.",
     description: "Search by building number or name to locate it on the map.<br>Select a linked building number or name below to view its floor plan.",
     languageLabel: "Language selection",
-    searchPlaceholder: "Search by number or building name (e.g., 101, Administration Building)",
-    searchAria: "Search by building number or name",
+    searchPlaceholder: "Search buildings, facilities or services (e.g., 101, Student ID, Cafe)",
+    searchAria: "Search buildings, facilities or services",
     clearAria: "Clear search",
     searchButton: "Search",
     toolbar: "Zoom in to view building numbers more clearly. After zooming, drag or use a trackpad to move around the map.",
@@ -1787,9 +1813,12 @@ const UI = {
     openTitle: (id,name) => `View the floor plan for ${id} ${name}`,
     locationAria: (id,name) => `Location of ${id} ${name}`,
     openAria: (id,name) => `Open the floor plan for ${id} ${name}`,
-    noResult: q => `No building matched ‘<strong>${q}</strong>’.`,
+    noResult: q => `No building, facility or service matched ‘<strong>${q}</strong>’.`,
     oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> has been highlighted on the map.` + (linked ? ` Select its map marker or directory entry to open the floor plan.` : ` A floor plan link is not available yet.`),
     manyResults: (items) => `<strong>${items.length}</strong> buildings matched: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
+    oneFacilityResult: (f,b) => `<strong>${escapeHtml(facilityDisplayName(f))}${facilityDetail(f) ? ` · ${escapeHtml(facilityDetail(f))}` : ""}</strong> has been highlighted. <strong>${escapeHtml(displayName(b))} · ${escapeHtml(facilityFloor(f))}</strong>`,
+    manyFacilityResults: (items) => `<strong>${items.length}</strong> facilities or services matched and are now shown on the map: ` + items.slice(0,8).map(f => escapeHtml(facilityDisplayName(f))).join(", ") + (items.length > 8 ? "…" : ""),
+    mixedResults: (buildings,facilities) => `<strong>${buildings.length} building(s) · ${facilities.length} facility/service result(s)</strong> matched and are now shown on the map.`,
     footer: "Edit building names and floor-plan links in BUILDINGS, and campus offices/student services/amenities in FACILITIES.",
     debug: "<strong>DEBUG MODE</strong> · Red circles show the clickable building-number areas."
   }
@@ -2368,9 +2397,92 @@ function highlightBuilding(b,shouldScroll=true){
   }
 }
 
+function facilityDirectSearchFields(f){
+  return [
+    f.id,
+    f.nameKo,
+    f.nameEn,
+    f.detailKo || "",
+    f.detailEn || "",
+    ...(f.aliasesKo || []),
+    ...(f.aliasesEn || [])
+  ];
+}
+
+function facilityCategorySearchFields(f){
+  const c = FACILITY_CATEGORIES[f.category];
+  return [
+    c?.ko || "",
+    c?.en || "",
+    ...(c?.aliasesKo || []),
+    ...(c?.aliasesEn || [])
+  ];
+}
+
+function directFieldMatches(value,q){
+  const normalized = normalize(value);
+  // 'cafe'가 'cafeteria'까지 잡는 오탐은 막되, Cafe ING 같은 실제 카페명은 검색한다.
+  if(q === "cafe"){
+    const tokens = String(value ?? "")
+      .toLowerCase()
+      .normalize("NFKC")
+      .split(/[^\p{L}\p{N}]+/gu)
+      .filter(Boolean)
+      .map(normalize);
+    return tokens.includes("cafe");
+  }
+  return normalized.includes(q);
+}
+
+function facilityMatchesQuery(f,q){
+  const directMatch = facilityDirectSearchFields(f).some(value => directFieldMatches(value,q));
+  const categoryMatch = facilityCategorySearchFields(f).some(value => directFieldMatches(value,q));
+  return directMatch || categoryMatch;
+}
+
+function activateFacilitySearchResults(facilities){
+  if(!facilities.length) return;
+
+  facilities.forEach(f => activeFacilityCategories.add(f.category));
+  closeFacilityPopup();
+  renderFacilityControls();
+  updateFacilityVisibility();
+
+  facilities.forEach(f => {
+    const marker = facilityMarkerEls.get(f.id);
+    if(!marker) return;
+    marker.classList.remove("search-hit");
+    void marker.offsetWidth;
+    marker.classList.add("search-hit");
+  });
+}
+
+function focusFacilityResult(f,shouldScroll=true,openPopup=false){
+  const b = buildingById(f.buildingId);
+  const marker = facilityMarkerEls.get(f.id);
+  if(!b || !marker) return;
+
+  highlightBuilding(b,false);
+
+  if(shouldScroll){
+    const dx = Number(marker.dataset.dx || 0);
+    const dy = Number(marker.dataset.dy || 0);
+    mapScroll.scrollTo({
+      left:Math.max(0,marker.offsetLeft + dx - mapScroll.clientWidth / 2),
+      top:Math.max(0,marker.offsetTop + dy - mapScroll.clientHeight / 2),
+      behavior:"smooth"
+    });
+  }
+
+  if(openPopup){
+    setTimeout(() => openFacilityPopup(f,marker),260);
+  }
+}
+
 function searchBuildings(shouldScroll=true){
   const raw = searchInput.value.trim();
   clearHighlights();
+  closeFacilityPopup();
 
   if(!raw){
     message.textContent = "";
@@ -2381,23 +2493,45 @@ function searchBuildings(shouldScroll=true){
   clearBtn.style.display = "block";
   const q = normalize(raw);
 
-  let results = BUILDINGS.filter(b => {
+  let buildingResults = BUILDINGS.filter(b => {
     const fields = [b.id,b.nameKo,b.nameEn,...(b.aliasesKo || []),...(b.aliasesEn || [])].map(normalize);
     return fields.some(v => v.includes(q));
   });
 
   const exactId = BUILDINGS.find(b => normalize(b.id) === q);
-  if(exactId) results = [exactId];
+  if(exactId) buildingResults = [exactId];
 
-  if(results.length === 0){
+  const facilityResults = exactId ? [] : FACILITIES.filter(f => facilityMatchesQuery(f,q));
+
+  if(buildingResults.length === 0 && facilityResults.length === 0){
     message.innerHTML = t().noResult(escapeHtml(raw));
     return;
   }
 
-  results.forEach((b,i) => highlightBuilding(b,shouldScroll && i === 0));
-  message.innerHTML = results.length === 1
-    ? t().oneResult(results[0],hasUrl(results[0]))
-    : t().manyResults(results);
+  buildingResults.forEach((b,i) => highlightBuilding(b,shouldScroll && i === 0 && facilityResults.length === 0));
+
+  if(facilityResults.length){
+    activateFacilitySearchResults(facilityResults);
+    facilityResults.forEach(f => {
+      const b = buildingById(f.buildingId);
+      if(b) highlightBuilding(b,false);
+    });
+    focusFacilityResult(facilityResults[0],shouldScroll,facilityResults.length === 1);
+  }
+
+  if(buildingResults.length && facilityResults.length){
+    message.innerHTML = t().mixedResults(buildingResults,facilityResults);
+  }else if(facilityResults.length === 1){
+    const f = facilityResults[0];
+    const b = buildingById(f.buildingId);
+    message.innerHTML = b ? t().oneFacilityResult(f,b) : t().manyFacilityResults(facilityResults);
+  }else if(facilityResults.length > 1){
+    message.innerHTML = t().manyFacilityResults(facilityResults);
+  }else{
+    message.innerHTML = buildingResults.length === 1
+      ? t().oneResult(buildingResults[0],hasUrl(buildingResults[0]))
+      : t().manyResults(buildingResults);
+  }
 }
 
 searchBtn.addEventListener("click",() => searchBuildings(true));
@@ -2406,6 +2540,7 @@ searchInput.addEventListener("input",() => { clearBtn.style.display = searchInpu
 clearBtn.addEventListener("click",() => {
   searchInput.value = "";
   clearHighlights();
+  closeFacilityPopup();
   message.textContent = "";
   clearBtn.style.display = "none";
   searchInput.focus();
