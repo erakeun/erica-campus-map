@@ -548,6 +548,89 @@
 
     .facility-marker-icon{font-size:16px;line-height:1;pointer-events:none}
 
+    /* 브랜드가 있는 편의점/카페는 작은 로고·워드마크 카드로 표시 */
+    .facility-marker.has-brand{
+      width:54px;
+      height:40px;
+      border-radius:12px;
+      background:#fff;
+      padding:3px 5px;
+      overflow:hidden;
+    }
+
+    .facility-brand-shell{
+      --brand-bg:#fff;
+      --brand-fg:#172033;
+      width:100%;
+      height:100%;
+      min-width:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:8px;
+      background:var(--brand-bg);
+      color:var(--brand-fg);
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .facility-brand-logo{
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      object-position:center;
+      pointer-events:none;
+    }
+
+    .facility-brand-fallback{
+      display:none;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      height:100%;
+      padding:2px 3px;
+      text-align:center;
+      font-size:8px;
+      font-weight:950;
+      line-height:1.02;
+      letter-spacing:-.025em;
+      white-space:pre-line;
+      word-break:keep-all;
+      pointer-events:none;
+    }
+
+    .facility-marker.brand-failed .facility-brand-logo{display:none}
+    .facility-marker.brand-failed .facility-brand-fallback{display:flex}
+
+    .facility-brand-wordmark{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      height:100%;
+      padding:2px 3px;
+      text-align:center;
+      font-size:8px;
+      font-weight:950;
+      line-height:1.02;
+      letter-spacing:-.035em;
+      white-space:pre-line;
+      word-break:keep-all;
+      pointer-events:none;
+    }
+
+    .facility-brand-shell.brand-bluepot{--brand-bg:#f3f7ff;--brand-fg:#24549a}
+    .facility-brand-shell.brand-ing{--brand-bg:#fff;--brand-fg:#d83b33}
+    .facility-brand-shell.brand-dailybeetle{--brand-bg:#f2fbef;--brand-fg:#3d6f38}
+    .facility-brand-shell.brand-ripple{--brand-bg:#f8f3ec;--brand-fg:#54473d}
+    .facility-brand-shell.brand-ogada{--brand-bg:#fbf6eb;--brand-fg:#80652c}
+    .facility-brand-shell.brand-barva{--brand-bg:#f1f7f3;--brand-fg:#2f5c47}
+    .facility-brand-shell.brand-thebake{--brand-bg:#fff8e8;--brand-fg:#765116}
+    .facility-brand-shell.brand-hanyangbakery{--brand-bg:#eef5fb;--brand-fg:#0b5cab}
+    .facility-brand-shell.brand-grazie{--brand-bg:#fff;--brand-fg:#694a31}
+    .facility-brand-shell.brand-emart24{--brand-bg:#57585b;--brand-fg:#ffb71b}
+
     .facility-popup{
       --popup-dx:0px;
       --popup-dy:-32px;
@@ -626,6 +709,17 @@
       color:#667085;
       font-size:12px;
       line-height:1.5;
+    }
+
+    .facility-popup-detail{
+      margin-top:7px;
+      padding:7px 9px;
+      border-radius:8px;
+      background:#f6f8fb;
+      color:#344054;
+      font-size:11px;
+      font-weight:800;
+      line-height:1.4;
     }
 
     .facility-popup-link{
@@ -846,7 +940,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.2.0 · FACILITY LAYERS</div>
+        <div class="version">V2.3.0 · FACILITY & SERVICE LAYERS</div>
         <h1 id="pageTitle">ERICA 캠퍼스 내부구조도 안내</h1>
         <p id="pageDescription"></p>
       </div>
@@ -874,7 +968,7 @@
         <div class="label" id="mapToolbarLabel"></div>
 
         <div class="map-toolbar-actions">
-          <button class="facility-master-btn" id="facilityMasterBtn" type="button" aria-expanded="false">
+          <button class="facility-master-btn" id="facilityMasterBtn" type="button" aria-expanded="true">
             <span class="facility-master-icon" aria-hidden="true">⌖</span>
             <span id="facilityMasterLabel"></span>
             <span class="facility-master-count" id="facilityMasterCount">0</span>
@@ -889,7 +983,7 @@
         </div>
       </div>
 
-      <div class="facility-panel" id="facilityPanel" hidden>
+      <div class="facility-panel" id="facilityPanel">
         <div class="facility-panel-top">
           <div>
             <strong class="facility-panel-title" id="facilityPanelTitle"></strong>
@@ -935,7 +1029,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.2.0 · FACILITY LAYERS</span>
+      <span class="footer-version">V2.3.0 · FACILITY & SERVICE LAYERS</span>
     </footer>
   </main>
 
@@ -1533,7 +1627,7 @@ const BUILDINGS = [
 /* ============================================================
    CAMPUS FACILITIES
 
-   - category   : admin / convenience / cafe / restaurant / welfare
+   - category   : admin / support / convenience / cafe / restaurant / welfare
    - buildingId : BUILDINGS의 건물번호와 연결
    - floorKo/En : 층 표기
    - nameKo/En  : 시설명
@@ -1544,6 +1638,7 @@ const BUILDINGS = [
 
 const FACILITY_CATEGORIES = {
   admin:       { icon:"🏢", color:"#6f42c1", ko:"단과대학 행정팀", en:"College Administration Offices" },
+  support:     { icon:"🧭", color:"#0e7490", ko:"학생·행정 지원", en:"Student & Administrative Services" },
   convenience: { icon:"🛒", color:"#0f8b8d", ko:"편의점", en:"Convenience Stores" },
   cafe:        { icon:"☕", color:"#a16207", ko:"카페", en:"Cafes" },
   restaurant:  { icon:"🍴", color:"#c2410c", ko:"식당", en:"Restaurants" },
@@ -1563,23 +1658,32 @@ const FACILITIES = [
   { id:"admin-lions", category:"admin", buildingId:"317", floorKo:"1층", floorEn:"1F", nameKo:"LIONS칼리지 행정팀", nameEn:"LIONS College of Liberal Arts Administration Office" },
 
   // ===== 편의점 =====
-  { id:"store-welfare-7eleven", category:"convenience", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"세븐일레븐", nameEn:"7-Eleven" },
-  { id:"store-bus-emart24", category:"convenience", buildingId:"306", floorKo:"1층", floorEn:"1F", nameKo:"이마트24", nameEn:"Emart24" },
-  { id:"store-eng3-7eleven", category:"convenience", buildingId:"303", floorKo:"지하 1층", floorEn:"B1", nameKo:"세븐일레븐", nameEn:"7-Eleven" },
-  { id:"store-changui-cu", category:"convenience", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"CU", nameEn:"CU" },
+  { id:"store-welfare-7eleven", category:"convenience", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"세븐일레븐", nameEn:"7-Eleven", brandLogo:"https://images.contentstack.io/v3/assets/blt79dc99fad342cc45/bltaea3ad03c180ee64/633f08d845693810d212c437/7_Eleven_Horizontal_2022_RGB_thumb_1639377127_8824.png", brandText:"7-ELEVEN", brandBg:"#ffffff", brandFg:"#087b55" },
+  { id:"store-bus-emart24", category:"convenience", buildingId:"306", floorKo:"1층", floorEn:"1F", nameKo:"이마트24", nameEn:"emart24", brandLogo:"https://emart24.co.kr/assets/assets/imgs/brandResourceCenter/brandColor_img_02.png", brandText:"emart24", brandClass:"brand-emart24", brandBg:"#57585b", brandFg:"#ffb71b", brandCrop:"emart24" },
+  { id:"store-eng3-7eleven", category:"convenience", buildingId:"303", floorKo:"지하 1층", floorEn:"B1", nameKo:"세븐일레븐", nameEn:"7-Eleven", brandLogo:"https://images.contentstack.io/v3/assets/blt79dc99fad342cc45/bltaea3ad03c180ee64/633f08d845693810d212c437/7_Eleven_Horizontal_2022_RGB_thumb_1639377127_8824.png", brandText:"7-ELEVEN", brandBg:"#ffffff", brandFg:"#087b55" },
+  { id:"store-changui-cu", category:"convenience", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"CU", nameEn:"CU", brandLogo:"https://upload.wikimedia.org/wikipedia/commons/1/1a/CU_BI_%282017%29.svg", brandText:"CU", brandBg:"#ffffff", brandFg:"#5a2c82" },
   { id:"store-library-unmanned", category:"convenience", buildingId:"401", floorKo:"2층", floorEn:"2F", nameKo:"무인편의점", nameEn:"Unmanned Convenience Store" },
 
   // ===== 카페 =====
-  { id:"cafe-business-blueport", category:"cafe", buildingId:"201", floorKo:"1층", floorEn:"1F", nameKo:"카페 블루포트", nameEn:"Cafe Blueport" },
-  { id:"cafe-welfare-ing", category:"cafe", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"카페ING", nameEn:"Cafe ING" },
-  { id:"cafe-welfare-starbucks", category:"cafe", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"스타벅스", nameEn:"Starbucks" },
-  { id:"cafe-welfare-dailybeetle", category:"cafe", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"데일리비틀주스", nameEn:"Daily Beetle Juice" },
-  { id:"cafe-welfare-ripple", category:"cafe", buildingId:"102", floorKo:"1층", floorEn:"1F", nameKo:"리플커피", nameEn:"Ripple Coffee" },
-  { id:"cafe-bus-ogada", category:"cafe", buildingId:"306", floorKo:"1층", floorEn:"1F", nameKo:"카페 오가다", nameEn:"Cafe Ogada" },
-  { id:"cafe-convention-barva", category:"cafe", buildingId:"307", floorKo:"1층", floorEn:"1F", nameKo:"바르바커피", nameEn:"BARVA Coffee" },
-  { id:"cafe-multidisciplinary-thebake", category:"cafe", buildingId:"317", floorKo:"1층", floorEn:"1F", nameKo:"더베이크", nameEn:"The Bake" },
-  { id:"cafe-incubator-hanyangbakery", category:"cafe", buildingId:"308", floorKo:"1층", floorEn:"1F", nameKo:"한양베이커리", nameEn:"Hanyang Bakery" },
-  { id:"cafe-changui-grazie", category:"cafe", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"그라찌에", nameEn:"Grazie" },
+  { id:"cafe-business-blueport", category:"cafe", buildingId:"201", floorKo:"1층", floorEn:"1F", nameKo:"카페 블루포트", nameEn:"Cafe BluePot", brandText:"BLUEPOT", brandClass:"brand-bluepot" },
+  { id:"cafe-welfare-ing", category:"cafe", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"카페ING", nameEn:"Cafe ING", brandText:"cafe Ing", brandClass:"brand-ing" },
+  { id:"cafe-welfare-starbucks", category:"cafe", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"스타벅스", nameEn:"Starbucks", brandLogo:"https://www.starbucks.co.kr/common/img/common/logo.png", brandText:"STARBUCKS", brandBg:"#ffffff", brandFg:"#00754a" },
+  { id:"cafe-welfare-dailybeetle", category:"cafe", buildingId:"102", floorKo:"2층", floorEn:"2F", nameKo:"데일리비틀주스", nameEn:"Daily Beetle Juice", brandText:"DAILY\nBEETLE", brandClass:"brand-dailybeetle" },
+  { id:"cafe-welfare-ripple", category:"cafe", buildingId:"102", floorKo:"1층", floorEn:"1F", nameKo:"리플커피", nameEn:"Ripple Coffee", brandText:"RIPPLE", brandClass:"brand-ripple" },
+  { id:"cafe-bus-ogada", category:"cafe", buildingId:"306", floorKo:"1층", floorEn:"1F", nameKo:"카페 오가다", nameEn:"Cafe Ogada", brandText:"오가다\nOGADA", brandClass:"brand-ogada" },
+  { id:"cafe-convention-barva", category:"cafe", buildingId:"307", floorKo:"1층", floorEn:"1F", nameKo:"바르바커피", nameEn:"BARVA Coffee", brandText:"BARVA", brandClass:"brand-barva" },
+  { id:"cafe-multidisciplinary-thebake", category:"cafe", buildingId:"317", floorKo:"1층", floorEn:"1F", nameKo:"더베이크", nameEn:"The Bake", brandText:"THE BAKE", brandClass:"brand-thebake" },
+  { id:"cafe-incubator-hanyangbakery", category:"cafe", buildingId:"308", floorKo:"1층", floorEn:"1F", nameKo:"한양베이커리", nameEn:"Hanyang Bakery", brandText:"HANYANG\nBAKERY", brandClass:"brand-hanyangbakery" },
+  { id:"cafe-changui-grazie", category:"cafe", buildingId:"501", floorKo:"1층", floorEn:"1F", nameKo:"그라찌에", nameEn:"Grazie", brandLogo:"https://cdn.imweb.me/upload/S20250729e3587ccf5ab03/1d033f93cfe4a.png", brandText:"Grazie", brandClass:"brand-grazie", brandBg:"#ffffff", brandFg:"#694a31" },
+
+
+  // ===== 학생·행정 지원 =====
+  { id:"support-student-card", category:"support", buildingId:"103", floorKo:"4층", floorEn:"4F", nameKo:"학생지원팀", nameEn:"Student Support Team", detailKo:"학생증 발급", detailEn:"Student ID services" },
+  { id:"support-holmz-photo", category:"support", buildingId:"401", floorKo:"4층", floorEn:"4F", nameKo:"노상일HOLMZ", nameEn:"Roh Sang-il HOLMZ", detailKo:"증명사진 촬영", detailEn:"ID photo service" },
+  { id:"support-health-center", category:"support", buildingId:"103", floorKo:"3층", floorEn:"3F", nameKo:"한양보건센터", nameEn:"Health Care Center" },
+  { id:"support-residence-admin", category:"support", buildingId:"501", floorKo:"2층", floorEn:"2F", nameKo:"창의인재원 행정팀", nameEn:"Residence Hall Administrative Affairs Team" },
+  { id:"support-admissions", category:"support", buildingId:"101", floorKo:"1층", floorEn:"1F", nameKo:"입학팀", nameEn:"ERICA Admissions Team" },
+  { id:"support-career", category:"support", buildingId:"401", floorKo:"1층", floorEn:"1F", nameKo:"커리어개발팀", nameEn:"Career Development Team" },
 
   // ===== 식당 =====
   { id:"food-welfare-staff", category:"restaurant", buildingId:"102", floorKo:"3층", floorEn:"3F", nameKo:"교직원식당", nameEn:"Faculty & Staff Cafeteria" },
@@ -1596,7 +1700,7 @@ const FACILITIES = [
 ];
 
 const SETTINGS = {
-  version: "V2.2.0 · FACILITY LAYERS",
+  version: "V2.3.0 · FACILITY & SERVICE LAYERS",
   englishUrlFallbackToKorean: true,
   mapImages: {
     ko: "assets/erica-map-ko.jpg",
@@ -1616,8 +1720,8 @@ const UI = {
     searchButton: "찾기",
     toolbar: "지도를 확대하면 건물 번호를 더 선명하게 확인할 수 있습니다. 확대 후 마우스·트랙패드로 지도를 이동할 수 있습니다.",
     facilityMaster: "시설 보기",
-    facilityPanelTitle: "행정팀·편의시설 지도 표시",
-    facilityPanelHelp: "원하는 항목을 개별로 켜거나 끌 수 있습니다. 같은 건물의 여러 시설은 자동으로 펼쳐서 표시됩니다.",
+    facilityPanelTitle: "행정팀·학생지원·편의시설 지도 표시",
+    facilityPanelHelp: "시설 필터는 항상 표시됩니다. 원하는 항목을 개별로 켜거나 끌 수 있고, 같은 건물의 여러 시설은 자동으로 펼쳐집니다.",
     facilityAllOn: "전체 켜기",
     facilityAllOff: "전체 끄기",
     facilityCategoryAria: name => `${name} 표시 전환`,
@@ -1644,7 +1748,7 @@ const UI = {
     noResult: q => `‘<strong>${q}</strong>’에 해당하는 건물을 찾지 못했습니다.`,
     oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> 위치를 표시했습니다.` + (linked ? ` 지도 번호 또는 아래 건물명을 누르면 내부 구조도가 열립니다.` : ` 현재 내부 구조도 링크는 연결되어 있지 않습니다.`),
     manyResults: (items) => `<strong>${items.length}개</strong> 건물이 검색되었습니다: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
-    footer: "※ 건물명·구조도 링크는 BUILDINGS, 행정팀·편의시설은 FACILITIES 배열에서 수정할 수 있습니다.",
+    footer: "※ 건물명·구조도 링크는 BUILDINGS, 행정팀·학생지원·편의시설은 FACILITIES 배열에서 수정할 수 있습니다.",
     debug: "<strong>DEBUG MODE</strong> · 빨간 원은 지도 번호 클릭 영역입니다."
   },
   en: {
@@ -1658,8 +1762,8 @@ const UI = {
     searchButton: "Search",
     toolbar: "Zoom in to view building numbers more clearly. After zooming, drag or use a trackpad to move around the map.",
     facilityMaster: "Facilities",
-    facilityPanelTitle: "Campus offices & amenities",
-    facilityPanelHelp: "Turn categories on or off individually. Multiple facilities in the same building are automatically spread around the building marker.",
+    facilityPanelTitle: "Campus offices, student services & amenities",
+    facilityPanelHelp: "Facility filters are always visible. Turn categories on or off individually; multiple facilities in the same building are automatically spread around the building marker.",
     facilityAllOn: "Show all",
     facilityAllOff: "Hide all",
     facilityCategoryAria: name => `Toggle ${name}`,
@@ -1686,7 +1790,7 @@ const UI = {
     noResult: q => `No building matched ‘<strong>${q}</strong>’.`,
     oneResult: (b,linked) => `<strong>${b.id} ${escapeHtml(displayName(b))}</strong> has been highlighted on the map.` + (linked ? ` Select its map marker or directory entry to open the floor plan.` : ` A floor plan link is not available yet.`),
     manyResults: (items) => `<strong>${items.length}</strong> buildings matched: ` + items.slice(0,8).map(b => `${b.id} ${escapeHtml(displayName(b))}`).join(", ") + (items.length > 8 ? "…" : ""),
-    footer: "Edit building names and floor-plan links in BUILDINGS, and campus offices/amenities in FACILITIES.",
+    footer: "Edit building names and floor-plan links in BUILDINGS, and campus offices/student services/amenities in FACILITIES.",
     debug: "<strong>DEBUG MODE</strong> · Red circles show the clickable building-number areas."
   }
 };
@@ -1757,13 +1861,31 @@ const ZOOM_MAX = 3;
 const ZOOM_STEP = .25;
 const activeFacilityCategories = new Set();
 const facilityMarkerEls = new Map();
-let facilityPanelOpen = false;
+let facilityPanelOpen = true;
 let selectedFacilityId = null;
 
 function t(){ return UI[currentLang]; }
 function displayName(b){ return currentLang === "en" ? b.nameEn : b.nameKo; }
 function facilityDisplayName(f){ return currentLang === "en" ? f.nameEn : f.nameKo; }
 function facilityFloor(f){ return currentLang === "en" ? f.floorEn : f.floorKo; }
+function facilityDetail(f){ return currentLang === "en" ? (f.detailEn || "") : (f.detailKo || ""); }
+
+function facilityBrandMarkup(f,c){
+  if(f.brandLogo){
+    const brandClass = f.brandClass ? ` ${escapeHtml(f.brandClass)}` : "";
+    const bg = f.brandBg || "#ffffff";
+    const fg = f.brandFg || "#172033";
+    return `<span class="facility-brand-shell${brandClass}" style="--brand-bg:${escapeHtml(bg)};--brand-fg:${escapeHtml(fg)}">
+      <img class="facility-brand-logo" src="${escapeHtml(f.brandLogo)}" alt="" loading="lazy" referrerpolicy="no-referrer">
+      <span class="facility-brand-fallback">${escapeHtml(f.brandText || facilityDisplayName(f))}</span>
+    </span>`;
+  }
+  if(f.brandText){
+    const brandClass = f.brandClass ? ` ${escapeHtml(f.brandClass)}` : "";
+    return `<span class="facility-brand-shell${brandClass}"><span class="facility-brand-wordmark">${escapeHtml(f.brandText)}</span></span>`;
+  }
+  return `<span class="facility-marker-icon" aria-hidden="true">${c.icon}</span>`;
+}
 function facilityCategoryLabel(key){
   const c = FACILITY_CATEGORIES[key];
   return currentLang === "en" ? c.en : c.ko;
@@ -1839,8 +1961,12 @@ function renderFacilityControls(){
   facilityPanelHelp.textContent = t().facilityPanelHelp;
   facilityAllOn.textContent = t().facilityAllOn;
   facilityAllOff.textContent = t().facilityAllOff;
-  facilityMasterBtn.setAttribute("aria-expanded",String(facilityPanelOpen));
-  facilityMasterBtn.classList.toggle("is-open",facilityPanelOpen);
+  facilityPanel.hidden = false;
+  facilityPanelOpen = true;
+  facilityMasterBtn.setAttribute("aria-expanded","true");
+  facilityMasterBtn.classList.add("is-open");
+  facilityMasterBtn.setAttribute("aria-label",currentLang === "en" ? "Toggle all facility layers" : "전체 시설 표시 전환");
+  facilityMasterBtn.title = currentLang === "en" ? "Show or hide all facility layers" : "전체 시설 레이어 켜기/끄기";
 
   facilityCategoryButtons.replaceChildren();
   Object.entries(FACILITY_CATEGORIES).forEach(([key,c]) => {
@@ -1866,11 +1992,11 @@ function updateFacilityMasterCount(){
   facilityMasterBtn.classList.toggle("has-active",active > 0);
 }
 
-function toggleFacilityPanel(force){
-  facilityPanelOpen = typeof force === "boolean" ? force : !facilityPanelOpen;
-  facilityPanel.hidden = !facilityPanelOpen;
-  facilityMasterBtn.setAttribute("aria-expanded",String(facilityPanelOpen));
-  facilityMasterBtn.classList.toggle("is-open",facilityPanelOpen);
+function toggleFacilityPanel(){
+  // V2.3.0부터 패널은 항상 펼쳐진 상태를 유지한다.
+  // 상단 "시설 보기" 버튼은 전체 시설 레이어 ON/OFF로 동작한다.
+  const allOn = activeFacilityCategories.size === Object.keys(FACILITY_CATEGORIES).length;
+  setAllFacilityCategories(!allOn);
 }
 
 function toggleFacilityCategory(key){
@@ -1892,24 +2018,24 @@ function setAllFacilityCategories(on){
 function facilityOffsets(count,index){
   if(count <= 1) return [0,-34];
   if(count <= 5){
-    const radius = 39;
+    const radius = 47;
     const angle = -Math.PI / 2 + index * (Math.PI * 2 / count);
     return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
   }
   if(count <= 9){
-    const radius = 50;
+    const radius = 63;
     const angle = -Math.PI / 2 + index * (Math.PI * 2 / count);
     return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
   }
   const outerCount = Math.ceil(count * .64);
   if(index < outerCount){
-    const radius = 58;
+    const radius = 76;
     const angle = -Math.PI / 2 + index * (Math.PI * 2 / outerCount);
     return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
   }
   const innerIndex = index - outerCount;
   const innerCount = count - outerCount;
-  const radius = 34;
+  const radius = 47;
   const angle = -Math.PI / 2 + innerIndex * (Math.PI * 2 / innerCount) + .35;
   return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
 }
@@ -1926,14 +2052,21 @@ function renderFacilityMarkers(){
     const c = FACILITY_CATEGORIES[f.category];
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "facility-marker";
+    const hasBrand = Boolean(f.brandLogo || f.brandText);
+    btn.className = "facility-marker" + (hasBrand ? " has-brand" : "");
     btn.dataset.facilityId = f.id;
     btn.dataset.category = f.category;
     btn.style.left = b.x + "%";
     btn.style.top = convertedY(b.y) + "%";
     btn.style.setProperty("--cat",c.color);
-    btn.innerHTML = `<span class="facility-marker-icon" aria-hidden="true">${c.icon}</span>`;
-    const label = `${facilityDisplayName(f)} · ${displayName(b)} ${facilityFloor(f)}`;
+    btn.innerHTML = facilityBrandMarkup(f,c);
+    const brandImg = btn.querySelector(".facility-brand-logo");
+    if(brandImg){
+      brandImg.addEventListener("error",() => btn.classList.add("brand-failed"),{once:true});
+      brandImg.addEventListener("load",() => btn.classList.remove("brand-failed"),{once:true});
+    }
+    const detail = facilityDetail(f);
+    const label = `${facilityDisplayName(f)}${detail ? ` · ${detail}` : ""} · ${displayName(b)} ${facilityFloor(f)}`;
     btn.title = label;
     btn.setAttribute("aria-label",label);
     btn.addEventListener("click",e => {
@@ -1986,6 +2119,8 @@ function openFacilityPopup(f,marker){
 
   const c = FACILITY_CATEGORIES[f.category];
   const linked = hasUrl(b);
+  const detail = facilityDetail(f);
+  const detailHtml = detail ? `<div class="facility-popup-detail">${escapeHtml(detail)}</div>` : "";
   const linkHtml = linked
     ? `<a class="facility-popup-link" href="${escapeHtml(buildingUrl(b))}" target="_blank" rel="noopener noreferrer">${escapeHtml(t().facilityFloorPlan)}</a>`
     : "";
@@ -1995,6 +2130,7 @@ function openFacilityPopup(f,marker){
     <div class="facility-popup-category"><span class="facility-popup-icon" style="--cat:${c.color}" aria-hidden="true">${c.icon}</span><span>${escapeHtml(facilityCategoryLabel(f.category))}</span></div>
     <strong class="facility-popup-name">${escapeHtml(facilityDisplayName(f))}</strong>
     <div class="facility-popup-location">${escapeHtml(t().facilityPopupLocation(displayName(b),facilityFloor(f)))}</div>
+    ${detailHtml}
     ${linkHtml}
   `;
   facilityPopup.style.left = b.x + "%";
