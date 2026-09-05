@@ -8,19 +8,21 @@ const context = vm.createContext({});
 vm.runInContext(
   script.slice(script.indexOf('const BUILDINGS ='), script.indexOf('const SETTINGS =')) + '\n' +
   script.slice(script.indexOf('function groupFacilitiesByBuilding'), script.indexOf('function renderFacilityMarkers')) +
-  '\nglobalThis.buildingData = BUILDINGS; globalThis.facilityData = FACILITIES; globalThis.categoryData = FACILITY_CATEGORIES;',
+  '\nglobalThis.buildingData = BUILDINGS; globalThis.facilityData = FACILITIES; globalThis.categoryData = FACILITY_CATEGORIES; globalThis.mapFeatureData = MAP_FEATURES;',
   context
 );
 const {
   buildingData,
   facilityData,
   categoryData,
+  mapFeatureData,
   groupFacilitiesByBuilding: buildings,
   groupFacilitiesByFloor: floors
 } = context;
 
 assert.equal(buildingData.length, 51);
 assert.equal(facilityData.length, 54);
+assert.equal(mapFeatureData.length, 19);
 assert.equal(new Set(buildingData.map(b => b.id)).size, buildingData.length, 'building IDs must be unique');
 assert.equal(new Set(facilityData.map(f => f.id)).size, facilityData.length, 'facility IDs must be unique');
 for (const facility of facilityData) {
@@ -47,12 +49,19 @@ assert.equal(facilityData.find(f => f.id === 'support-erica-ic-pbl-teaching-lear
 assert.equal(facilityData.filter(f => f.category === 'finance').length, 2);
 assert.equal(facilityData.filter(f => f.category === 'copy').length, 3);
 assert.equal(facilityData.find(f => f.id === 'store-residential-college-7eleven').buildingId, '504');
+assert.equal(facilityData.filter(f => f.category === 'restaurant' && f.url?.includes('erica-today-menu/?restaurant=')).length, 5);
+assert.equal(mapFeatureData.filter(f => f.category === 'smoking').length, 18);
+assert.equal(mapFeatureData.filter(f => f.category === 'innovation' && f.kind === 'polygon').length, 1);
+for (const feature of mapFeatureData) {
+  assert.ok(categoryData[feature.category], `${feature.id} must reference an existing category`);
+  for (const suffix of ['Ko','En','Zh']) assert.ok(feature[`name${suffix}`], `${feature.id} must include name${suffix}`);
+}
 for (const key of ['support','convenience','restaurant']) assert.match(categoryData[key].icon, /^<svg/);
 for (const query of ['복사','복사기','출력','프린터','인쇄']) assert.ok(categoryData.copy.aliasesKo.includes(query));
 
 assert.equal(buildingData.find(b => b.id === '404').urlKo, 'https://blog.naver.com/hyerica4473/223820883613');
-assert.equal(buildingData.find(b => b.id === 'KTC').urlKo, 'https://blog.naver.com/hyerica4473/223938119953');
-assert.equal(buildingData.find(b => b.id === 'KAKAO').urlKo, '');
+assert.equal(buildingData.find(b => b.id === 'KTC').urlKo, '');
+assert.equal(buildingData.find(b => b.id === 'KAKAO').urlKo, 'https://blog.naver.com/hyerica4473/223938119953');
 assert.deepEqual(Array.from(buildingData.find(b => b.id === 'AGORA').links, link => link.url), [
   'https://blog.naver.com/hyerica4473/224221136802',
   'https://blog.naver.com/hyerica4473/224222000345'
@@ -60,4 +69,4 @@ assert.deepEqual(Array.from(buildingData.find(b => b.id === 'AGORA').links, link
 assert.equal(floors([{floorEn:'B2'},{floorEn:'1F'},{floorEn:'B1'},{floorEn:'3F'},{}]).map(([k])=>k).join(','),'3F,1F,B1,B2,');
 assert.equal(buildings([]).size, 0);
 assert.equal(floors([]).length, 0);
-console.log('PASS: script syntax, 51 buildings, 54 facilities, requested links/categories, grouping, and floor order');
+console.log('PASS: script syntax, buildings/facilities/map features, requested links/categories, grouping, and floor order');
