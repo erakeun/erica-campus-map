@@ -502,6 +502,18 @@
       box-shadow:0 2px 6px rgba(15,23,42,.16);
     }
 
+    .facility-category-icon svg,
+    .facility-marker-icon svg{
+      width:15px;
+      height:15px;
+      display:block;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.15;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
     .facility-category-count{
       color:#8490a2;
       font-size:10px;
@@ -570,6 +582,8 @@
     }
 
     .facility-marker-icon{font-size:16px;line-height:1;pointer-events:none}
+
+    .facility-marker-icon svg{width:18px;height:18px}
 
     /* 브랜드가 있는 편의점/카페는 작은 로고·워드마크 카드로 표시 */
     .facility-marker.has-brand{
@@ -847,6 +861,14 @@
       transition:.16s ease;
     }
 
+    button.building-row{
+      width:100%;
+      border:0;
+      border-bottom:1px solid #eef2f6;
+      text-align:left;
+      font:inherit;
+    }
+
     .building-row:last-child{border-bottom:0}
     .building-row.is-linked{cursor:pointer}
     .building-row.is-linked:hover{background:#f5f9fe}
@@ -912,6 +934,7 @@
     }
 
     @media (max-width:1050px){
+      .map-toolbar{align-items:flex-start;flex-direction:column}
       .map-toolbar-actions{width:100%;justify-content:space-between}
       .facility-panel-top{flex-direction:column}
       .facility-all-actions{align-self:flex-end}
@@ -930,7 +953,6 @@
       .map-card,.directory{border-radius:14px}
       .map-stage{min-width:1050px}
       .map-scroll{max-height:72vh}
-      .map-toolbar{align-items:flex-start;flex-direction:column}
       .map-toolbar-actions{width:100%;flex-wrap:wrap}
       .facility-master-btn{margin-right:auto}
       .zoom-controls{margin-left:auto}
@@ -965,7 +987,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.5.0 · BUILDING FACILITY GUIDE</div>
+        <div class="version">V2.6.0 · CAMPUS PLACES & SERVICES</div>
         <h1 id="pageTitle">ERICA 캠퍼스 내부구조도 안내</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1055,7 +1077,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.5.0 · BUILDING FACILITY GUIDE</span>
+      <span class="footer-version">V2.6.0 · CAMPUS PLACES & SERVICES</span>
     </footer>
   </main>
 
@@ -1761,7 +1783,8 @@ const BUILDINGS = [
     "nameEn": "Stadium",
     "aliasesKo": [],
     "aliasesEn": [],
-    "urlKo": "",
+    "urlKo": "https://blog.naver.com/hyerica4473/223820883613",
+    "linkType": "guide",
     "urlEn": "",
     "x": 62.79,
     "y": 28.16,
@@ -1859,13 +1882,111 @@ const BUILDINGS = [
       "Residential College"
     ],
     "urlZh": ""
+  },
+  {
+    "id": "KAKAO",
+    "group": "places",
+    "nameKo": "카카오 데이터센터 안산",
+    "nameEn": "Kakao Data Center Ansan",
+    "aliasesKo": [
+      "카카오",
+      "카카오 데이터센터",
+      "데이터센터"
+    ],
+    "aliasesEn": [
+      "Kakao",
+      "Kakao Data Center",
+      "Data Center"
+    ],
+    "urlKo": "",
+    "urlEn": "",
+    "x": 68.65,
+    "y": 24.2,
+    "nameZh": "카카오 데이터센터 안산",
+    "aliasesZh": [
+      "Kakao",
+      "数据中心"
+    ],
+    "urlZh": ""
+  },
+  {
+    "id": "KTC",
+    "group": "places",
+    "nameKo": "인테그리스 코리아 테크놀로지 센터(KTC)",
+    "nameEn": "Entegris Korea Technology Center (KTC)",
+    "aliasesKo": [
+      "인테그리스",
+      "인테그리스 코리아",
+      "KTC",
+      "Technology Center"
+    ],
+    "aliasesEn": [
+      "Entegris",
+      "Entegris Korea",
+      "KTC",
+      "Technology Center"
+    ],
+    "urlKo": "https://blog.naver.com/hyerica4473/223938119953",
+    "linkType": "guide",
+    "urlEn": "",
+    "x": 76.1,
+    "y": 24.2,
+    "nameZh": "인테그리스 코리아 테크놀로지 센터(KTC)",
+    "aliasesZh": [
+      "Entegris",
+      "KTC",
+      "Technology Center"
+    ],
+    "urlZh": ""
+  },
+  {
+    "id": "AGORA",
+    "group": "places",
+    "nameKo": "정문 아고라",
+    "nameEn": "Main Gate (AGORA)",
+    "aliasesKo": [
+      "아고라",
+      "정문",
+      "아고라 홍보관",
+      "아고라 대관"
+    ],
+    "aliasesEn": [
+      "Agora",
+      "Main Gate",
+      "Agora PR Hall",
+      "Agora Rental"
+    ],
+    "urlKo": "",
+    "urlEn": "",
+    "links": [
+      {
+        "labelKo": "아고라 홍보관 안내",
+        "labelEn": "Agora PR Hall Guide",
+        "labelZh": "아고라 홍보관 안내",
+        "url": "https://blog.naver.com/hyerica4473/224221136802"
+      },
+      {
+        "labelKo": "아고라 대관 방법",
+        "labelEn": "How to Rent Agora",
+        "labelZh": "아고라 대관 방법",
+        "url": "https://blog.naver.com/hyerica4473/224222000345"
+      }
+    ],
+    "x": 10.0,
+    "y": 49.9,
+    "nameZh": "正门（AGORA）",
+    "aliasesZh": [
+      "AGORA",
+      "正门"
+    ],
+    "urlZh": ""
   }
 ];
 
 /* ============================================================
    CAMPUS FACILITIES
 
-   - category   : admin / support / convenience / cafe / restaurant / welfare
+   - category   : admin / support / convenience / cafe / restaurant / finance / copy / welfare
    - buildingId : BUILDINGS의 건물번호와 연결
    - floorKo/En/Zh : 언어별 층 표기
    - nameKo/En/Zh  : 언어별 시설명
@@ -1900,8 +2021,8 @@ const FACILITY_CATEGORIES = {
     ]
   },
   "support": {
-    "icon": "🧭",
-    "color": "#0e7490",
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><rect x='3' y='5' width='18' height='14' rx='2'/><circle cx='8' cy='10' r='2'/><path d='M5.5 16c.6-2 4.4-2 5 0M13 9h5M13 13h5'/></svg>",
+    "color": "#0369a1",
     "ko": "학생·행정 지원",
     "en": "Student & Administrative Services",
     "aliasesKo": [
@@ -1922,8 +2043,8 @@ const FACILITY_CATEGORIES = {
     ]
   },
   "convenience": {
-    "icon": "🛒",
-    "color": "#0f8b8d",
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 10v10h16V10M3 10l2-6h14l2 6'/><path d='M3 10c0 2 3 2 3 0 0 2 3 2 3 0 0 2 3 2 3 0 0 2 3 2 3 0 0 2 3 2 3 0M9 20v-5h6v5'/></svg>",
+    "color": "#047857",
     "ko": "편의점",
     "en": "Convenience Stores",
     "aliasesKo": [
@@ -1969,8 +2090,8 @@ const FACILITY_CATEGORIES = {
     ]
   },
   "restaurant": {
-    "icon": "🍴",
-    "color": "#c2410c",
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M6 3v7M3.5 3v4.5C3.5 9 4.6 10 6 10s2.5-1 2.5-2.5V3M6 10v11M15 3v18M15 3c3 1.2 4 4 4 7h-4'/></svg>",
+    "color": "#b45309",
     "ko": "식당",
     "en": "Restaurants",
     "aliasesKo": [
@@ -1994,6 +2115,60 @@ const FACILITY_CATEGORIES = {
       "教职员食堂",
       "美食中心",
       "餐饮"
+    ]
+  },
+  "finance": {
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M3 9h18L12 3 3 9ZM5 10v8M9 10v8M15 10v8M19 10v8M3 21h18M2 18h20'/></svg>",
+    "color": "#1d4ed8",
+    "ko": "은행·ATM",
+    "en": "Bank & ATMs",
+    "aliasesKo": [
+      "은행",
+      "ATM",
+      "신한은행",
+      "금융시설"
+    ],
+    "aliasesEn": [
+      "bank",
+      "ATM",
+      "Shinhan Bank",
+      "financial services"
+    ],
+    "zh": "银行·ATM",
+    "aliasesZh": [
+      "银行",
+      "自动取款机",
+      "新韩银行"
+    ]
+  },
+  "copy": {
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M7 8V3h10v5M7 17H4V9h16v8h-3M7 14h10v7H7z'/><path d='M16.5 11h.01'/></svg>",
+    "color": "#7c3aed",
+    "ko": "복사·출력",
+    "en": "Copy & Print",
+    "aliasesKo": [
+      "복사",
+      "복사기",
+      "복사실",
+      "출력",
+      "프린터",
+      "인쇄",
+      "무인복사기"
+    ],
+    "aliasesEn": [
+      "copy",
+      "copier",
+      "print",
+      "printer",
+      "printing"
+    ],
+    "zh": "复印·打印",
+    "aliasesZh": [
+      "复印",
+      "复印机",
+      "打印",
+      "打印机",
+      "印刷"
     ]
   },
   "welfare": {
@@ -2579,8 +2754,12 @@ const FACILITIES = [
     "buildingId": "101",
     "floorKo": "1층",
     "floorEn": "1F",
-    "nameKo": "입학팀",
+    "nameKo": "입학처 입학팀",
     "nameEn": "ERICA Admissions Team",
+    "aliasesKo": [
+      "입학팀",
+      "입학처"
+    ],
     "floorZh": "1层",
     "nameZh": "ERICA入学组",
     "aliasesZh": [
@@ -2746,11 +2925,182 @@ const FACILITIES = [
       "文具",
       "办公用品"
     ]
+  },
+  {
+    "id": "admin-convergence-industry-graduate-rc",
+    "category": "admin",
+    "buildingId": "307",
+    "floorKo": "4층",
+    "floorEn": "4F",
+    "floorZh": "4层",
+    "nameKo": "융합산업대학원 RC행정팀",
+    "nameEn": "",
+    "nameZh": "",
+    "aliasesKo": [
+      "융합산업대학원 행정팀",
+      "RC행정팀",
+      "RC 행정팀"
+    ]
+  },
+  {
+    "id": "support-international-education",
+    "category": "support",
+    "buildingId": "307",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "floorZh": "2层",
+    "nameKo": "국제교육원",
+    "nameEn": "",
+    "nameZh": ""
+  },
+  {
+    "id": "support-continuing-education",
+    "category": "support",
+    "buildingId": "307",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "floorZh": "2层",
+    "nameKo": "사회교육원",
+    "nameEn": "",
+    "nameZh": ""
+  },
+  {
+    "id": "support-disabled-students",
+    "category": "support",
+    "buildingId": "103",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "floorZh": "3层",
+    "nameKo": "장애학생지원센터",
+    "nameEn": "",
+    "nameZh": ""
+  },
+  {
+    "id": "support-happiness-dream-counseling",
+    "category": "support",
+    "buildingId": "103",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "floorZh": "2层",
+    "nameKo": "한양행복드림상담센터",
+    "nameEn": "",
+    "nameZh": "",
+    "aliasesKo": [
+      "행복드림상담센터",
+      "상담센터"
+    ]
+  },
+  {
+    "id": "support-human-rights",
+    "category": "support",
+    "buildingId": "103",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "floorZh": "1层",
+    "nameKo": "인권센터",
+    "nameEn": "",
+    "nameZh": ""
+  },
+  {
+    "id": "support-erica-ic-pbl-teaching-learning",
+    "category": "support",
+    "buildingId": "206",
+    "floorKo": "지하 1층 B109호",
+    "floorEn": "B1",
+    "floorZh": "地下1层 B109室",
+    "nameKo": "ERICA IC-PBL교수학습센터",
+    "nameEn": "",
+    "nameZh": "",
+    "aliasesKo": [
+      "IC-PBL센터",
+      "IC-PBL",
+      "PBL센터",
+      "교수학습센터"
+    ],
+    "aliasesEn": [
+      "IC-PBL Center",
+      "IC-PBL",
+      "PBL Center"
+    ]
+  },
+  {
+    "id": "finance-welfare-shinhan-bank-atm",
+    "category": "finance",
+    "buildingId": "102",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "floorZh": "1层",
+    "nameKo": "신한은행 및 ATM",
+    "nameEn": "Shinhan Bank & ATM",
+    "nameZh": "新韩银行及ATM",
+    "aliasesKo": [
+      "신한은행",
+      "ATM"
+    ]
+  },
+  {
+    "id": "finance-convention-shinhan-atm",
+    "category": "finance",
+    "buildingId": "307",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "floorZh": "1层",
+    "nameKo": "신한은행 ATM",
+    "nameEn": "Shinhan Bank ATM",
+    "nameZh": "新韩银行ATM"
+  },
+  {
+    "id": "copy-library-unmanned",
+    "category": "copy",
+    "buildingId": "401",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "floorZh": "2层",
+    "nameKo": "무인복사기",
+    "nameEn": "Self-service Copier",
+    "nameZh": "自助复印机"
+  },
+  {
+    "id": "copy-education-1-room",
+    "category": "copy",
+    "buildingId": "209",
+    "floorKo": "2층",
+    "floorEn": "2F",
+    "floorZh": "2层",
+    "nameKo": "복사실",
+    "nameEn": "Copy Room",
+    "nameZh": "复印室"
+  },
+  {
+    "id": "copy-welfare-room",
+    "category": "copy",
+    "buildingId": "102",
+    "floorKo": "3층",
+    "floorEn": "3F",
+    "floorZh": "3层",
+    "nameKo": "복사실",
+    "nameEn": "Copy Room",
+    "nameZh": "复印室"
+  },
+  {
+    "id": "store-residential-college-7eleven",
+    "category": "convenience",
+    "buildingId": "504",
+    "floorKo": "1층",
+    "floorEn": "1F",
+    "floorZh": "1层",
+    "nameKo": "세븐일레븐",
+    "nameEn": "7-Eleven",
+    "nameZh": "7-Eleven",
+    "aliasesKo": [
+      "7-Eleven",
+      "7일레븐"
+    ]
   }
 ];
 
 const SETTINGS = {
-  version: "V2.5.0 · BUILDING FACILITY GUIDE",
+  version: "V2.6.0 · CAMPUS PLACES & SERVICES",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
@@ -2764,7 +3114,7 @@ const UI = {
   ko: {
     title: "ERICA 캠퍼스 내부구조도 안내",
     metaDescription: "ERICA 캠퍼스의 건물·시설·서비스를 검색하고 내부 구조도를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
-    description: "건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>내부 구조도가 연결된 건물은 지도 번호 또는 아래 건물명을 눌러 확인할 수 있습니다.",
+    description: "건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>내부 구조도나 안내가 연결된 장소는 지도 번호 또는 아래 이름을 눌러 확인할 수 있습니다.",
     languageLabel: "언어 선택",
     searchPlaceholder: "건물·시설·서비스 검색 (예: 101, 학생증, 카페)",
     searchAria: "건물, 시설 또는 서비스 검색",
@@ -2788,14 +3138,19 @@ const UI = {
     zoomInAria: "지도 확대",
     resetAria: "지도 배율 100%로 초기화",
     mapAlt: "한양대학교 ERICA 캠퍼스 항공 지도",
-    hintLinked: "마우스를 올렸을 때 반응하는 건물은 내부 구조도가 연결된 건물입니다.",
+    hintLinked: "마우스를 올렸을 때 반응하는 장소는 내부 구조도 또는 안내 링크가 연결되어 있습니다.",
     hintSearch: "검색은 구조도 연결 여부와 관계없이 건물 위치를 표시합니다.",
     directoryTitle: "건물 목록",
-    directoryDescription: "내부 구조도가 있는 건물은 건물명을 누르면 새 탭에서 열립니다.",
-    legendLinked: "● 내부 구조도 연결",
+    directoryDescription: "내부 구조도나 안내가 있는 장소는 이름을 눌러 확인할 수 있습니다.",
+    legendLinked: "● 안내 링크 연결",
     legendPending: "○ 준비중",
     view: "구조도 보기",
+    viewGuide: "안내 보기",
     pending: "준비중",
+    placesGroup: "캠퍼스 주요 장소",
+    placeLinks: "관련 안내",
+    openGuideTitle: (id,name) => `${id} ${name} 관련 안내 보기`,
+    openGuideAria: (id,name) => `${id} ${name} 관련 안내 열기`,
     group: n => `${n}00번대`,
     openTitle: (id,name) => `${id} ${name} 내부 구조도 보기`,
     locationAria: (id,name) => `${id} ${name} 위치`,
@@ -2812,7 +3167,7 @@ const UI = {
   en: {
     title: "ERICA Campus Building Floor Plan Guide",
     metaDescription: "Search ERICA campus buildings, facilities and services, and open linked building floor plans from an interactive campus map.",
-    description: "Search by building number or name to locate it on the map.<br>Select a linked building number or name below to view its floor plan.",
+    description: "Search by building number or name to locate it on the map.<br>Select a linked place on the map or in the directory to view its floor plan or guide.",
     languageLabel: "Language selection",
     searchPlaceholder: "Search buildings, facilities or services (e.g., 101, Student ID, Cafe)",
     searchAria: "Search buildings, facilities or services",
@@ -2836,14 +3191,19 @@ const UI = {
     zoomInAria: "Zoom in",
     resetAria: "Reset map zoom to 100%",
     mapAlt: "Aerial map of Hanyang University ERICA Campus",
-    hintLinked: "Buildings that respond on hover have a linked floor plan.",
+    hintLinked: "Places that respond on hover have a linked floor plan or guide.",
     hintSearch: "Search locates a building whether or not its floor plan is linked.",
     directoryTitle: "Building Directory",
-    directoryDescription: "Select a building with a linked floor plan to open it in a new tab.",
-    legendLinked: "● Floor plan available",
+    directoryDescription: "Select a place with a linked floor plan or guide to view it.",
+    legendLinked: "● Guide link available",
     legendPending: "○ Coming soon",
     view: "View floor plan",
+    viewGuide: "View guide",
     pending: "Coming soon",
+    placesGroup: "Campus Places",
+    placeLinks: "Related guides",
+    openGuideTitle: (id,name) => `View guides for ${id} ${name}`,
+    openGuideAria: (id,name) => `Open guides for ${id} ${name}`,
     group: n => `${n}00 Series`,
     openTitle: (id,name) => `View the floor plan for ${id} ${name}`,
     locationAria: (id,name) => `Location of ${id} ${name}`,
@@ -2860,7 +3220,7 @@ const UI = {
   zh: {
     title: "ERICA校园建筑平面图指南",
     metaDescription: "可搜索ERICA校园建筑、设施和服务，并通过交互式校园地图查看建筑位置及已连接的内部平面图。",
-    description: "输入建筑编号或名称，即可在地图上查看其位置。<br>已连接内部平面图的建筑，可点击地图编号或下方建筑名称查看。",
+    description: "输入建筑编号或名称，即可在地图上查看其位置。<br>已连接内部平面图或指南的地点，可点击地图编号或下方名称查看。",
     languageLabel: "语言选择",
     searchPlaceholder: "搜索建筑、设施或服务（例：101、学生证、咖啡厅）",
     searchAria: "搜索建筑、设施或服务",
@@ -2884,14 +3244,19 @@ const UI = {
     zoomInAria: "放大地图",
     resetAria: "将地图缩放重置为100%",
     mapAlt: "汉阳大学ERICA校园航拍地图",
-    hintLinked: "鼠标悬停时有反应的建筑已连接内部平面图。",
+    hintLinked: "鼠标悬停时有反应的地点已连接内部平面图或指南。",
     hintSearch: "无论是否已连接平面图，搜索都会标示建筑位置。",
     directoryTitle: "建筑列表",
-    directoryDescription: "已有内部平面图的建筑，点击名称即可在新标签页中打开。",
-    legendLinked: "● 可查看内部平面图",
+    directoryDescription: "已有内部平面图或指南的地点，可点击名称查看。",
+    legendLinked: "● 已连接指南",
     legendPending: "○ 准备中",
     view: "查看平面图",
+    viewGuide: "查看指南",
     pending: "准备中",
+    placesGroup: "校园主要地点",
+    placeLinks: "相关指南",
+    openGuideTitle: (id,name) => `查看${id} ${name}的相关指南`,
+    openGuideAria: (id,name) => `打开${id} ${name}的相关指南`,
     group: n => `${n}00号段`,
     openTitle: (id,name) => `查看${id} ${name}的建筑平面图`,
     locationAria: (id,name) => `${id} ${name}的位置`,
@@ -3036,7 +3401,16 @@ function buildingUrl(b){
   return koreanUrl;
 }
 
-function hasUrl(b){ return buildingUrl(b).length > 0; }
+function buildingExtraLinks(b){
+  return (b.links || [])
+    .map(link => ({label:localizedValue(link,"label"),url:String(link.url || "").trim()}))
+    .filter(link => link.url);
+}
+
+function hasUrl(b){ return buildingUrl(b).length > 0 || buildingExtraLinks(b).length > 0; }
+function hasGuideLinks(b){ return b.linkType === "guide" || buildingExtraLinks(b).length > 0; }
+function buildingOpenTitle(b){ return hasGuideLinks(b) ? t().openGuideTitle(b.id,displayName(b)) : t().openTitle(b.id,displayName(b)); }
+function buildingOpenAria(b){ return hasGuideLinks(b) ? t().openGuideAria(b.id,displayName(b)) : t().openAria(b.id,displayName(b)); }
 
 function normalize(s){
   return String(s ?? "")
@@ -3079,11 +3453,15 @@ function renderMapHotspots(){
     btn.style.top = convertedY(b.y) + "%";
     btn.dataset.id = b.id;
     btn.dataset.label = `${b.id} ${name}`;
-    btn.setAttribute("aria-label", linked ? t().openAria(b.id,name) : t().locationAria(b.id,name));
-    btn.title = linked ? t().openTitle(b.id,name) : `${b.id} ${name}`;
+    btn.setAttribute("aria-label", linked ? buildingOpenAria(b) : t().locationAria(b.id,name));
+    btn.title = linked ? buildingOpenTitle(b) : `${b.id} ${name}`;
 
     if(linked){
-      btn.addEventListener("click", () => window.open(buildingUrl(b),"_blank","noopener,noreferrer"));
+      btn.addEventListener("click", () => {
+        const links = buildingExtraLinks(b);
+        if(links.length) openBuildingLinks(b);
+        else window.open(buildingUrl(b),"_blank","noopener,noreferrer");
+      });
     }
 
     hotspotLayer.appendChild(btn);
@@ -3296,6 +3674,22 @@ function openFacilityPopup(f,marker){
   openBuildingFacilities(f.buildingId,marker,false,f.id);
 }
 
+function openBuildingLinks(b){
+  const links = buildingExtraLinks(b);
+  if(!links.length) return;
+  closeFacilityPopup();
+  facilityPopup.innerHTML = `
+    <header class="facility-popup-header">
+      <button class="facility-popup-close" type="button" aria-label="${escapeHtml(t().facilityCloseAria)}">×</button>
+      <div class="facility-popup-category">${escapeHtml(t().placeLinks)}</div>
+      <h2 class="facility-popup-name" id="facilityPopupTitle">${escapeHtml(displayName(b))}</h2>
+    </header>
+    <div>${links.map(link => `<a class="facility-popup-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)} →</a>`).join(" ")}</div>
+  `;
+  facilityPopup.querySelector(".facility-popup-close").addEventListener("click",closeFacilityPopup);
+  if(!facilityPopup.open) facilityPopup.showModal();
+}
+
 function closeFacilityPopup(){
   selectedFacilityId = null;
   if(facilityPopup.open) facilityPopup.close();
@@ -3315,7 +3709,7 @@ facilityMasterBtn.addEventListener("click",() => toggleFacilityPanel());
 facilityAllOn.addEventListener("click",() => setAllFacilityCategories(true));
 facilityAllOff.addEventListener("click",() => setAllFacilityCategories(false));
 
-function groupKey(b){ return b.id.charAt(0); }
+function groupKey(b){ return b.group || b.id.charAt(0); }
 
 function renderDirectory(){
   directoryBody.replaceChildren();
@@ -3333,7 +3727,7 @@ function renderDirectory(){
     group.className = "building-group";
 
     const h3 = document.createElement("h3");
-    h3.textContent = t().group(key);
+    h3.textContent = key === "places" ? t().placesGroup : t().group(key);
     group.appendChild(h3);
 
     const list = document.createElement("div");
@@ -3341,23 +3735,29 @@ function renderDirectory(){
 
     items.forEach(b => {
       const linked = hasUrl(b);
+      const extraLinks = buildingExtraLinks(b);
       const name = displayName(b);
-      const row = document.createElement(linked ? "a" : "div");
+      const row = document.createElement(extraLinks.length ? "button" : (linked ? "a" : "div"));
       row.className = "building-row " + (linked ? "is-linked" : "is-unlinked");
       row.dataset.id = b.id;
 
       if(linked){
-        row.href = buildingUrl(b);
-        row.target = "_blank";
-        row.rel = "noopener noreferrer";
-        row.title = t().openTitle(b.id,name);
-        row.setAttribute("aria-label",t().openAria(b.id,name));
+        if(extraLinks.length){
+          row.type = "button";
+          row.addEventListener("click",() => openBuildingLinks(b));
+        }else{
+          row.href = buildingUrl(b);
+          row.target = "_blank";
+          row.rel = "noopener noreferrer";
+        }
+        row.title = buildingOpenTitle(b);
+        row.setAttribute("aria-label",buildingOpenAria(b));
       }
 
       row.innerHTML = `
         <span class="building-id">${escapeHtml(b.id)}</span>
         <span class="building-name">${escapeHtml(name)}</span>
-        <span class="building-status">${linked ? t().view : t().pending}</span>
+        <span class="building-status">${linked ? (hasGuideLinks(b) ? t().viewGuide : t().view) : t().pending}</span>
       `;
 
       list.appendChild(row);
