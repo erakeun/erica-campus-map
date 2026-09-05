@@ -745,12 +745,16 @@
     .facility-brand-shell.brand-emart24{--brand-bg:#57585b;--brand-fg:#ffb71b}
 
     .facility-marker.is-group{
-      width:auto;max-width:150px;min-width:90px;height:auto;min-height:44px;
-      padding:7px 10px;border-radius:12px;background:#fff;color:#172033;
-      text-align:center;gap:3px;line-height:1.25;
+      width:34px;min-width:34px;max-width:none;height:34px;min-height:34px;
+      padding:0;border-radius:50%;background:var(--cat);color:#fff;
+      text-align:center;gap:0;line-height:1;
     }
-    .facility-group-name{font-size:11px;font-weight:850;overflow-wrap:anywhere}
-    .facility-group-count{font-size:10px;color:#526174;font-weight:750}
+    .facility-group-count{
+      position:absolute;right:-8px;top:-8px;display:grid;place-items:center;
+      min-width:20px;height:20px;padding:0 4px;border:2px solid var(--cat);border-radius:999px;
+      background:#fff;color:#172033;font-size:10px;font-weight:900;line-height:1;
+      pointer-events:none;
+    }
     .facility-popup{
       position:fixed;inset:0;margin:auto;width:min(460px,calc(100vw - 24px));
       max-height:calc(100dvh - 48px);padding:22px;border:1px solid #dbe3ec;
@@ -1071,7 +1075,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.9.1 · REFINED LEADERS</div>
+        <div class="version">V2.9.2 · COMPACT GROUP MARKERS</div>
         <h1 id="pageTitle">ERICA 캠퍼스맵</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1162,7 +1166,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.9.1 · REFINED LEADERS</span>
+      <span class="footer-version">V2.9.2 · COMPACT GROUP MARKERS</span>
     </footer>
   </main>
 
@@ -3298,7 +3302,7 @@ const MAP_FEATURES = [
 ];
 
 const SETTINGS = {
-  version: "V2.9.1 · REFINED LEADERS",
+  version: "V2.9.2 · COMPACT GROUP MARKERS",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
@@ -3855,7 +3859,7 @@ function updateFacilityVisibility(){
     btn.style.setProperty("--dy","-34px");
     btn.style.setProperty("--cat",c.color);
     btn.innerHTML = grouped
-      ? `<span class="facility-group-name">${escapeHtml(displayName(b))}</span><span class="facility-group-count">${escapeHtml(summary)}</span>`
+      ? `<span class="facility-marker-icon" aria-hidden="true">${c.icon}</span><span class="facility-group-count" aria-hidden="true">${items.length}</span>`
       : facilityBrandMarkup(f,c);
     const brandImg = btn.querySelector(".facility-brand-logo");
     if(brandImg) brandImg.addEventListener("error",() => btn.classList.add("brand-failed"),{once:true});

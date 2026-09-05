@@ -88,6 +88,8 @@ for (const id of [
 assert.match(html, /@media \(max-width:900px\)[\s\S]*?\.map-stage\{width:100%;min-width:100%\}/);
 assert.match(html, /else if\(identifiable\)[\s\S]*?openPlaceInfo\(b\)/);
 assert.match(html, /height:"2px",background:"#ff2d55",boxShadow:"0 0 0 1px/);
+assert.doesNotMatch(html, /facility-group-name/);
+assert.match(html, /facility-group-count" aria-hidden="true">\$\{items\.length\}/);
 assert.deepEqual(Array.from(buildingData.find(b => b.id === 'AGORA').links, link => link.url), [
   'https://blog.naver.com/hyerica4473/224221136802',
   'https://blog.naver.com/hyerica4473/224222000345'
