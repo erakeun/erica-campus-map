@@ -333,6 +333,24 @@
     }
 
     .map-hotspot.is-linked{cursor:pointer}
+    .map-hotspot.is-identifiable{cursor:pointer}
+
+    .map-hotspot.is-place-label{
+      width:auto;
+      height:auto;
+      min-width:76px;
+      min-height:34px;
+      padding:7px 11px;
+      border:2px solid rgba(255,255,255,.96);
+      border-radius:999px;
+      background:#087fbd;
+      color:#fff;
+      box-shadow:0 4px 14px rgba(15,23,42,.36);
+      font-size:12px;
+      font-weight:900;
+      line-height:1.2;
+      white-space:nowrap;
+    }
 
     .map-hotspot.is-linked:hover{
       background:rgba(255,255,255,.22);
@@ -1011,7 +1029,7 @@
       .language-switch{align-self:flex-end}
       .search-panel{width:100%}
       .map-card,.directory{border-radius:14px}
-      .map-stage{min-width:1050px}
+      .map-stage{width:100%;min-width:100%}
       .map-scroll{max-height:72vh}
       .map-toolbar-actions{width:100%;flex-wrap:wrap}
       .facility-master-btn{margin-right:auto}
@@ -1023,6 +1041,9 @@
       .directory-head{align-items:flex-start;flex-direction:column;padding:18px}
       .title-wrap p{font-size:13px}
       .footer{flex-direction:column}
+      .smoking-marker{width:21px;height:28px}
+      .innovation-zone-label{padding:4px 6px;border-width:1px;border-radius:5px;font-size:7px}
+      .map-hotspot.is-place-label{min-width:54px;min-height:24px;padding:4px 7px;border-width:1px;font-size:8px}
     }
 
     @media (max-width:520px){
@@ -1047,7 +1068,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.7.0 · DINING & MAP ZONES</div>
+        <div class="version">V2.8.0 · MOBILE MAP & LOCATIONS</div>
         <h1 id="pageTitle">ERICA 캠퍼스맵</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1138,7 +1159,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.7.0 · DINING & MAP ZONES</span>
+      <span class="footer-version">V2.8.0 · MOBILE MAP & LOCATIONS</span>
     </footer>
   </main>
 
@@ -1961,8 +1982,8 @@ const BUILDINGS = [
     ],
     "urlKo": "https://blog.naver.com/hyerica4473/223938119953",
     "urlEn": "",
-    "x": 68.65,
-    "y": 24.2,
+    "x": 70.3,
+    "y": 25.2,
     "nameZh": "Kakao安山数据中心",
     "aliasesZh": [
       "Kakao",
@@ -1990,8 +2011,8 @@ const BUILDINGS = [
     ],
     "urlKo": "",
     "urlEn": "",
-    "x": 76.1,
-    "y": 24.2,
+    "x": 78.7,
+    "y": 25.6,
     "nameZh": "英特格里斯韩国技术中心（KTC）",
     "aliasesZh": [
       "Entegris",
@@ -2034,13 +2055,30 @@ const BUILDINGS = [
       }
     ],
     "x": 10.0,
-    "y": 49.9,
+    "y": 46.8,
     "nameZh": "正门（AGORA）",
     "aliasesZh": [
       "AGORA",
       "正门"
     ],
     "urlZh": ""
+  },
+  {
+    "id": "HG",
+    "group": "places",
+    "mapLabel": true,
+    "nameKo": "하냥동산",
+    "nameEn": "Hanyang Garden",
+    "nameZh": "汉阳花园",
+    "aliasesKo": ["한양동산", "하냥 동산", "동산"],
+    "aliasesEn": ["Hanyang Garden", "Garden"],
+    "aliasesZh": ["汉阳庭园", "花园"],
+    "urlKo": "https://blog.naver.com/hyerica4473/223449382969",
+    "urlEn": "",
+    "urlZh": "",
+    "linkType": "guide",
+    "x": 14.7,
+    "y": 61.4
   }
 ];
 
@@ -3199,7 +3237,8 @@ const MAP_FEATURES = [
   ...[
     [48.56,15.16],[49.95,17.96],[54.69,16.13],[27.95,28.06],[49.29,48.49],[24.49,53.23],
     [57.50,54.09],[15.50,55.38],[17.36,75.16],[22.36,23.44],[21.07,29.68],[17.82,38.17],
-    [30.54,41.83],[18.19,46.02],[59.28,46.34],[38.04,46.99],[33.91,71.72],[28.96,80.65]
+    [30.54,41.83],[18.19,46.02],[59.28,46.34],[38.04,46.99],[33.91,71.72],[28.96,80.65],
+    [36.90,26.40],[34.00,50.30]
   ].map(([x,y],index) => ({
     id: `smoking-area-${index + 1}`,
     category: "smoking",
@@ -3213,7 +3252,7 @@ const MAP_FEATURES = [
 ];
 
 const SETTINGS = {
-  version: "V2.7.0 · DINING & MAP ZONES",
+  version: "V2.8.0 · MOBILE MAP & LOCATIONS",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
@@ -3561,15 +3600,17 @@ function renderMapHotspots(){
   BUILDINGS.forEach(b => {
     const name = displayName(b);
     const linked = hasUrl(b);
+    const identifiable = b.group === "places";
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "map-hotspot" + (linked ? " is-linked" : "");
+    btn.className = "map-hotspot" + (linked ? " is-linked" : "") + (identifiable ? " is-identifiable" : "") + (b.mapLabel ? " is-place-label" : "");
     btn.style.left = b.x + "%";
     btn.style.top = convertedY(b.y) + "%";
     btn.dataset.id = b.id;
     btn.dataset.label = `${b.id} ${name}`;
     btn.setAttribute("aria-label", linked ? buildingOpenAria(b) : t().locationAria(b.id,name));
     btn.title = linked ? buildingOpenTitle(b) : `${b.id} ${name}`;
+    if(b.mapLabel) btn.textContent = name;
 
     if(linked){
       btn.addEventListener("click", () => {
@@ -3577,6 +3618,8 @@ function renderMapHotspots(){
         if(links.length) openBuildingLinks(b);
         else window.open(buildingUrl(b),"_blank","noopener,noreferrer");
       });
+    }else if(identifiable){
+      btn.addEventListener("click",() => openPlaceInfo(b));
     }
 
     hotspotLayer.appendChild(btn);
@@ -3841,6 +3884,20 @@ function openBuildingLinks(b){
       <h2 class="facility-popup-name" id="facilityPopupTitle">${escapeHtml(displayName(b))}</h2>
     </header>
     <div>${links.map(link => `<a class="facility-popup-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)} →</a>`).join(" ")}</div>
+  `;
+  facilityPopup.querySelector(".facility-popup-close").addEventListener("click",closeFacilityPopup);
+  if(!facilityPopup.open) facilityPopup.showModal();
+}
+
+function openPlaceInfo(b){
+  closeFacilityPopup();
+  facilityPopup.innerHTML = `
+    <header class="facility-popup-header">
+      <button class="facility-popup-close" type="button" aria-label="${escapeHtml(t().facilityCloseAria)}">×</button>
+      <div class="facility-popup-category">${escapeHtml(t().placesGroup)}</div>
+      <h2 class="facility-popup-name" id="facilityPopupTitle">${escapeHtml(displayName(b))}</h2>
+      <div class="facility-popup-location">${escapeHtml(t().pending)}</div>
+    </header>
   `;
   facilityPopup.querySelector(".facility-popup-close").addEventListener("click",closeFacilityPopup);
   if(!facilityPopup.open) facilityPopup.showModal();
