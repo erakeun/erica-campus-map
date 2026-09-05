@@ -654,41 +654,38 @@
     .facility-brand-shell.brand-grazie{--brand-bg:#fff;--brand-fg:#694a31}
     .facility-brand-shell.brand-emart24{--brand-bg:#57585b;--brand-fg:#ffb71b}
 
+    .facility-marker.is-group{
+      width:auto;max-width:150px;min-width:90px;height:auto;min-height:44px;
+      padding:7px 10px;border-radius:12px;background:#fff;color:#172033;
+      text-align:center;gap:3px;line-height:1.25;
+    }
+    .facility-group-name{font-size:11px;font-weight:850;overflow-wrap:anywhere}
+    .facility-group-count{font-size:10px;color:#526174;font-weight:750}
     .facility-popup{
-      --popup-dx:0px;
-      --popup-dy:-32px;
-      position:absolute;
-      width:min(300px,calc(100vw - 36px));
-      z-index:90;
-      padding:14px 15px 13px;
-      border:1px solid #dbe3ec;
-      border-radius:14px;
-      background:rgba(255,255,255,.98);
-      color:#172033;
-      box-shadow:0 16px 38px rgba(15,23,42,.24);
-      line-height:1.4;
-      transform:translate(-50%,-100%) translate(var(--popup-dx),calc(var(--popup-dy) - 22px));
-      pointer-events:auto;
+      position:fixed;inset:0;margin:auto;width:min(460px,calc(100vw - 24px));
+      max-height:calc(100dvh - 48px);padding:22px;border:1px solid #dbe3ec;
+      border-radius:18px;background:#fff;color:#172033;
+      box-shadow:0 20px 60px #0f172a40;line-height:1.5;overflow:auto;
     }
-
-    .facility-popup.is-below{
-      transform:translate(-50%,0) translate(var(--popup-dx),calc(var(--popup-dy) + 22px));
-    }
-
-    .facility-popup[hidden]{display:none}
-
+    .facility-popup::backdrop{background:rgba(15,23,42,.28)}
+    .facility-popup-header{position:sticky;top:-22px;background:#fff;z-index:2;padding:8px 48px 12px 0}
     .facility-popup-close{
-      position:absolute;
-      top:7px;
-      right:7px;
-      width:28px;
-      height:28px;
-      border:0;
-      border-radius:50%;
-      background:transparent;
-      color:#7a8492;
-      font-size:20px;
-      cursor:pointer;
+      position:absolute;top:8px;right:8px;width:44px;height:44px;
+      border:0;border-radius:50%;background:transparent;color:#667085;
+      font-size:24px;cursor:pointer;
+    }
+    .facility-floor{margin-top:18px;border-top:1px solid #e5ebf2;padding-top:12px}
+    .facility-floor h3{margin:0 0 8px;font-size:15px;color:#155da4}
+    .facility-floor ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+    .facility-floor li{padding:10px 12px;border-radius:10px;background:#f6f8fb}
+    .facility-floor li.is-search-result{background:#fff4dc;outline:2px solid #c8790b}
+    .facility-item-name{display:block;font-size:14px;font-weight:800}
+    .facility-item-category{font-size:11px;color:#58677b}
+    .facility-item-detail{margin-top:4px;font-size:12px;color:#4b596c;overflow-wrap:anywhere}
+    .facility-scope-btn{min-height:44px;margin-top:12px;padding:8px 12px;border:1px solid #cad8e8;border-radius:9px;background:#f1f6fc;color:#18558c;font-weight:750;cursor:pointer}
+    .facility-popup :focus-visible{outline:3px solid #287acd;outline-offset:3px}
+    @media(max-width:600px){
+      .facility-popup{inset:auto 12px 12px;margin:0;width:auto;max-height:72dvh;padding:20px 16px;padding-bottom:max(20px,env(safe-area-inset-bottom));}
     }
 
     .facility-popup-close:hover{background:#f1f4f7;color:#344054}
@@ -968,7 +965,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.4.1 · TRILINGUAL SMART MAP</div>
+        <div class="version">V2.5.0 · BUILDING FACILITY GUIDE</div>
         <h1 id="pageTitle">ERICA 캠퍼스 내부구조도 안내</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1031,7 +1028,7 @@
           <img id="campusMap" src="assets/erica-map-ko.jpg" alt="한양대학교 ERICA 캠퍼스 항공 지도" width="4096" height="1860" />
           <div class="hotspot-layer" id="hotspotLayer"></div>
           <div class="facility-layer" id="facilityLayer"></div>
-          <div class="facility-popup" id="facilityPopup" hidden></div>
+
         </div>
       </div>
 
@@ -1058,10 +1055,11 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.4.1 · TRILINGUAL SMART MAP</span>
+      <span class="footer-version">V2.5.0 · BUILDING FACILITY GUIDE</span>
     </footer>
   </main>
 
+<dialog class="facility-popup" id="facilityPopup" aria-labelledby="facilityPopupTitle"></dialog>
 <script>
 /* ============================================================
    유지보수 핵심
@@ -2752,7 +2750,7 @@ const FACILITIES = [
 ];
 
 const SETTINGS = {
-  version: "V2.4.1 · TRILINGUAL SMART MAP",
+  version: "V2.5.0 · BUILDING FACILITY GUIDE",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
@@ -2777,8 +2775,9 @@ const UI = {
     facilityMasterAria: "전체 시설 표시 전환",
     facilityMasterTitle: "전체 시설 레이어 켜기 또는 끄기",
     facilityPanelTitle: "행정팀·학생지원·편의시설 지도 표시",
-    facilityPanelHelp: "시설 필터는 항상 표시됩니다. 원하는 항목을 개별로 켜거나 끌 수 있고, 같은 건물의 여러 시설은 자동으로 펼쳐집니다.",
+    facilityPanelHelp: "시설 종류를 선택하면 건물별로 묶어 표시합니다. 건물 마커를 눌러 층별 시설과 담당 업무를 확인하세요.",
     facilityAllOn: "전체 켜기",
+    facilityCount: n => `시설 ${n}곳`, facilityAll: "건물 전체 시설 보기", facilityFiltered: "선택한 종류만 보기", facilityFloors: "층별 시설 안내", floorUnknown: "층 정보 확인 필요",
     facilityAllOff: "전체 끄기",
     facilityCategoryAria: name => `${name} 표시 전환`,
     facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
@@ -2824,8 +2823,9 @@ const UI = {
     facilityMasterAria: "Toggle all facility layers",
     facilityMasterTitle: "Show or hide all facility layers",
     facilityPanelTitle: "Campus offices, student services & amenities",
-    facilityPanelHelp: "Facility filters are always visible. Turn categories on or off individually; multiple facilities in the same building are automatically spread around the building marker.",
+    facilityPanelHelp: "Choose facility categories to see one marker per building. Open a marker for facilities and services by floor.",
     facilityAllOn: "Show all",
+    facilityCount: n => `${n} facilities`, facilityAll: "View all building facilities", facilityFiltered: "Show selected categories", facilityFloors: "Facilities by floor", floorUnknown: "Floor not specified",
     facilityAllOff: "Hide all",
     facilityCategoryAria: name => `Toggle ${name}`,
     facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
@@ -2871,8 +2871,9 @@ const UI = {
     facilityMasterAria: "切换全部设施图层",
     facilityMasterTitle: "显示或隐藏全部设施图层",
     facilityPanelTitle: "行政办公室、学生服务及便利设施地图显示",
-    facilityPanelHelp: "设施筛选区始终显示。可单独开启或关闭各类别；同一建筑内的多个设施会自动展开。",
+    facilityPanelHelp: "选择设施类别后，将按建筑合并显示。点击建筑标记可查看各楼层的设施及服务。",
     facilityAllOn: "全部开启",
+    facilityCount: n => `${n}处设施`, facilityAll: "查看建筑全部设施", facilityFiltered: "仅显示所选类别", facilityFloors: "楼层设施指南", floorUnknown: "楼层待确认",
     facilityAllOff: "全部关闭",
     facilityCategoryAria: name => `切换${name}显示`,
     facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
@@ -3151,141 +3152,164 @@ function setAllFacilityCategories(on){
   updateFacilityVisibility();
 }
 
-function facilityOffsets(count,index){
-  if(count <= 1) return [0,-34];
-  if(count <= 5){
-    const radius = 47;
-    const angle = -Math.PI / 2 + index * (Math.PI * 2 / count);
-    return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
-  }
-  if(count <= 9){
-    const radius = 63;
-    const angle = -Math.PI / 2 + index * (Math.PI * 2 / count);
-    return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
-  }
-  const outerCount = Math.ceil(count * .64);
-  if(index < outerCount){
-    const radius = 76;
-    const angle = -Math.PI / 2 + index * (Math.PI * 2 / outerCount);
-    return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
-  }
-  const innerIndex = index - outerCount;
-  const innerCount = count - outerCount;
-  const radius = 47;
-  const angle = -Math.PI / 2 + innerIndex * (Math.PI * 2 / innerCount) + .35;
-  return [Math.round(Math.cos(angle) * radius),Math.round(Math.sin(angle) * radius)];
+function groupFacilitiesByBuilding(facilities){
+  const groups = new Map();
+  facilities.forEach(f => {
+    if(!groups.has(f.buildingId)) groups.set(f.buildingId,[]);
+    groups.get(f.buildingId).push(f);
+  });
+  return groups;
+}
+
+function groupFacilitiesByFloor(facilities){
+  const floors = new Map();
+  facilities.forEach(f => {
+    const key = f.floorEn || f.floorKo || "";
+    if(!floors.has(key)) floors.set(key,[]);
+    floors.get(key).push(f);
+  });
+  const rank = key => {
+    const match = key.match(/^(B)?(\d+)/i);
+    return match ? Number(match[2]) * (match[1] ? -1 : 1) : -Infinity;
+  };
+  return [...floors.entries()].sort((a,b) => rank(b[0])-rank(a[0]));
 }
 
 function renderFacilityMarkers(){
-  facilityLayer.replaceChildren();
-  facilityMarkerEls.clear();
-  selectedFacilityId = null;
-  facilityPopup.hidden = true;
-
-  FACILITIES.forEach(f => {
-    const b = buildingById(f.buildingId);
-    if(!b) return;
-    const c = FACILITY_CATEGORIES[f.category];
-    const btn = document.createElement("button");
-    btn.type = "button";
-    const hasBrand = Boolean(f.brandLogo || f.brandText);
-    btn.className = "facility-marker" + (hasBrand ? " has-brand" : "");
-    btn.dataset.facilityId = f.id;
-    btn.dataset.category = f.category;
-    btn.style.left = b.x + "%";
-    btn.style.top = convertedY(b.y) + "%";
-    btn.style.setProperty("--cat",c.color);
-    btn.innerHTML = facilityBrandMarkup(f,c);
-    const brandImg = btn.querySelector(".facility-brand-logo");
-    if(brandImg){
-      brandImg.addEventListener("error",() => btn.classList.add("brand-failed"),{once:true});
-      brandImg.addEventListener("load",() => btn.classList.remove("brand-failed"),{once:true});
-    }
-    const detail = facilityDetail(f);
-    const label = `${facilityDisplayName(f)}${detail ? ` · ${detail}` : ""} · ${displayName(b)} ${facilityFloor(f)}`;
-    btn.title = label;
-    btn.setAttribute("aria-label",label);
-    btn.addEventListener("click",e => {
-      e.stopPropagation();
-      openFacilityPopup(f,btn);
-    });
-    facilityLayer.appendChild(btn);
-    facilityMarkerEls.set(f.id,btn);
-  });
-
+  closeFacilityPopup();
   updateFacilityVisibility();
 }
 
 function updateFacilityVisibility(){
-  const visible = FACILITIES.filter(f => activeFacilityCategories.has(f.category));
-  const groups = new Map();
-  visible.forEach(f => {
-    if(!groups.has(f.buildingId)) groups.set(f.buildingId,[]);
-    groups.get(f.buildingId).push(f);
-  });
-
-  FACILITIES.forEach(f => {
-    const el = facilityMarkerEls.get(f.id);
-    if(!el) return;
-    const show = activeFacilityCategories.has(f.category);
-    el.classList.toggle("is-visible",show);
-    if(!show) el.classList.remove("is-selected");
-  });
-
-  groups.forEach(items => {
-    items.forEach((f,index) => {
-      const [dx,dy] = facilityOffsets(items.length,index);
-      const el = facilityMarkerEls.get(f.id);
-      if(!el) return;
-      el.style.setProperty("--dx",dx + "px");
-      el.style.setProperty("--dy",dy + "px");
-      el.dataset.dx = String(dx);
-      el.dataset.dy = String(dy);
+  facilityLayer.replaceChildren();
+  facilityMarkerEls.clear();
+  const groups = groupFacilitiesByBuilding(FACILITIES.filter(f => activeFacilityCategories.has(f.category)));
+  groups.forEach((items,buildingId) => {
+    const b = buildingById(buildingId);
+    if(!b) return;
+    const f = items[0];
+    const c = FACILITY_CATEGORIES[f.category];
+    const grouped = items.length > 1;
+    const categories = [...new Set(items.map(item => item.category))];
+    const summary = categories.length === 1
+      ? `${facilityCategoryLabel(categories[0])} · ${t().facilityCount(items.length)}`
+      : t().facilityCount(items.length);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "facility-marker is-visible" + (grouped ? " is-group" : (f.brandLogo || f.brandText ? " has-brand" : ""));
+    btn.dataset.buildingId = buildingId;
+    btn.dataset.dx = "0";
+    btn.dataset.dy = "-34";
+    btn.style.left = b.x + "%";
+    btn.style.top = convertedY(b.y) + "%";
+    btn.style.setProperty("--dy","-34px");
+    btn.style.setProperty("--cat",c.color);
+    btn.innerHTML = grouped
+      ? `<span class="facility-group-name">${escapeHtml(displayName(b))}</span><span class="facility-group-count">${escapeHtml(summary)}</span>`
+      : facilityBrandMarkup(f,c);
+    const brandImg = btn.querySelector(".facility-brand-logo");
+    if(brandImg) brandImg.addEventListener("error",() => btn.classList.add("brand-failed"),{once:true});
+    const label = `${displayName(b)} · ${summary}${!grouped ? ` · ${facilityDisplayName(f)} · ${facilityFloor(f)}` : ""}`;
+    btn.title = label;
+    btn.setAttribute("aria-label",label);
+    btn.setAttribute("aria-haspopup","dialog");
+    btn.addEventListener("click",e => {
+      e.stopPropagation();
+      openBuildingFacilities(buildingId,btn);
     });
+    facilityLayer.appendChild(btn);
+    items.forEach(item => facilityMarkerEls.set(item.id,btn));
   });
-
+  layoutFacilityMarkers();
   updateFacilityMasterCount();
 }
 
-function openFacilityPopup(f,marker){
-  const b = buildingById(f.buildingId);
-  if(!b) return;
-  selectedFacilityId = f.id;
-  facilityMarkerEls.forEach(el => el.classList.toggle("is-selected",el === marker));
+function layoutFacilityMarkers(){
+  facilityLayer.querySelectorAll(".facility-leader").forEach(el => el.remove());
+  const placed = [];
+  const candidates = [];
+  for(let dx=-240;dx<=240;dx+=24){
+    for(let shift=-240;shift<=240;shift+=24) candidates.push({dx,dy:shift-34,score:dx*dx+shift*shift});
+  }
+  candidates.sort((a,b) => a.score-b.score);
+  for(const marker of new Set(facilityMarkerEls.values())){
+    const x = marker.offsetLeft, y = marker.offsetTop;
+    const width = marker.offsetWidth, height = marker.offsetHeight;
+    const rect = ({dx,dy}) => ({left:x+dx-width/2,right:x+dx+width/2,top:y+dy-height/2,bottom:y+dy+height/2});
+    const position = candidates.find(candidate => {
+      const r = rect(candidate);
+      return r.left >= 0 && r.right <= stage.clientWidth && r.top >= 0 && r.bottom <= stage.clientHeight &&
+        !placed.some(other => r.right+6 > other.left && r.left-6 < other.right && r.bottom+6 > other.top && r.top-6 < other.bottom);
+    }) || {dx:0,dy:-34};
+    marker.dataset.dx = String(position.dx);
+    marker.dataset.dy = String(position.dy);
+    marker.style.setProperty("--dx",`${position.dx}px`);
+    marker.style.setProperty("--dy",`${position.dy}px`);
+    placed.push(rect(position));
+    const line = document.createElement("span");
+    line.className = "facility-leader";
+    line.setAttribute("aria-hidden","true");
+    Object.assign(line.style,{position:"absolute",left:`${x}px`,top:`${y}px`,width:`${Math.hypot(position.dx,position.dy)}px`,height:"2px",background:"#fff",boxShadow:"0 0 2px #243b53",transformOrigin:"0 50%",transform:`rotate(${Math.atan2(position.dy,position.dx)}rad)`,pointerEvents:"none"});
+    facilityLayer.appendChild(line);
+  }
+}
+new ResizeObserver(layoutFacilityMarkers).observe(stage);
 
-  const c = FACILITY_CATEGORIES[f.category];
-  const linked = hasUrl(b);
-  const detail = facilityDetail(f);
-  const detailHtml = detail ? `<div class="facility-popup-detail">${escapeHtml(detail)}</div>` : "";
-  const linkHtml = linked
-    ? `<a class="facility-popup-link" href="${escapeHtml(buildingUrl(b))}" target="_blank" rel="noopener noreferrer">${escapeHtml(t().facilityFloorPlan)}</a>`
-    : "";
-
+function openBuildingFacilities(buildingId,marker,showAll=false,highlightId=null){
+  const b = buildingById(buildingId);
+  if(!b || !marker.isConnected) return;
+  const all = FACILITIES.filter(f => f.buildingId === buildingId);
+  const items = showAll ? all : all.filter(f => activeFacilityCategories.has(f.category));
+  if(!items.length) return;
+  selectedFacilityId = highlightId;
+  new Set(facilityMarkerEls.values()).forEach(el => el.classList.toggle("is-selected",el === marker));
+  const floors = groupFacilitiesByFloor(items).map(([,facilities]) => `
+    <section class="facility-floor">
+      <h3>${escapeHtml(facilityFloor(facilities[0]) || t().floorUnknown)}</h3>
+      <ul>${facilities.map(f => `<li data-facility-id="${escapeHtml(f.id)}"${f.id === highlightId ? ' class="is-search-result"' : ''}>
+        <span class="facility-item-name">${escapeHtml(facilityDisplayName(f))}</span>
+        <span class="facility-item-category">${escapeHtml(facilityCategoryLabel(f.category))}</span>
+        ${facilityDetail(f) ? `<div class="facility-item-detail">${escapeHtml(facilityDetail(f))}</div>` : ""}
+      </li>`).join("")}</ul>
+    </section>`).join("");
   facilityPopup.innerHTML = `
+    <header class="facility-popup-header">
     <button class="facility-popup-close" type="button" aria-label="${escapeHtml(t().facilityCloseAria)}">×</button>
-    <div class="facility-popup-category"><span class="facility-popup-icon" style="--cat:${c.color}" aria-hidden="true">${c.icon}</span><span>${escapeHtml(facilityCategoryLabel(f.category))}</span></div>
-    <strong class="facility-popup-name">${escapeHtml(facilityDisplayName(f))}</strong>
-    <div class="facility-popup-location">${escapeHtml(t().facilityPopupLocation(displayName(b),facilityFloor(f)))}</div>
-    ${detailHtml}
-    ${linkHtml}
+    <div class="facility-popup-category">${escapeHtml(t().facilityFloors)}</div>
+    <h2 class="facility-popup-name" id="facilityPopupTitle">${escapeHtml(displayName(b))}</h2>
+    <div class="facility-popup-location">${escapeHtml(t().facilityCount(items.length))}</div>
+    </header>
+    ${all.length > all.filter(f => activeFacilityCategories.has(f.category)).length ? `<button class="facility-scope-btn" type="button">${escapeHtml(showAll ? t().facilityFiltered : t().facilityAll)}</button>` : ""}
+    ${floors}
+    ${hasUrl(b) ? `<a class="facility-popup-link" href="${escapeHtml(buildingUrl(b))}" target="_blank" rel="noopener noreferrer">${escapeHtml(t().facilityFloorPlan)}</a>` : ""}
   `;
-  facilityPopup.style.left = b.x + "%";
-  facilityPopup.style.top = convertedY(b.y) + "%";
-  facilityPopup.style.setProperty("--popup-dx",(marker.dataset.dx || "0") + "px");
-  facilityPopup.style.setProperty("--popup-dy",(marker.dataset.dy || "-34") + "px");
-  facilityPopup.classList.toggle("is-below",convertedY(b.y) < 24);
-  facilityPopup.hidden = false;
-  facilityPopup.querySelector(".facility-popup-close").addEventListener("click",e => {
-    e.stopPropagation();
-    closeFacilityPopup();
+  facilityPopup.querySelector(".facility-popup-close").addEventListener("click",closeFacilityPopup);
+  facilityPopup.querySelector(".facility-scope-btn")?.addEventListener("click",() => {
+    openBuildingFacilities(buildingId,marker,!showAll,highlightId);
+    facilityPopup.querySelector(".facility-scope-btn")?.focus({preventScroll:true});
   });
+  if(!facilityPopup.open) facilityPopup.showModal();
+  facilityPopup.querySelector(".is-search-result")?.scrollIntoView({block:"nearest"});
+}
+
+function openFacilityPopup(f,marker){
+  openBuildingFacilities(f.buildingId,marker,false,f.id);
 }
 
 function closeFacilityPopup(){
   selectedFacilityId = null;
-  facilityPopup.hidden = true;
-  facilityMarkerEls.forEach(el => el.classList.remove("is-selected"));
+  if(facilityPopup.open) facilityPopup.close();
+  new Set(facilityMarkerEls.values()).forEach(el => el.classList.remove("is-selected"));
 }
+facilityPopup.addEventListener("close",() => {
+  selectedFacilityId = null;
+  new Set(facilityMarkerEls.values()).forEach(el => el.classList.remove("is-selected"));
+});
+facilityPopup.addEventListener("click",event => {
+  const rect = facilityPopup.getBoundingClientRect();
+  if(event.target === facilityPopup && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) closeFacilityPopup();
+});
+
 
 facilityMasterBtn.addEventListener("click",() => toggleFacilityPanel());
 facilityAllOn.addEventListener("click",() => setAllFacilityCategories(true));
@@ -3587,7 +3611,7 @@ function focusFacilityResult(f,shouldScroll=true,openPopup=false){
   }
 
   if(openPopup){
-    setTimeout(() => openFacilityPopup(f,marker),260);
+    openFacilityPopup(f,marker);
   }
 }
 
