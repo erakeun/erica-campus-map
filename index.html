@@ -772,6 +772,9 @@
     .facility-item-name{display:block;font-size:14px;font-weight:800}
     .facility-item-link{color:#075fae;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
     .facility-item-link:hover{color:#004987}
+    .facility-item-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+    .facility-item-links a{display:inline-flex;padding:5px 7px;border:1px solid #bcd4ea;border-radius:8px;background:#edf6ff;color:#075fae;font-size:11px;font-weight:800;text-decoration:none}
+    .facility-item-links a:hover{background:#dfeefe;color:#004987}
     .facility-item-category{font-size:11px;color:#58677b}
     .facility-item-detail{margin-top:4px;font-size:12px;color:#4b596c;overflow-wrap:anywhere}
     .facility-scope-btn{min-height:44px;margin-top:12px;padding:8px 12px;border:1px solid #cad8e8;border-radius:9px;background:#f1f6fc;color:#18558c;font-weight:750;cursor:pointer}
@@ -1068,7 +1071,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.8.0 · MOBILE MAP & LOCATIONS</div>
+        <div class="version">V2.9.0 · OFFICIAL LINKS</div>
         <h1 id="pageTitle">ERICA 캠퍼스맵</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1159,7 +1162,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.8.0 · MOBILE MAP & LOCATIONS</span>
+      <span class="footer-version">V2.9.0 · OFFICIAL LINKS</span>
     </footer>
   </main>
 
@@ -1822,7 +1825,15 @@ const BUILDINGS = [
       "职业发展中心",
       "全球职业发展中心"
     ],
-    "urlZh": ""
+    "urlZh": "",
+    "links": [
+      {
+        "labelKo": "ERICA 학술정보관 공식 홈페이지",
+        "labelEn": "ERICA Academic Information Center Official Website",
+        "labelZh": "ERICA学术信息馆官方网站",
+        "url": "https://information.hanyang.ac.kr/"
+      }
+    ]
   },
   {
     "id": "402",
@@ -2066,7 +2077,6 @@ const BUILDINGS = [
   {
     "id": "HG",
     "group": "places",
-    "mapLabel": true,
     "nameKo": "하냥동산",
     "nameEn": "Hanyang Garden",
     "nameZh": "汉阳花园",
@@ -2321,7 +2331,8 @@ const FACILITIES = [
     "floorKo": "2층",
     "floorEn": "2F",
     "nameKo": "공학대학 행정팀",
-    "nameEn": "College of Engineering Sciences Administration Office",
+    "nameEn": "College of Engineering Administration Office",
+    "url": "https://ieng.hanyang.ac.kr/",
     "floorZh": "2层",
     "nameZh": "工学院行政办公室",
     "aliasesZh": [
@@ -2337,6 +2348,7 @@ const FACILITIES = [
     "floorEn": "6F",
     "nameKo": "소프트웨어융합대학 행정팀",
     "nameEn": "College of Computing Administration Office",
+    "url": "https://computing.hanyang.ac.kr/",
     "floorZh": "6层",
     "nameZh": "软件融合学院行政办公室",
     "aliasesZh": [
@@ -2352,6 +2364,7 @@ const FACILITIES = [
     "floorEn": "2F",
     "nameKo": "약학대학 행정팀",
     "nameEn": "College of Pharmacy Administration Office",
+    "url": "https://pharmacy.hanyang.ac.kr/",
     "floorZh": "2层",
     "nameZh": "药学院行政办公室",
     "aliasesZh": [
@@ -2366,6 +2379,7 @@ const FACILITIES = [
     "floorEn": "1F",
     "nameKo": "첨단융합대학 행정팀",
     "nameEn": "College of Advanced Technology & Convergence Administration Office",
+    "url": "https://atc.hanyang.ac.kr/",
     "floorZh": "1层",
     "nameZh": "尖端融合学院行政办公室",
     "aliasesZh": [
@@ -2380,6 +2394,20 @@ const FACILITIES = [
     "floorEn": "2F",
     "nameKo": "글로벌문화통상대학/커뮤니케이션&컬처대학 행정팀",
     "nameEn": "College of Languages & Cultures / College of Communication Administration Office",
+    "links": [
+      {
+        "labelKo": "글로벌문화통상대학 홈페이지",
+        "labelEn": "College of Global Culture and Commerce Website",
+        "labelZh": "全球文化通商学院官网",
+        "url": "https://lan-cul.hanyang.ac.kr/"
+      },
+      {
+        "labelKo": "커뮤니케이션&컬처대학 홈페이지",
+        "labelEn": "College of Communication & Culture Website",
+        "labelZh": "传播与文化学院官网",
+        "url": "https://ccss.hanyang.ac.kr/"
+      }
+    ],
     "floorZh": "2层",
     "nameZh": "全球文化通商学院／传播与文化学院行政办公室",
     "aliasesZh": [
@@ -2396,6 +2424,7 @@ const FACILITIES = [
     "floorEn": "4F",
     "nameKo": "경상대학 행정팀",
     "nameEn": "College of Business & Economics Administration Office",
+    "url": "https://ibus.hanyang.ac.kr/",
     "floorZh": "4层",
     "nameZh": "经商学院行政办公室",
     "aliasesZh": [
@@ -2411,6 +2440,7 @@ const FACILITIES = [
     "floorEn": "3F",
     "nameKo": "디자인대학 행정팀",
     "nameEn": "College of Design Administration Office",
+    "url": "https://design.hanyang.ac.kr/",
     "floorZh": "3层",
     "nameZh": "设计学院行政办公室",
     "aliasesZh": [
@@ -2425,6 +2455,7 @@ const FACILITIES = [
     "floorEn": "1F",
     "nameKo": "예체능대학 행정팀",
     "nameEn": "College of Sport & Arts Administration Office",
+    "url": "https://sportsnarts.hanyang.ac.kr/",
     "floorZh": "1层",
     "nameZh": "艺体能学院行政办公室",
     "aliasesZh": [
@@ -2439,6 +2470,7 @@ const FACILITIES = [
     "floorEn": "1F",
     "nameKo": "LIONS칼리지 행정팀",
     "nameEn": "LIONS College of Liberal Arts Administration Office",
+    "url": "https://lions.hanyang.ac.kr/",
     "floorZh": "1层",
     "nameZh": "LIONS学院行政办公室",
     "aliasesZh": [
@@ -2724,6 +2756,7 @@ const FACILITIES = [
     "floorEn": "4F",
     "nameKo": "학생지원팀",
     "nameEn": "Student Support Team",
+    "url": "https://esc.hanyang.ac.kr/-4",
     "detailKo": "학생증 발급",
     "detailEn": "Student ID services",
     "floorZh": "4层",
@@ -2745,6 +2778,7 @@ const FACILITIES = [
     "floorEn": "2F",
     "nameKo": "무인증명발급기",
     "nameEn": "Certificate Kiosk",
+    "url": "https://ehaksa.hanyang.ac.kr/",
     "detailKo": "학생복지관 우측 출입구를 이용하며 우측 계단실에 위치",
     "detailEn": "Use the right-side entrance of the Student Welfare Building; located in the right stairwell",
     "aliasesKo": [
@@ -2780,6 +2814,7 @@ const FACILITIES = [
     "floorEn": "4F",
     "nameKo": "학사운영팀",
     "nameEn": "Academic Affairs Team",
+    "url": "https://ehaksa.hanyang.ac.kr/",
     "detailKo": "학적·수업·성적·졸업 및 증명 발급 업무",
     "detailEn": "Academic records, classes, grades, graduation, and certificate issuance services",
     "aliasesKo": [
@@ -2842,6 +2877,7 @@ const FACILITIES = [
     "floorEn": "3F",
     "nameKo": "한양보건센터",
     "nameEn": "Health Care Center",
+    "url": "https://site.hanyang.ac.kr/web/hc/erica-1",
     "floorZh": "3层",
     "nameZh": "汉阳保健中心",
     "aliasesZh": [
@@ -2859,6 +2895,7 @@ const FACILITIES = [
     "floorEn": "2F",
     "nameKo": "창의인재원 행정팀",
     "nameEn": "Residence Hall Administrative Affairs Team",
+    "url": "https://hydorm.hanyang.ac.kr/",
     "floorZh": "2层",
     "nameZh": "创意人才院行政办公室",
     "aliasesZh": [
@@ -2875,6 +2912,7 @@ const FACILITIES = [
     "floorEn": "1F",
     "nameKo": "입학처 입학팀",
     "nameEn": "ERICA Admissions Team",
+    "url": "https://goerica.hanyang.ac.kr/",
     "aliasesKo": [
       "입학팀",
       "입학처"
@@ -2896,6 +2934,7 @@ const FACILITIES = [
     "floorEn": "1F",
     "nameKo": "커리어개발팀",
     "nameEn": "Career Development Team",
+    "url": "https://cdp.hanyang.ac.kr/",
     "floorZh": "1层",
     "nameZh": "职业发展组",
     "aliasesZh": [
@@ -3058,8 +3097,9 @@ const FACILITIES = [
     "floorEn": "4F",
     "floorZh": "4层",
     "nameKo": "융합산업대학원 RC행정팀",
-    "nameEn": "",
-    "nameZh": "",
+    "nameEn": "Graduate School of Industrial Convergence RC Administration Team",
+    "nameZh": "融合产业研究生院RC行政组",
+    "url": "https://gsic.hanyang.ac.kr/",
     "aliasesKo": [
       "융합산업대학원 행정팀",
       "RC행정팀",
@@ -3074,8 +3114,9 @@ const FACILITIES = [
     "floorEn": "2F",
     "floorZh": "2层",
     "nameKo": "국제교육원",
-    "nameEn": "",
-    "nameZh": ""
+    "nameEn": "Institute of International Education",
+    "nameZh": "国际教育院",
+    "url": "https://ericaiie.hanyang.ac.kr/"
   },
   {
     "id": "support-continuing-education",
@@ -3085,8 +3126,9 @@ const FACILITIES = [
     "floorEn": "2F",
     "floorZh": "2层",
     "nameKo": "사회교육원",
-    "nameEn": "",
-    "nameZh": ""
+    "nameEn": "Institute of Continuing Education",
+    "nameZh": "社会教育院",
+    "url": "https://cec.hanyang.ac.kr/"
   },
   {
     "id": "support-disabled-students",
@@ -3096,8 +3138,9 @@ const FACILITIES = [
     "floorEn": "3F",
     "floorZh": "3层",
     "nameKo": "장애학생지원센터",
-    "nameEn": "",
-    "nameZh": ""
+    "nameEn": "Center for Students with Disabilities",
+    "nameZh": "残疾学生支援中心",
+    "url": "https://nuri.hanyang.ac.kr/ko/home"
   },
   {
     "id": "support-happiness-dream-counseling",
@@ -3107,8 +3150,9 @@ const FACILITIES = [
     "floorEn": "2F",
     "floorZh": "2层",
     "nameKo": "한양행복드림상담센터",
-    "nameEn": "",
-    "nameZh": "",
+    "nameEn": "Hanyang Happiness Dream Counseling Center",
+    "nameZh": "汉阳幸福梦想心理咨询中心",
+    "url": "https://mycounsel.hanyang.ac.kr/home",
     "aliasesKo": [
       "행복드림상담센터",
       "상담센터"
@@ -3122,8 +3166,9 @@ const FACILITIES = [
     "floorEn": "1F",
     "floorZh": "1层",
     "nameKo": "인권센터",
-    "nameEn": "",
-    "nameZh": ""
+    "nameEn": "Human Rights Center",
+    "nameZh": "人权中心",
+    "url": "https://ehrc.hanyang.ac.kr/"
   },
   {
     "id": "support-erica-ic-pbl-teaching-learning",
@@ -3133,8 +3178,9 @@ const FACILITIES = [
     "floorEn": "B1",
     "floorZh": "地下1层 B109室",
     "nameKo": "ERICA IC-PBL교수학습센터",
-    "nameEn": "",
-    "nameZh": "",
+    "nameEn": "ERICA IC-PBL Center for Teaching and Learning",
+    "nameZh": "ERICA IC-PBL教学学习中心",
+    "url": "https://pblplatform.hanyang.ac.kr/",
     "aliasesKo": [
       "IC-PBL센터",
       "IC-PBL",
@@ -3252,7 +3298,7 @@ const MAP_FEATURES = [
 ];
 
 const SETTINGS = {
-  version: "V2.8.0 · MOBILE MAP & LOCATIONS",
+  version: "V2.9.0 · OFFICIAL LINKS",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
@@ -3516,6 +3562,23 @@ function facilityDisplayName(f){ return localizedValue(f,"name"); }
 function mapFeatureDisplayName(feature){ return localizedValue(feature,"name"); }
 function facilityFloor(f){ return localizedValue(f,"floor"); }
 function facilityDetail(f){ return localizedValue(f,"detail"); }
+function facilityExtraLinks(f){
+  return (f.links || [])
+    .map(link => ({label:localizedValue(link,"label"),url:String(link.url || "").trim()}))
+    .filter(link => link.label && link.url);
+}
+
+function facilityNameMarkup(f){
+  const name = escapeHtml(facilityDisplayName(f));
+  const primary = String(f.url || "").trim();
+  const title = primary
+    ? `<a class="facility-item-name facility-item-link" href="${escapeHtml(primary)}" target="_blank" rel="noopener noreferrer">${name} ↗</a>`
+    : `<span class="facility-item-name">${name}</span>`;
+  const links = facilityExtraLinks(f);
+  return title + (links.length
+    ? `<div class="facility-item-links">${links.map(link => `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)} ↗</a>`).join("")}</div>`
+    : "");
+}
 
 function facilityBrandMarkup(f,c){
   if(f.brandLogo){
@@ -3559,6 +3622,18 @@ function buildingExtraLinks(b){
   return (b.links || [])
     .map(link => ({label:localizedValue(link,"label"),url:String(link.url || "").trim()}))
     .filter(link => link.url);
+}
+
+function buildingPopupLinks(b){
+  const links = buildingExtraLinks(b);
+  const primaryUrl = buildingUrl(b);
+  if(primaryUrl){
+    links.unshift({
+      label: b.linkType === "guide" ? t().viewGuide : t().facilityFloorPlan.replace(/\s*→\s*$/, ""),
+      url: primaryUrl
+    });
+  }
+  return links;
 }
 
 function hasUrl(b){ return buildingUrl(b).length > 0 || buildingExtraLinks(b).length > 0; }
@@ -3842,9 +3917,7 @@ function openBuildingFacilities(buildingId,marker,showAll=false,highlightId=null
     <section class="facility-floor">
       <h3>${escapeHtml(facilityFloor(facilities[0]) || t().floorUnknown)}</h3>
       <ul>${facilities.map(f => `<li data-facility-id="${escapeHtml(f.id)}"${f.id === highlightId ? ' class="is-search-result"' : ''}>
-        ${f.url
-          ? `<a class="facility-item-name facility-item-link" href="${escapeHtml(f.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(facilityDisplayName(f))} ↗</a>`
-          : `<span class="facility-item-name">${escapeHtml(facilityDisplayName(f))}</span>`}
+        ${facilityNameMarkup(f)}
         <span class="facility-item-category">${escapeHtml(facilityCategoryLabel(f.category))}</span>
         ${facilityDetail(f) ? `<div class="facility-item-detail">${escapeHtml(facilityDetail(f))}</div>` : ""}
       </li>`).join("")}</ul>
@@ -3874,7 +3947,7 @@ function openFacilityPopup(f,marker){
 }
 
 function openBuildingLinks(b){
-  const links = buildingExtraLinks(b);
+  const links = buildingPopupLinks(b);
   if(!links.length) return;
   closeFacilityPopup();
   facilityPopup.innerHTML = `

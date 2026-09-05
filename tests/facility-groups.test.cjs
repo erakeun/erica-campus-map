@@ -68,7 +68,23 @@ assert.deepEqual(
 );
 assert.equal(buildingData.find(b => b.id === 'AGORA').y, 46.8);
 assert.equal(buildingData.find(b => b.id === 'HG').urlKo, 'https://blog.naver.com/hyerica4473/223449382969');
+assert.equal(buildingData.find(b => b.id === 'HG').mapLabel, undefined, 'Hanyang Garden must not be permanently labeled');
 for (const suffix of ['Ko','En','Zh']) assert.ok(buildingData.find(b => b.id === 'HG')[`name${suffix}`]);
+assert.equal(buildingData.find(b => b.id === '401').links[0].url, 'https://information.hanyang.ac.kr/');
+for (const id of [
+  'admin-engineering','admin-computing','admin-pharmacy','admin-advanced','admin-business',
+  'admin-design','admin-sport','admin-lions','support-student-card','support-certificate-kiosk',
+  'support-academic-affairs','support-health-center','support-residence-admin','support-admissions',
+  'support-career','admin-convergence-industry-graduate-rc','support-international-education',
+  'support-continuing-education','support-disabled-students','support-happiness-dream-counseling',
+  'support-human-rights','support-erica-ic-pbl-teaching-learning'
+]) assert.match(facilityData.find(f => f.id === id).url, /^https:\/\//, `${id} must link to its official website`);
+assert.equal(facilityData.find(f => f.id === 'admin-languages-communication').links.length, 2);
+for (const id of [
+  'admin-convergence-industry-graduate-rc','support-international-education','support-continuing-education',
+  'support-disabled-students','support-happiness-dream-counseling','support-human-rights',
+  'support-erica-ic-pbl-teaching-learning'
+]) for (const suffix of ['Ko','En','Zh']) assert.ok(facilityData.find(f => f.id === id)[`name${suffix}`], `${id} must include name${suffix}`);
 assert.match(html, /@media \(max-width:900px\)[\s\S]*?\.map-stage\{width:100%;min-width:100%\}/);
 assert.match(html, /else if\(identifiable\)[\s\S]*?openPlaceInfo\(b\)/);
 assert.deepEqual(Array.from(buildingData.find(b => b.id === 'AGORA').links, link => link.url), [
