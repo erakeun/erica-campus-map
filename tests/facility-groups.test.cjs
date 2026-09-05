@@ -87,6 +87,7 @@ for (const id of [
 ]) for (const suffix of ['Ko','En','Zh']) assert.ok(facilityData.find(f => f.id === id)[`name${suffix}`], `${id} must include name${suffix}`);
 assert.match(html, /@media \(max-width:900px\)[\s\S]*?\.map-stage\{width:100%;min-width:100%\}/);
 assert.match(html, /else if\(identifiable\)[\s\S]*?openPlaceInfo\(b\)/);
+assert.match(html, /height:"2px",background:"#ff2d55",boxShadow:"0 0 0 1px/);
 assert.deepEqual(Array.from(buildingData.find(b => b.id === 'AGORA').links, link => link.url), [
   'https://blog.naver.com/hyerica4473/224221136802',
   'https://blog.naver.com/hyerica4473/224222000345'

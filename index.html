@@ -1071,7 +1071,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.9.0 · OFFICIAL LINKS</div>
+        <div class="version">V2.9.1 · REFINED LEADERS</div>
         <h1 id="pageTitle">ERICA 캠퍼스맵</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1162,7 +1162,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.9.0 · OFFICIAL LINKS</span>
+      <span class="footer-version">V2.9.1 · REFINED LEADERS</span>
     </footer>
   </main>
 
@@ -3298,7 +3298,7 @@ const MAP_FEATURES = [
 ];
 
 const SETTINGS = {
-  version: "V2.9.0 · OFFICIAL LINKS",
+  version: "V2.9.1 · REFINED LEADERS",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
@@ -3899,7 +3899,7 @@ function layoutFacilityMarkers(){
     const line = document.createElement("span");
     line.className = "facility-leader";
     line.setAttribute("aria-hidden","true");
-    Object.assign(line.style,{position:"absolute",left:`${x}px`,top:`${y}px`,width:`${Math.hypot(position.dx,position.dy)}px`,height:"4px",background:"#ff2d55",boxShadow:"0 0 0 2px rgba(255,255,255,.96),0 0 8px rgba(255,45,85,.95)",transformOrigin:"0 50%",transform:`rotate(${Math.atan2(position.dy,position.dx)}rad)`,pointerEvents:"none"});
+    Object.assign(line.style,{position:"absolute",left:`${x}px`,top:`${y}px`,width:`${Math.hypot(position.dx,position.dy)}px`,height:"2px",background:"#ff2d55",boxShadow:"0 0 0 1px rgba(255,255,255,.9),0 0 3px rgba(255,45,85,.72)",transformOrigin:"0 50%",transform:`rotate(${Math.atan2(position.dy,position.dx)}rad)`,pointerEvents:"none"});
     facilityLayer.appendChild(line);
   }
 }
