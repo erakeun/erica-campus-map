@@ -20,9 +20,9 @@ const {
   groupFacilitiesByFloor: floors
 } = context;
 
-assert.equal(buildingData.length, 51);
+assert.equal(buildingData.length, 52);
 assert.equal(facilityData.length, 54);
-assert.equal(mapFeatureData.length, 19);
+assert.equal(mapFeatureData.length, 21);
 assert.equal(new Set(buildingData.map(b => b.id)).size, buildingData.length, 'building IDs must be unique');
 assert.equal(new Set(facilityData.map(f => f.id)).size, facilityData.length, 'facility IDs must be unique');
 for (const facility of facilityData) {
@@ -50,7 +50,7 @@ assert.equal(facilityData.filter(f => f.category === 'finance').length, 2);
 assert.equal(facilityData.filter(f => f.category === 'copy').length, 3);
 assert.equal(facilityData.find(f => f.id === 'store-residential-college-7eleven').buildingId, '504');
 assert.equal(facilityData.filter(f => f.category === 'restaurant' && f.url?.includes('erica-today-menu/?restaurant=')).length, 5);
-assert.equal(mapFeatureData.filter(f => f.category === 'smoking').length, 18);
+assert.equal(mapFeatureData.filter(f => f.category === 'smoking').length, 20);
 assert.equal(mapFeatureData.filter(f => f.category === 'innovation' && f.kind === 'polygon').length, 1);
 for (const feature of mapFeatureData) {
   assert.ok(categoryData[feature.category], `${feature.id} must reference an existing category`);
@@ -62,6 +62,15 @@ for (const query of ['복사','복사기','출력','프린터','인쇄']) assert
 assert.equal(buildingData.find(b => b.id === '404').urlKo, 'https://blog.naver.com/hyerica4473/223820883613');
 assert.equal(buildingData.find(b => b.id === 'KTC').urlKo, '');
 assert.equal(buildingData.find(b => b.id === 'KAKAO').urlKo, 'https://blog.naver.com/hyerica4473/223938119953');
+assert.deepEqual(
+  [buildingData.find(b => b.id === 'KAKAO').x, buildingData.find(b => b.id === 'KTC').x],
+  [70.3, 78.7]
+);
+assert.equal(buildingData.find(b => b.id === 'AGORA').y, 46.8);
+assert.equal(buildingData.find(b => b.id === 'HG').urlKo, 'https://blog.naver.com/hyerica4473/223449382969');
+for (const suffix of ['Ko','En','Zh']) assert.ok(buildingData.find(b => b.id === 'HG')[`name${suffix}`]);
+assert.match(html, /@media \(max-width:900px\)[\s\S]*?\.map-stage\{width:100%;min-width:100%\}/);
+assert.match(html, /else if\(identifiable\)[\s\S]*?openPlaceInfo\(b\)/);
 assert.deepEqual(Array.from(buildingData.find(b => b.id === 'AGORA').links, link => link.url), [
   'https://blog.naver.com/hyerica4473/224221136802',
   'https://blog.naver.com/hyerica4473/224222000345'
