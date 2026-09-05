@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ERICA 캠퍼스 내부구조도 안내</title>
-  <meta name="description" content="ERICA 캠퍼스 건물을 검색하고 내부 구조도를 확인할 수 있는 인터랙티브 캠퍼스맵입니다." />
+  <title>ERICA 캠퍼스맵</title>
+  <meta name="description" content="ERICA 캠퍼스의 건물·시설·흡연구역·캠퍼스혁신파크를 한눈에 확인하는 인터랙티브 캠퍼스맵입니다." />
 
   <style>
     :root{
@@ -275,6 +275,49 @@
 
     .hotspot-layer{position:absolute;inset:0;pointer-events:none}
 
+    .map-feature-layer{
+      position:absolute;
+      inset:0;
+      z-index:35;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    .innovation-zone-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+    .innovation-zone-shape{
+      fill:rgba(250,204,21,.31);
+      stroke:#ff5a1f;
+      stroke-width:5;
+      vector-effect:non-scaling-stroke;
+      filter:drop-shadow(0 0 5px rgba(255,255,255,.92));
+    }
+    .innovation-zone-label{
+      position:absolute;
+      left:80%;
+      top:38%;
+      transform:translate(-50%,-50%);
+      padding:8px 11px;
+      border:2px solid #fff;
+      border-radius:9px;
+      background:#0797d5;
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      line-height:1.25;
+      white-space:nowrap;
+      box-shadow:0 5px 15px rgba(15,23,42,.32);
+    }
+    .smoking-marker{
+      position:absolute;
+      width:32px;
+      height:42px;
+      transform:translate(-50%,-100%);
+      filter:drop-shadow(0 3px 3px rgba(15,23,42,.48));
+    }
+    .smoking-marker svg{display:block;width:100%;height:100%}
+    .smoking-marker .smoking-pin{fill:#ef3b24;stroke:#fff;stroke-width:2.5}
+    .smoking-marker .smoking-symbol{fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
     .map-hotspot{
       position:absolute;
       width:38px;
@@ -527,6 +570,21 @@
       pointer-events:none;
     }
 
+    .facility-leader{z-index:40;border-radius:999px}
+    .facility-leader::before{
+      content:"";
+      position:absolute;
+      left:-5px;
+      top:50%;
+      width:10px;
+      height:10px;
+      transform:translateY(-50%);
+      border:2px solid #fff;
+      border-radius:50%;
+      background:#ff2d55;
+      box-shadow:0 0 7px rgba(255,45,85,.95);
+    }
+
     .facility-marker{
       --cat:#64748b;
       --dx:0px;
@@ -694,6 +752,8 @@
     .facility-floor li{padding:10px 12px;border-radius:10px;background:#f6f8fb}
     .facility-floor li.is-search-result{background:#fff4dc;outline:2px solid #c8790b}
     .facility-item-name{display:block;font-size:14px;font-weight:800}
+    .facility-item-link{color:#075fae;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+    .facility-item-link:hover{color:#004987}
     .facility-item-category{font-size:11px;color:#58677b}
     .facility-item-detail{margin-top:4px;font-size:12px;color:#4b596c;overflow-wrap:anywhere}
     .facility-scope-btn{min-height:44px;margin-top:12px;padding:8px 12px;border:1px solid #cad8e8;border-radius:9px;background:#f1f6fc;color:#18558c;font-weight:750;cursor:pointer}
@@ -987,8 +1047,8 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.6.0 · CAMPUS PLACES & SERVICES</div>
-        <h1 id="pageTitle">ERICA 캠퍼스 내부구조도 안내</h1>
+        <div class="version">V2.7.0 · DINING & MAP ZONES</div>
+        <h1 id="pageTitle">ERICA 캠퍼스맵</h1>
         <p id="pageDescription"></p>
       </div>
 
@@ -1049,6 +1109,7 @@
         <div class="map-stage" id="mapStage">
           <img id="campusMap" src="assets/erica-map-ko.jpg" alt="한양대학교 ERICA 캠퍼스 항공 지도" width="4096" height="1860" />
           <div class="hotspot-layer" id="hotspotLayer"></div>
+          <div class="map-feature-layer" id="mapFeatureLayer"></div>
           <div class="facility-layer" id="facilityLayer"></div>
 
         </div>
@@ -1077,7 +1138,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.6.0 · CAMPUS PLACES & SERVICES</span>
+      <span class="footer-version">V2.7.0 · DINING & MAP ZONES</span>
     </footer>
   </main>
 
@@ -1898,16 +1959,17 @@ const BUILDINGS = [
       "Kakao Data Center",
       "Data Center"
     ],
-    "urlKo": "",
+    "urlKo": "https://blog.naver.com/hyerica4473/223938119953",
     "urlEn": "",
     "x": 68.65,
     "y": 24.2,
-    "nameZh": "카카오 데이터센터 안산",
+    "nameZh": "Kakao安山数据中心",
     "aliasesZh": [
       "Kakao",
       "数据中心"
     ],
-    "urlZh": ""
+    "urlZh": "",
+    "linkType": "guide"
   },
   {
     "id": "KTC",
@@ -1926,12 +1988,11 @@ const BUILDINGS = [
       "KTC",
       "Technology Center"
     ],
-    "urlKo": "https://blog.naver.com/hyerica4473/223938119953",
-    "linkType": "guide",
+    "urlKo": "",
     "urlEn": "",
     "x": 76.1,
     "y": 24.2,
-    "nameZh": "인테그리스 코리아 테크놀로지 센터(KTC)",
+    "nameZh": "英特格里斯韩国技术中心（KTC）",
     "aliasesZh": [
       "Entegris",
       "KTC",
@@ -1962,13 +2023,13 @@ const BUILDINGS = [
       {
         "labelKo": "아고라 홍보관 안내",
         "labelEn": "Agora PR Hall Guide",
-        "labelZh": "아고라 홍보관 안내",
+        "labelZh": "阿戈拉宣传馆指南",
         "url": "https://blog.naver.com/hyerica4473/224221136802"
       },
       {
         "labelKo": "아고라 대관 방법",
         "labelEn": "How to Rent Agora",
-        "labelZh": "아고라 대관 방법",
+        "labelZh": "阿戈拉租借方法",
         "url": "https://blog.naver.com/hyerica4473/224222000345"
       }
     ],
@@ -2191,6 +2252,26 @@ const FACILITY_CATEGORIES = {
       "其他设施",
       "便民设施"
     ]
+  },
+  "smoking": {
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M3 15h13v4H3zM16 15h2v4h-2M20 15v4'/><path d='M7 12c-2-2 2-3 0-5M12 12c-2-2 2-3 0-5'/></svg>",
+    "color": "#ef3b24",
+    "ko": "흡연구역",
+    "en": "Smoking Areas",
+    "zh": "吸烟区",
+    "aliasesKo": ["흡연", "담배", "흡연장"],
+    "aliasesEn": ["smoking", "smoking area"],
+    "aliasesZh": ["吸烟", "吸烟处"]
+  },
+  "innovation": {
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 20V9l5 3V8l5 3V4h6v16z'/><path d='M8 20v-3M13 20v-3M18 8h.01M18 12h.01'/></svg>",
+    "color": "#f59e0b",
+    "ko": "캠퍼스혁신파크",
+    "en": "Campus Innovation Park",
+    "zh": "校园创新园区",
+    "aliasesKo": ["혁신파크", "캠퍼스 혁신파크", "예정부지"],
+    "aliasesEn": ["innovation park", "planned site"],
+    "aliasesZh": ["创新园区", "规划用地"]
   }
 };
 
@@ -2795,6 +2876,7 @@ const FACILITIES = [
     "floorEn": "3F",
     "nameKo": "교직원식당",
     "nameEn": "Faculty & Staff Cafeteria",
+    "url": "https://erakeun.github.io/erica-today-menu/?restaurant=faculty",
     "floorZh": "3层",
     "nameZh": "教职员食堂",
     "aliasesZh": [
@@ -2810,6 +2892,7 @@ const FACILITIES = [
     "floorEn": "2F",
     "nameKo": "학생식당",
     "nameEn": "Student Cafeteria",
+    "url": "https://erakeun.github.io/erica-today-menu/?restaurant=student",
     "floorZh": "2层",
     "nameZh": "学生食堂",
     "aliasesZh": [
@@ -2825,6 +2908,7 @@ const FACILITIES = [
     "floorEn": "2F",
     "nameKo": "푸드코트",
     "nameEn": "Food Court",
+    "url": "https://erakeun.github.io/erica-today-menu/?restaurant=food-court",
     "floorZh": "2层",
     "nameZh": "美食中心",
     "aliasesZh": [
@@ -2841,6 +2925,7 @@ const FACILITIES = [
     "floorEn": "B1",
     "nameKo": "창업보육센터 식당",
     "nameEn": "Business Incubator Cafeteria",
+    "url": "https://erakeun.github.io/erica-today-menu/?restaurant=incubator",
     "floorZh": "地下1层",
     "nameZh": "创业保育中心食堂",
     "aliasesZh": [
@@ -2856,6 +2941,7 @@ const FACILITIES = [
     "floorEn": "1F",
     "nameKo": "기숙사 식당",
     "nameEn": "Residence Hall Cafeteria",
+    "url": "https://erakeun.github.io/erica-today-menu/?restaurant=dormitory",
     "floorZh": "1层",
     "nameZh": "创意人才院食堂",
     "aliasesZh": [
@@ -3099,8 +3185,35 @@ const FACILITIES = [
   }
 ];
 
+/* 첨부된 2026 ERICA MAP 표기를 현재 항공 지도 비율에 맞춰 옮긴 지도 전용 정보. */
+const MAP_FEATURES = [
+  {
+    id: "campus-innovation-park",
+    category: "innovation",
+    kind: "polygon",
+    nameKo: "캠퍼스혁신파크 예정 부지",
+    nameEn: "Planned Campus Innovation Park Site",
+    nameZh: "校园创新园区规划用地",
+    points: "1295,269 1337,252 1783,271 1918,568 1911,609 1737,600 1738,666 1401,638 1394,720 1350,601 1412,574"
+  },
+  ...[
+    [48.56,15.16],[49.95,17.96],[54.69,16.13],[27.95,28.06],[49.29,48.49],[24.49,53.23],
+    [57.50,54.09],[15.50,55.38],[17.36,75.16],[22.36,23.44],[21.07,29.68],[17.82,38.17],
+    [30.54,41.83],[18.19,46.02],[59.28,46.34],[38.04,46.99],[33.91,71.72],[28.96,80.65]
+  ].map(([x,y],index) => ({
+    id: `smoking-area-${index + 1}`,
+    category: "smoking",
+    kind: "point",
+    x,
+    y,
+    nameKo: `흡연구역 ${index + 1}`,
+    nameEn: `Smoking Area ${index + 1}`,
+    nameZh: `吸烟区 ${index + 1}`
+  }))
+];
+
 const SETTINGS = {
-  version: "V2.6.0 · CAMPUS PLACES & SERVICES",
+  version: "V2.7.0 · DINING & MAP ZONES",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
@@ -3112,8 +3225,8 @@ const SETTINGS = {
 
 const UI = {
   ko: {
-    title: "ERICA 캠퍼스 내부구조도 안내",
-    metaDescription: "ERICA 캠퍼스의 건물·시설·서비스를 검색하고 내부 구조도를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
+    title: "ERICA 캠퍼스맵",
+    metaDescription: "ERICA 캠퍼스의 건물·시설·서비스·흡연구역·캠퍼스혁신파크를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
     description: "건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>내부 구조도나 안내가 연결된 장소는 지도 번호 또는 아래 이름을 눌러 확인할 수 있습니다.",
     languageLabel: "언어 선택",
     searchPlaceholder: "건물·시설·서비스 검색 (예: 101, 학생증, 카페)",
@@ -3124,8 +3237,8 @@ const UI = {
     facilityMaster: "시설 보기",
     facilityMasterAria: "전체 시설 표시 전환",
     facilityMasterTitle: "전체 시설 레이어 켜기 또는 끄기",
-    facilityPanelTitle: "행정팀·학생지원·편의시설 지도 표시",
-    facilityPanelHelp: "시설 종류를 선택하면 건물별로 묶어 표시합니다. 건물 마커를 눌러 층별 시설과 담당 업무를 확인하세요.",
+    facilityPanelTitle: "교내 시설·흡연구역·캠퍼스혁신파크 표시",
+    facilityPanelHelp: "종류를 선택하면 지도에 표시합니다. 건물 마커를 눌러 층별 시설을 확인하고, 식당명을 눌러 오늘의 메뉴를 보세요.",
     facilityAllOn: "전체 켜기",
     facilityCount: n => `시설 ${n}곳`, facilityAll: "건물 전체 시설 보기", facilityFiltered: "선택한 종류만 보기", facilityFloors: "층별 시설 안내", floorUnknown: "층 정보 확인 필요",
     facilityAllOff: "전체 끄기",
@@ -3165,8 +3278,8 @@ const UI = {
     debug: "<strong>DEBUG MODE</strong> · 빨간 원은 지도 번호 클릭 영역입니다."
   },
   en: {
-    title: "ERICA Campus Building Floor Plan Guide",
-    metaDescription: "Search ERICA campus buildings, facilities and services, and open linked building floor plans from an interactive campus map.",
+    title: "ERICA Campus Map",
+    metaDescription: "Explore ERICA campus buildings, services, smoking areas and the planned Campus Innovation Park on an interactive map.",
     description: "Search by building number or name to locate it on the map.<br>Select a linked place on the map or in the directory to view its floor plan or guide.",
     languageLabel: "Language selection",
     searchPlaceholder: "Search buildings, facilities or services (e.g., 101, Student ID, Cafe)",
@@ -3177,8 +3290,8 @@ const UI = {
     facilityMaster: "Facilities",
     facilityMasterAria: "Toggle all facility layers",
     facilityMasterTitle: "Show or hide all facility layers",
-    facilityPanelTitle: "Campus offices, student services & amenities",
-    facilityPanelHelp: "Choose facility categories to see one marker per building. Open a marker for facilities and services by floor.",
+    facilityPanelTitle: "Campus facilities, smoking areas & Innovation Park",
+    facilityPanelHelp: "Choose a category to show it on the map. Open a building marker for facilities by floor, then select a restaurant to view today's menu.",
     facilityAllOn: "Show all",
     facilityCount: n => `${n} facilities`, facilityAll: "View all building facilities", facilityFiltered: "Show selected categories", facilityFloors: "Facilities by floor", floorUnknown: "Floor not specified",
     facilityAllOff: "Hide all",
@@ -3218,8 +3331,8 @@ const UI = {
     debug: "<strong>DEBUG MODE</strong> · Red circles show the clickable building-number areas."
   },
   zh: {
-    title: "ERICA校园建筑平面图指南",
-    metaDescription: "可搜索ERICA校园建筑、设施和服务，并通过交互式校园地图查看建筑位置及已连接的内部平面图。",
+    title: "ERICA校园地图",
+    metaDescription: "可通过交互式地图查看ERICA校园建筑、服务、吸烟区及校园创新园区规划用地。",
     description: "输入建筑编号或名称，即可在地图上查看其位置。<br>已连接内部平面图或指南的地点，可点击地图编号或下方名称查看。",
     languageLabel: "语言选择",
     searchPlaceholder: "搜索建筑、设施或服务（例：101、学生证、咖啡厅）",
@@ -3230,8 +3343,8 @@ const UI = {
     facilityMaster: "设施显示",
     facilityMasterAria: "切换全部设施图层",
     facilityMasterTitle: "显示或隐藏全部设施图层",
-    facilityPanelTitle: "行政办公室、学生服务及便利设施地图显示",
-    facilityPanelHelp: "选择设施类别后，将按建筑合并显示。点击建筑标记可查看各楼层的设施及服务。",
+    facilityPanelTitle: "校园设施、吸烟区及校园创新园区",
+    facilityPanelHelp: "选择类别即可在地图上显示。点击建筑标记查看楼层设施，再点击餐厅名称查看今日菜单。",
     facilityAllOn: "全部开启",
     facilityCount: n => `${n}处设施`, facilityAll: "查看建筑全部设施", facilityFiltered: "仅显示所选类别", facilityFloors: "楼层设施指南", floorUnknown: "楼层待确认",
     facilityAllOff: "全部关闭",
@@ -3289,6 +3402,7 @@ const mapScroll = document.getElementById("mapScroll");
 const stage = document.getElementById("mapStage");
 const campusMap = document.getElementById("campusMap");
 const hotspotLayer = document.getElementById("hotspotLayer");
+const mapFeatureLayer = document.getElementById("mapFeatureLayer");
 const hintLinked = document.querySelector("#hintLinked span");
 const hintSearch = document.getElementById("hintSearch");
 const directoryTitle = document.getElementById("directoryTitle");
@@ -3360,6 +3474,7 @@ function localizedValue(obj,prefix){
 }
 function displayName(b){ return localizedValue(b,"name"); }
 function facilityDisplayName(f){ return localizedValue(f,"name"); }
+function mapFeatureDisplayName(feature){ return localizedValue(feature,"name"); }
 function facilityFloor(f){ return localizedValue(f,"floor"); }
 function facilityDetail(f){ return localizedValue(f,"detail"); }
 
@@ -3485,7 +3600,7 @@ function renderFacilityControls(){
 
   facilityCategoryButtons.replaceChildren();
   Object.entries(FACILITY_CATEGORIES).forEach(([key,c]) => {
-    const count = FACILITIES.filter(f => f.category === key).length;
+    const count = FACILITIES.filter(f => f.category === key).length + MAP_FEATURES.filter(f => f.category === key).length;
     const label = facilityCategoryLabel(key);
     const btn = document.createElement("button");
     btn.type = "button";
@@ -3558,9 +3673,48 @@ function renderFacilityMarkers(){
   updateFacilityVisibility();
 }
 
+function renderMapFeatures(){
+  mapFeatureLayer.replaceChildren();
+
+  if(activeFacilityCategories.has("innovation")){
+    const feature = MAP_FEATURES.find(item => item.category === "innovation");
+    const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.classList.add("innovation-zone-svg");
+    svg.setAttribute("viewBox","0 0 2048 930");
+    svg.setAttribute("preserveAspectRatio","none");
+    svg.setAttribute("aria-hidden","true");
+    const polygon = document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    polygon.classList.add("innovation-zone-shape");
+    polygon.setAttribute("points",feature.points);
+    svg.appendChild(polygon);
+    mapFeatureLayer.appendChild(svg);
+    const label = document.createElement("span");
+    label.className = "innovation-zone-label";
+    label.textContent = mapFeatureDisplayName(feature);
+    label.setAttribute("role","img");
+    label.setAttribute("aria-label",mapFeatureDisplayName(feature));
+    mapFeatureLayer.appendChild(label);
+  }
+
+  if(activeFacilityCategories.has("smoking")){
+    MAP_FEATURES.filter(item => item.category === "smoking").forEach(feature => {
+      const marker = document.createElement("span");
+      marker.className = "smoking-marker";
+      marker.style.left = `${feature.x}%`;
+      marker.style.top = `${feature.y}%`;
+      marker.title = mapFeatureDisplayName(feature);
+      marker.setAttribute("role","img");
+      marker.setAttribute("aria-label",mapFeatureDisplayName(feature));
+      marker.innerHTML = `<svg viewBox="0 0 40 52" aria-hidden="true"><path class="smoking-pin" d="M20 1C9.5 1 2 8.7 2 18.4 2 31.5 20 51 20 51s18-19.5 18-32.6C38 8.7 30.5 1 20 1Z"/><path class="smoking-symbol" d="M10 25h16v5H10zM26 25h3v5h-3M31 25v5M14 21c-2-2 2-3 0-6M20 21c-2-2 2-3 0-6"/></svg>`;
+      mapFeatureLayer.appendChild(marker);
+    });
+  }
+}
+
 function updateFacilityVisibility(){
   facilityLayer.replaceChildren();
   facilityMarkerEls.clear();
+  renderMapFeatures();
   const groups = groupFacilitiesByBuilding(FACILITIES.filter(f => activeFacilityCategories.has(f.category)));
   groups.forEach((items,buildingId) => {
     const b = buildingById(buildingId);
@@ -3627,7 +3781,7 @@ function layoutFacilityMarkers(){
     const line = document.createElement("span");
     line.className = "facility-leader";
     line.setAttribute("aria-hidden","true");
-    Object.assign(line.style,{position:"absolute",left:`${x}px`,top:`${y}px`,width:`${Math.hypot(position.dx,position.dy)}px`,height:"2px",background:"#fff",boxShadow:"0 0 2px #243b53",transformOrigin:"0 50%",transform:`rotate(${Math.atan2(position.dy,position.dx)}rad)`,pointerEvents:"none"});
+    Object.assign(line.style,{position:"absolute",left:`${x}px`,top:`${y}px`,width:`${Math.hypot(position.dx,position.dy)}px`,height:"4px",background:"#ff2d55",boxShadow:"0 0 0 2px rgba(255,255,255,.96),0 0 8px rgba(255,45,85,.95)",transformOrigin:"0 50%",transform:`rotate(${Math.atan2(position.dy,position.dx)}rad)`,pointerEvents:"none"});
     facilityLayer.appendChild(line);
   }
 }
@@ -3645,7 +3799,9 @@ function openBuildingFacilities(buildingId,marker,showAll=false,highlightId=null
     <section class="facility-floor">
       <h3>${escapeHtml(facilityFloor(facilities[0]) || t().floorUnknown)}</h3>
       <ul>${facilities.map(f => `<li data-facility-id="${escapeHtml(f.id)}"${f.id === highlightId ? ' class="is-search-result"' : ''}>
-        <span class="facility-item-name">${escapeHtml(facilityDisplayName(f))}</span>
+        ${f.url
+          ? `<a class="facility-item-name facility-item-link" href="${escapeHtml(f.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(facilityDisplayName(f))} ↗</a>`
+          : `<span class="facility-item-name">${escapeHtml(facilityDisplayName(f))}</span>`}
         <span class="facility-item-category">${escapeHtml(facilityCategoryLabel(f.category))}</span>
         ${facilityDetail(f) ? `<div class="facility-item-detail">${escapeHtml(facilityDetail(f))}</div>` : ""}
       </li>`).join("")}</ul>
