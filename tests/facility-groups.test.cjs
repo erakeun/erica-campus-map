@@ -115,6 +115,7 @@ assert.match(html, /@media \(max-width:900px\)[\s\S]*?\.map-stage\{width:100%;mi
 assert.match(html, /id="safetyFilterPanel"/);
 assert.match(html, /function safetyMatchesQuery/);
 assert.match(html, /\.safety-marker\[data-safety-id\^="safety-aed-"\]/);
+assert.match(html, /\.safety-type-btn\[data-safety-type="aed"\]/);
 assert.match(html, /else if\(identifiable\)[\s\S]*?openPlaceInfo\(b\)/);
 assert.match(html, /height:"2px",background:"#ff2d55",boxShadow:"0 0 0 1px/);
 assert.doesNotMatch(html, /facility-group-name/);

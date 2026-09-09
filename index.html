@@ -668,6 +668,11 @@
     .safety-type-btn:hover{border-color:var(--safety-color)}
     .safety-type-btn.is-active{border-color:var(--safety-color);background:color-mix(in srgb,var(--safety-color) 9%,white);color:#2d241f}
     .safety-type-icon{display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--safety-color);color:#fff;font-size:11px;line-height:1}
+    .safety-type-btn[data-safety-type="aed"] .safety-type-icon{
+      font-size:8px;
+      font-weight:900;
+      letter-spacing:-.45px;
+    }
     .safety-type-icon svg{display:block;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.15;stroke-linecap:round;stroke-linejoin:round}
     .safety-type-count{color:#8b756a;font-size:9px;font-weight:900}
 
@@ -1174,7 +1179,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V3.0.1 · CAMPUS SAFETY LAYER</div>
+        <div class="version">V3.0.2 · CAMPUS SAFETY LAYER</div>
         <h1 id="pageTitle">ERICA 캠퍼스맵</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1278,7 +1283,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V3.0.1 · CAMPUS SAFETY LAYER</span>
+      <span class="footer-version">V3.0.2 · CAMPUS SAFETY LAYER</span>
     </footer>
   </main>
 
@@ -3506,7 +3511,7 @@ const MAP_FEATURES = [
 ];
 
 const SETTINGS = {
-  version: "V3.0.1 · CAMPUS SAFETY LAYER",
+  version: "V3.0.2 · CAMPUS SAFETY LAYER",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
