@@ -25,7 +25,7 @@ const {
 assert.equal(buildingData.length, 52);
 assert.equal(facilityData.length, 54);
 assert.equal(mapFeatureData.length, 21);
-assert.equal(safetyFeatureData.length, 56);
+assert.equal(safetyFeatureData.length, 44);
 assert.equal(new Set(buildingData.map(b => b.id)).size, buildingData.length, 'building IDs must be unique');
 assert.equal(new Set(facilityData.map(f => f.id)).size, facilityData.length, 'facility IDs must be unique');
 for (const facility of facilityData) {
@@ -62,27 +62,23 @@ for (const feature of mapFeatureData) {
 assert.ok(categoryData.safety, 'safety category must exist');
 assert.equal(new Set(safetyFeatureData.map(feature => feature.id)).size, safetyFeatureData.length, 'safety IDs must be unique');
 for (const feature of safetyFeatureData) {
-  assert.equal(feature.category, 'safety');
+  assert.ok(['safety','vehicleGate'].includes(feature.category));
   assert.ok(safetyTypeData[feature.safetyType], `${feature.id} must reference an existing safety type`);
   assert.ok(feature.x >= 0 && feature.x <= 100 && feature.y >= 0 && feature.y <= 100, `${feature.id} must use map percentages`);
   for (const suffix of ['Ko','En','Zh']) assert.ok(feature[`name${suffix}`], `${feature.id} must include name${suffix}`);
 }
 assert.deepEqual(Object.fromEntries(Object.keys(safetyTypeData).map(type => [type,safetyFeatureData.filter(feature => feature.safetyType === type).length])), {
-  vehicleRestricted: 1,
   controlRoom: 1,
   safetyTeam: 1,
-  sports: 2,
   hazardousStorage: 3,
   emergencyCall: 21,
   aed: 11,
-  construction: 1,
-  parking: 2,
-  traffic: 4,
-  slip: 2,
   hydrant: 3,
   vehicleGate: 4
 });
-assert.equal(safetyFeatureData.filter(feature => feature.representative).length, 12);
+assert.equal(safetyFeatureData.filter(feature => feature.representative).length, 0);
+assert.equal(safetyFeatureData.filter(feature => feature.category === 'vehicleGate').length, 4);
+assert.ok(categoryData.vehicleGate, 'vehicle gate must be an independent category');
 for (const excluded of ['기숙시설 밀집지역','연구시설 밀집지역']) {
   assert.ok(!safetyFeatureData.some(feature => feature.nameKo.includes(excluded)), `${excluded} must stay excluded`);
 }

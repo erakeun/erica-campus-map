@@ -2436,9 +2436,19 @@ const FACILITY_CATEGORIES = {
     "ko": "안전정보",
     "en": "Safety Information",
     "zh": "安全信息",
-    "aliasesKo": ["안전", "안전시설", "안전주의지역", "캠퍼스 안전"],
+    "aliasesKo": ["안전", "안전시설", "캠퍼스 안전"],
     "aliasesEn": ["safety", "safety facility", "campus safety"],
     "aliasesZh": ["安全", "安全设施", "校园安全"]
+  },
+  "vehicleGate": {
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 5v16M20 5v16M4 8h14l2 3H6zM7 13v3M17 13v3'/></svg>",
+    "color": "#334155",
+    "ko": "차량식별·차단기",
+    "en": "Vehicle Gates",
+    "zh": "车辆识别及道闸",
+    "aliasesKo": ["차량식별", "차단기", "차량 차단기"],
+    "aliasesEn": ["vehicle gate", "barrier gate", "vehicle identification"],
+    "aliasesZh": ["车辆识别", "道闸"]
   }
 };
 
@@ -3390,11 +3400,6 @@ const FACILITIES = [
 
 /* 학교 제공 「캠퍼스 안전지도」에서 위치가 판독되는 항목만 현재 항공 지도에 맞춰 옮긴다. */
 const SAFETY_TYPES = {
-  vehicleRestricted: {
-    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='12' cy='12' r='9'/><path d='M6 18L18 6'/></svg>",
-    color: "#dc2626", ko: "차량통행제한지역", en: "Vehicle Restricted Area", zh: "车辆限行区域",
-    aliasesKo: ["차량통행제한", "통행제한"], aliasesEn: ["vehicle restricted", "restricted road"], aliasesZh: ["车辆限行", "道路限行"], warning: true
-  },
   controlRoom: {
     icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 18V8l8-4 8 4v10'/><path d='M8 18v-6h8v6M2 20h20'/></svg>",
     color: "#1d4ed8", ko: "통합상황실 출동위치", aliasesKo: ["통합상황실", "상황실", "출동위치"]
@@ -3402,11 +3407,6 @@ const SAFETY_TYPES = {
   safetyTeam: {
     icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3l8 3v5c0 5-3.1 8.3-8 10-4.9-1.7-8-5-8-10V6z'/><path d='M8 12h8M12 8v8'/></svg>",
     color: "#15803d", ko: "캠퍼스안전팀 출동위치", aliasesKo: ["캠퍼스안전팀", "안전팀", "출동위치"]
-  },
-  sports: {
-    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='12' cy='12' r='9'/><path d='M8 5l4 3 4-3M5 10l4 3-2 5M19 10l-4 3 2 5M9 13h6'/></svg>",
-    color: "#d97706", ko: "체육활동안전사고 주의지역", en: "Sports Activity Safety Caution", zh: "体育活动安全注意区域",
-    aliasesKo: ["체육활동", "체육 안전", "체육사고"], aliasesEn: ["sports safety", "sports accident"], aliasesZh: ["体育安全"], warning: true
   },
   hazardousStorage: {
     icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3l10 18H2z'/><path d='M12 8c2 3-2 4 1 7-3 0-5-3-1-7zM12 18h.01'/></svg>",
@@ -3421,24 +3421,6 @@ const SAFETY_TYPES = {
   aed: {
     icon: "AED", color: "#059669", ko: "AED(자동제세동기)", en: "AED", zh: "AED（自动体外除颤器）",
     aliasesKo: ["AED", "자동제세동기", "제세동기"], aliasesEn: ["AED", "defibrillator"], aliasesZh: ["AED", "自动体外除颤器"]
-  },
-  construction: {
-    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M8 20h8L14 4h-4zM7 15h10M8 10h8'/></svg>",
-    color: "#c2410c", ko: "공사현장안전사고 우려지역", en: "Construction Safety Caution", zh: "施工现场安全注意区域",
-    aliasesKo: ["공사현장", "공사 안전", "공사사고"], aliasesEn: ["construction safety", "construction site"], aliasesZh: ["施工安全", "施工现场"], warning: true
-  },
-  parking: {
-    icon: "P", color: "#475569", ko: "주차혼잡지역", en: "Congested Parking Area", zh: "停车拥堵区域",
-    aliasesKo: ["주차혼잡", "주차 혼잡", "혼잡 주차"], aliasesEn: ["parking congestion", "congested parking"], aliasesZh: ["停车拥堵", "停车场拥堵"], warning: true
-  },
-  traffic: {
-    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M5 16l1-5h12l1 5v3h-2v-2H7v2H5zM8 11l1-3h6l1 3M8 15h.01M16 15h.01'/></svg>",
-    color: "#ea580c", ko: "교통사고 주의지역", en: "Traffic Accident Caution", zh: "交通事故注意区域",
-    aliasesKo: ["교통사고", "교통 안전"], aliasesEn: ["traffic accident", "traffic safety"], aliasesZh: ["交通事故", "交通安全"], warning: true
-  },
-  slip: {
-    icon: "!", color: "#2563eb", ko: "실족안전사고 주의지역", en: "Slip and Fall Caution", zh: "滑倒坠落注意区域",
-    aliasesKo: ["실족", "실족사고", "낙상"], aliasesEn: ["slip", "fall hazard"], aliasesZh: ["滑倒", "跌落"], warning: true
   },
   hydrant: {
     icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M8 21V9h8v12M6 12h12M10 9V6h4v3M5 21h14M4 13v4M20 13v4'/></svg>",
@@ -3458,7 +3440,7 @@ function makeSafetyPoints(type,coordinates){
     const suffix = coordinates.length > 1 ? ` ${index + 1}` : "";
     return {
       id: `safety-${type}-${index + 1}`,
-      category: "safety",
+      category: type === "vehicleGate" ? "vehicleGate" : "safety",
       safetyType: type,
       kind: "point",
       x,
@@ -3466,16 +3448,14 @@ function makeSafetyPoints(type,coordinates){
       nameKo: `${definition.ko}${suffix}`,
       nameEn: `${definition.en || definition.ko}${suffix}`,
       nameZh: `${definition.zh || definition.ko}${suffix}`,
-      representative: Boolean(definition.warning)
+      representative: false
     };
   });
 }
 
 const SAFETY_FEATURES = [
-  ...makeSafetyPoints("vehicleRestricted", [[34.22,46.90]]),
   ...makeSafetyPoints("controlRoom", [[24.70,28.98]]),
   ...makeSafetyPoints("safetyTeam", [[38.31,75.76]]),
-  ...makeSafetyPoints("sports", [[47.33,33.56],[42.91,22.80]]),
   ...makeSafetyPoints("hazardousStorage", [[30.03,28.33],[27.50,42.93],[28.34,57.43]]),
   ...makeSafetyPoints("emergencyCall", [
     [16.04,48.34],[19.65,72.07],[13.23,75.81],[26.68,52.38],[22.71,24.37],[26.83,25.94],[38.36,23.88],
@@ -3486,10 +3466,6 @@ const SAFETY_FEATURES = [
     [17.84,52.72],[22.90,58.43],[37.32,54.42],[38.89,69.63],[40.01,40.34],[32.23,43.60],
     [18.60,49.34],[27.41,32.13],[32.14,34.45],[50.02,11.49],[25.21,26.84]
   ]),
-  ...makeSafetyPoints("construction", [[62.43,26.71]]),
-  ...makeSafetyPoints("parking", [[14.65,52.53],[21.88,38.58]]),
-  ...makeSafetyPoints("traffic", [[35.20,24.08],[47.59,26.04],[12.36,61.70],[44.36,63.21]]),
-  ...makeSafetyPoints("slip", [[24.23,23.26],[41.97,55.22]]),
   ...makeSafetyPoints("hydrant", [[34.81,56.44],[29.21,68.59],[26.19,40.70]]),
   ...makeSafetyPoints("vehicleGate", [[37.62,18.98],[14.33,57.82],[13.44,62.64],[56.53,27.28]])
 ];
@@ -3550,7 +3526,7 @@ const UI = {
     facilityPanelTitle: "교내 시설·안전정보·흡연구역·캠퍼스혁신파크 표시",
     facilityPanelHelp: "종류를 선택하면 지도에 표시합니다. 건물 마커를 눌러 층별 시설을 확인하고, 식당명을 눌러 오늘의 메뉴를 보세요.",
     safetyPanelTitle: "안전정보 세부 항목",
-    safetyPanelHelp: "필요한 안전정보만 선택해 표시합니다. 주의지역은 PPT 범위의 대표 위치로 표시됩니다.",
+    safetyPanelHelp: "필요한 안전시설과 출동 위치만 선택해 표시합니다.",
     safetyAllOn: "안전 전체 켜기",
     safetyAllOff: "안전 전체 끄기",
     safetySource: "학교 제공 캠퍼스 안전지도에서 확인한 위치",
@@ -3612,7 +3588,7 @@ const UI = {
     facilityPanelTitle: "Campus facilities, safety, smoking areas & Innovation Park",
     facilityPanelHelp: "Choose a category to show it on the map. Open a building marker for facilities by floor, then select a restaurant to view today's menu.",
     safetyPanelTitle: "Safety information filters",
-    safetyPanelHelp: "Select only the safety information you need. Caution areas use representative points from the supplied map.",
+    safetyPanelHelp: "Select the safety facilities and dispatch locations you need.",
     safetyAllOn: "Show all safety",
     safetyAllOff: "Hide all safety",
     safetySource: "Location identified from the campus safety map supplied by the university",
@@ -3674,7 +3650,7 @@ const UI = {
     facilityPanelTitle: "校园设施、安全信息、吸烟区及校园创新园区",
     facilityPanelHelp: "选择类别即可在地图上显示。点击建筑标记查看楼层设施，再点击餐厅名称查看今日菜单。",
     safetyPanelTitle: "安全信息分类",
-    safetyPanelHelp: "请选择需要显示的安全信息。注意区域以所提供地图中的代表位置显示。",
+    safetyPanelHelp: "请选择需要显示的安全设施和出动位置。",
     safetyAllOn: "显示全部安全信息",
     safetyAllOff: "隐藏全部安全信息",
     safetySource: "依据学校提供的校园安全地图确认的位置",
@@ -3983,8 +3959,8 @@ function renderFacilityControls(){
 
   facilityCategoryButtons.replaceChildren();
   Object.entries(FACILITY_CATEGORIES).forEach(([key,c]) => {
-    const count = key === "safety"
-      ? SAFETY_FEATURES.length
+    const count = key === "safety" || key === "vehicleGate"
+      ? SAFETY_FEATURES.filter(feature => feature.category === key).length
       : FACILITIES.filter(f => f.category === key).length + MAP_FEATURES.filter(f => f.category === key).length;
     const label = facilityCategoryLabel(key);
     const btn = document.createElement("button");
@@ -4011,7 +3987,7 @@ function renderSafetyControls(){
   safetyAllOff.textContent = t().safetyAllOff;
   safetyTypeButtons.replaceChildren();
   if(!visible) return;
-  Object.entries(SAFETY_TYPES).forEach(([key,definition]) => {
+  Object.entries(SAFETY_TYPES).filter(([key]) => SAFETY_FEATURES.some(feature => feature.category === "safety" && feature.safetyType === key)).forEach(([key,definition]) => {
     const count = SAFETY_FEATURES.filter(feature => feature.safetyType === key).length;
     const label = safetyTypeLabel(key);
     const btn = document.createElement("button");
@@ -4052,7 +4028,7 @@ function setAllFacilityCategories(on){
   activeFacilityCategories.clear();
   if(on) Object.keys(FACILITY_CATEGORIES).forEach(key => activeFacilityCategories.add(key));
   activeSafetyTypes.clear();
-  if(on) Object.keys(SAFETY_TYPES).forEach(key => activeSafetyTypes.add(key));
+  if(on) SAFETY_FEATURES.filter(feature => feature.category === "safety").forEach(feature => activeSafetyTypes.add(feature.safetyType));
   closeFacilityPopup();
   renderFacilityControls();
   updateFacilityVisibility();
@@ -4068,7 +4044,7 @@ function toggleSafetyType(key){
 
 function setAllSafetyTypes(on){
   activeSafetyTypes.clear();
-  if(on) Object.keys(SAFETY_TYPES).forEach(key => activeSafetyTypes.add(key));
+  if(on) SAFETY_FEATURES.filter(feature => feature.category === "safety").forEach(feature => activeSafetyTypes.add(feature.safetyType));
   closeFacilityPopup();
   renderSafetyControls();
   updateFacilityVisibility();
@@ -4144,11 +4120,15 @@ function renderMapFeatures(){
     });
   }
 
-  if(activeFacilityCategories.has("safety")) renderSafetyFeatures();
+  if(activeFacilityCategories.has("safety") || activeFacilityCategories.has("vehicleGate")) renderSafetyFeatures();
 }
 
 function renderSafetyFeatures(){
-  const visibleFeatures = SAFETY_FEATURES.filter(feature => activeSafetyTypes.has(feature.safetyType));
+  const visibleFeatures = SAFETY_FEATURES.filter(feature =>
+    feature.category === "vehicleGate"
+      ? activeFacilityCategories.has("vehicleGate")
+      : activeFacilityCategories.has("safety") && activeSafetyTypes.has(feature.safetyType)
+  );
   stage.classList.toggle("has-dense-safety",visibleFeatures.length > 15);
   stage.classList.toggle("has-very-dense-safety",visibleFeatures.length > 35);
   visibleFeatures.forEach(feature => {
@@ -4710,9 +4690,9 @@ function focusFacilityResult(f,shouldScroll=true,openPopup=false){
 
 function activateSafetySearchResults(features){
   if(!features.length) return;
-  activeFacilityCategories.add("safety");
+  features.forEach(feature => activeFacilityCategories.add(feature.category));
   activeSafetyTypes.clear();
-  features.forEach(feature => activeSafetyTypes.add(feature.safetyType));
+  features.filter(feature => feature.category === "safety").forEach(feature => activeSafetyTypes.add(feature.safetyType));
   closeFacilityPopup();
   renderFacilityControls();
   updateFacilityVisibility();
