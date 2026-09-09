@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ERICA 캠퍼스맵</title>
-  <meta name="description" content="ERICA 캠퍼스의 건물·시설·흡연구역·캠퍼스혁신파크를 한눈에 확인하는 인터랙티브 캠퍼스맵입니다." />
+  <meta name="description" content="ERICA 캠퍼스의 건물·시설·안전정보·흡연구역·캠퍼스혁신파크를 한눈에 확인하는 인터랙티브 캠퍼스맵입니다." />
 
   <style>
     :root{
@@ -318,6 +318,53 @@
     .smoking-marker .smoking-pin{fill:#ef3b24;stroke:#fff;stroke-width:2.5}
     .smoking-marker .smoking-symbol{fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 
+    .safety-marker{
+      --safety-color:#c2410c;
+      --dx:0px;
+      --dy:-24px;
+      position:absolute;
+      z-index:45;
+      width:31px;
+      height:31px;
+      display:grid;
+      place-items:center;
+      transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy)));
+      border:2px solid rgba(255,255,255,.98);
+      border-radius:50%;
+      padding:0;
+      background:var(--safety-color);
+      color:#fff;
+      box-shadow:0 5px 14px rgba(15,23,42,.3),0 0 0 1px rgba(15,23,42,.12);
+      cursor:pointer;
+      pointer-events:auto;
+      transition:transform .15s ease,filter .15s ease;
+    }
+
+    .safety-marker:hover,
+    .safety-marker.is-selected{
+      z-index:48;
+      filter:brightness(1.08);
+      transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.13);
+    }
+
+    .safety-marker.is-warning{border-radius:9px;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(45deg)}
+    .safety-marker.is-warning:hover,
+    .safety-marker.is-warning.is-selected{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(45deg) scale(1.13)}
+    .safety-marker.is-warning .safety-marker-icon{transform:rotate(-45deg)}
+    .safety-marker-icon{display:grid;place-items:center;width:18px;height:18px;font-size:13px;font-weight:950;line-height:1}
+    .safety-marker-icon svg{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+    .safety-marker.search-hit{animation:facilitySearchPulse .58s ease-in-out 6 alternate}
+    .safety-marker.search-hit::after{
+      content:"";
+      position:absolute;
+      inset:-8px;
+      border:3px solid #ff2d55;
+      border-radius:inherit;
+      box-shadow:0 0 0 5px rgba(255,255,255,.9),0 0 22px rgba(255,45,85,.82);
+      pointer-events:none;
+    }
+
     .map-hotspot{
       position:absolute;
       width:38px;
@@ -580,6 +627,43 @@
       font-size:10px;
       font-weight:900;
     }
+
+    .safety-filter-panel{
+      margin-top:11px;
+      padding:11px 12px 12px;
+      border:1px solid #fed7aa;
+      border-radius:12px;
+      background:#fffaf4;
+    }
+
+    .safety-filter-panel[hidden]{display:none}
+    .safety-filter-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:9px}
+    .safety-filter-title{display:block;color:#9a3412;font-size:12px;font-weight:900;line-height:1.35}
+    .safety-filter-help{margin-top:2px;color:#7c5c4b;font-size:10px;line-height:1.45}
+    .safety-filter-actions{display:flex;gap:6px;flex-shrink:0}
+    .safety-type-buttons{display:flex;flex-wrap:wrap;gap:6px}
+
+    .safety-type-btn{
+      --safety-color:#c2410c;
+      min-height:33px;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 9px;
+      border:1px solid #e5d5ca;
+      border-radius:9px;
+      background:#fff;
+      color:#59443a;
+      font-size:11px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .safety-type-btn:hover{border-color:var(--safety-color)}
+    .safety-type-btn.is-active{border-color:var(--safety-color);background:color-mix(in srgb,var(--safety-color) 9%,white);color:#2d241f}
+    .safety-type-icon{display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--safety-color);color:#fff;font-size:11px;line-height:1}
+    .safety-type-icon svg{display:block;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.15;stroke-linecap:round;stroke-linejoin:round}
+    .safety-type-count{color:#8b756a;font-size:9px;font-weight:900}
 
     .facility-layer{
       position:absolute;
@@ -1037,6 +1121,8 @@
       .search-panel{width:100%}
       .map-card,.directory{border-radius:14px}
       .map-stage{width:100%;min-width:100%}
+      .map-stage.has-dense-safety{min-width:720px}
+      .map-stage.has-very-dense-safety{min-width:980px}
       .map-scroll{max-height:72vh}
       .map-toolbar-actions{width:100%;flex-wrap:wrap}
       .facility-master-btn{margin-right:auto}
@@ -1044,11 +1130,17 @@
       .facility-panel{padding:12px}
       .facility-category-buttons{gap:6px}
       .facility-category-btn{font-size:11px;padding:6px 9px}
+      .safety-filter-top{flex-direction:column}
+      .safety-filter-actions{align-self:flex-end}
+      .safety-type-btn{font-size:10px;padding:5px 7px}
       .directory-body{grid-template-columns:1fr;padding:13px}
       .directory-head{align-items:flex-start;flex-direction:column;padding:18px}
       .title-wrap p{font-size:13px}
       .footer{flex-direction:column}
       .smoking-marker{width:21px;height:28px}
+      .safety-marker{width:25px;height:25px}
+      .safety-marker-icon{width:15px;height:15px;font-size:11px}
+      .safety-marker-icon svg{width:14px;height:14px}
       .innovation-zone-label{padding:4px 6px;border-width:1px;border-radius:5px;font-size:7px}
       .map-hotspot.is-place-label{min-width:54px;min-height:24px;padding:4px 7px;border-width:1px;font-size:8px}
     }
@@ -1066,7 +1158,7 @@
     @media (prefers-reduced-motion:reduce){
       *{scroll-behavior:auto!important}
       .map-hotspot.search-hit::before,.building-row.search-hit,
-      .facility-marker.search-hit{animation:none}
+      .facility-marker.search-hit,.safety-marker.search-hit{animation:none}
     }
   </style>
 </head>
@@ -1075,7 +1167,7 @@
   <main class="page">
     <section class="hero">
       <div class="title-wrap">
-        <div class="version">V2.9.2 · COMPACT GROUP MARKERS</div>
+        <div class="version">V3.0.0 · CAMPUS SAFETY LAYER</div>
         <h1 id="pageTitle">ERICA 캠퍼스맵</h1>
         <p id="pageDescription"></p>
       </div>
@@ -1131,6 +1223,19 @@
           </div>
         </div>
         <div class="facility-category-buttons" id="facilityCategoryButtons"></div>
+        <section class="safety-filter-panel" id="safetyFilterPanel" hidden>
+          <div class="safety-filter-top">
+            <div>
+              <strong class="safety-filter-title" id="safetyFilterTitle"></strong>
+              <div class="safety-filter-help" id="safetyFilterHelp"></div>
+            </div>
+            <div class="safety-filter-actions">
+              <button class="facility-small-btn" id="safetyAllOn" type="button"></button>
+              <button class="facility-small-btn" id="safetyAllOff" type="button"></button>
+            </div>
+          </div>
+          <div class="safety-type-buttons" id="safetyTypeButtons"></div>
+        </section>
       </div>
 
       <div class="map-scroll" id="mapScroll">
@@ -1166,7 +1271,7 @@
 
     <footer class="footer">
       <span id="footerText"></span>
-      <span class="footer-version">V2.9.2 · COMPACT GROUP MARKERS</span>
+      <span class="footer-version">V3.0.0 · CAMPUS SAFETY LAYER</span>
     </footer>
   </main>
 
@@ -2324,6 +2429,16 @@ const FACILITY_CATEGORIES = {
     "aliasesKo": ["혁신파크", "캠퍼스 혁신파크", "예정부지"],
     "aliasesEn": ["innovation park", "planned site"],
     "aliasesZh": ["创新园区", "规划用地"]
+  },
+  "safety": {
+    "icon": "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3l8 3v5c0 5-3.1 8.3-8 10-4.9-1.7-8-5-8-10V6z'/><path d='M9 12l2 2 4-5'/></svg>",
+    "color": "#c2410c",
+    "ko": "안전정보",
+    "en": "Safety Information",
+    "zh": "安全信息",
+    "aliasesKo": ["안전", "안전시설", "안전주의지역", "캠퍼스 안전"],
+    "aliasesEn": ["safety", "safety facility", "campus safety"],
+    "aliasesZh": ["安全", "安全设施", "校园安全"]
   }
 };
 
@@ -3273,6 +3388,112 @@ const FACILITIES = [
   }
 ];
 
+/* 학교 제공 「캠퍼스 안전지도」에서 위치가 판독되는 항목만 현재 항공 지도에 맞춰 옮긴다. */
+const SAFETY_TYPES = {
+  vehicleRestricted: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='12' cy='12' r='9'/><path d='M6 18L18 6'/></svg>",
+    color: "#dc2626", ko: "차량통행제한지역", en: "Vehicle Restricted Area", zh: "车辆限行区域",
+    aliasesKo: ["차량통행제한", "통행제한"], aliasesEn: ["vehicle restricted", "restricted road"], aliasesZh: ["车辆限行", "道路限行"], warning: true
+  },
+  controlRoom: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 18V8l8-4 8 4v10'/><path d='M8 18v-6h8v6M2 20h20'/></svg>",
+    color: "#1d4ed8", ko: "통합상황실 출동위치", aliasesKo: ["통합상황실", "상황실", "출동위치"]
+  },
+  safetyTeam: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3l8 3v5c0 5-3.1 8.3-8 10-4.9-1.7-8-5-8-10V6z'/><path d='M8 12h8M12 8v8'/></svg>",
+    color: "#15803d", ko: "캠퍼스안전팀 출동위치", aliasesKo: ["캠퍼스안전팀", "안전팀", "출동위치"]
+  },
+  sports: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='12' cy='12' r='9'/><path d='M8 5l4 3 4-3M5 10l4 3-2 5M19 10l-4 3 2 5M9 13h6'/></svg>",
+    color: "#d97706", ko: "체육활동안전사고 주의지역", en: "Sports Activity Safety Caution", zh: "体育活动安全注意区域",
+    aliasesKo: ["체육활동", "체육 안전", "체육사고"], aliasesEn: ["sports safety", "sports accident"], aliasesZh: ["体育安全"], warning: true
+  },
+  hazardousStorage: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3l10 18H2z'/><path d='M12 8c2 3-2 4 1 7-3 0-5-3-1-7zM12 18h.01'/></svg>",
+    color: "#b45309", ko: "위험물 저장소", en: "Hazardous Materials Storage", zh: "危险物品储存处",
+    aliasesKo: ["위험물", "위험물저장소"], aliasesEn: ["hazardous materials", "hazard storage"], aliasesZh: ["危险物品", "危险品仓库"]
+  },
+  emergencyCall: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M7 3l3 5-2 2c1.3 3 3.7 5.4 6.7 6.7l2-2 4.3 3c-1 3-3.2 4-5.5 3.3C9.4 19.3 4.7 14.6 3 8.5 2.3 6.2 4 4 7 3z'/></svg>",
+    color: "#e11d48", ko: "Emergency Call", en: "Emergency Call", zh: "紧急呼叫装置",
+    aliasesKo: ["비상전화", "긴급전화", "응급전화", "비상벨"], aliasesEn: ["emergency phone", "emergency call"], aliasesZh: ["紧急电话", "应急电话"]
+  },
+  aed: {
+    icon: "AED", color: "#059669", ko: "AED(자동제세동기)", en: "AED", zh: "AED（自动体外除颤器）",
+    aliasesKo: ["AED", "자동제세동기", "제세동기"], aliasesEn: ["AED", "defibrillator"], aliasesZh: ["AED", "自动体外除颤器"]
+  },
+  construction: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M8 20h8L14 4h-4zM7 15h10M8 10h8'/></svg>",
+    color: "#c2410c", ko: "공사현장안전사고 우려지역", en: "Construction Safety Caution", zh: "施工现场安全注意区域",
+    aliasesKo: ["공사현장", "공사 안전", "공사사고"], aliasesEn: ["construction safety", "construction site"], aliasesZh: ["施工安全", "施工现场"], warning: true
+  },
+  parking: {
+    icon: "P", color: "#475569", ko: "주차혼잡지역", en: "Congested Parking Area", zh: "停车拥堵区域",
+    aliasesKo: ["주차혼잡", "주차 혼잡", "혼잡 주차"], aliasesEn: ["parking congestion", "congested parking"], aliasesZh: ["停车拥堵", "停车场拥堵"], warning: true
+  },
+  traffic: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M5 16l1-5h12l1 5v3h-2v-2H7v2H5zM8 11l1-3h6l1 3M8 15h.01M16 15h.01'/></svg>",
+    color: "#ea580c", ko: "교통사고 주의지역", en: "Traffic Accident Caution", zh: "交通事故注意区域",
+    aliasesKo: ["교통사고", "교통 안전"], aliasesEn: ["traffic accident", "traffic safety"], aliasesZh: ["交通事故", "交通安全"], warning: true
+  },
+  slip: {
+    icon: "!", color: "#2563eb", ko: "실족안전사고 주의지역", en: "Slip and Fall Caution", zh: "滑倒坠落注意区域",
+    aliasesKo: ["실족", "실족사고", "낙상"], aliasesEn: ["slip", "fall hazard"], aliasesZh: ["滑倒", "跌落"], warning: true
+  },
+  hydrant: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M8 21V9h8v12M6 12h12M10 9V6h4v3M5 21h14M4 13v4M20 13v4'/></svg>",
+    color: "#dc2626", ko: "옥외소화전", en: "Outdoor Fire Hydrant", zh: "室外消防栓",
+    aliasesKo: ["소화전", "옥외 소화전"], aliasesEn: ["fire hydrant", "outdoor hydrant"], aliasesZh: ["消防栓", "室外消火栓"]
+  },
+  vehicleGate: {
+    icon: "<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M4 5v16M20 5v16M4 8h14l2 3H6zM7 13v3M17 13v3'/></svg>",
+    color: "#334155", ko: "차량식별 및 차단기", en: "Vehicle Identification Gate", zh: "车辆识别及道闸",
+    aliasesKo: ["차량식별", "차단기", "차량 차단기"], aliasesEn: ["vehicle gate", "barrier gate", "vehicle identification"], aliasesZh: ["车辆识别", "道闸"]
+  }
+};
+
+function makeSafetyPoints(type,coordinates){
+  const definition = SAFETY_TYPES[type];
+  return coordinates.map(([x,y],index) => {
+    const suffix = coordinates.length > 1 ? ` ${index + 1}` : "";
+    return {
+      id: `safety-${type}-${index + 1}`,
+      category: "safety",
+      safetyType: type,
+      kind: "point",
+      x,
+      y,
+      nameKo: `${definition.ko}${suffix}`,
+      nameEn: `${definition.en || definition.ko}${suffix}`,
+      nameZh: `${definition.zh || definition.ko}${suffix}`,
+      representative: Boolean(definition.warning)
+    };
+  });
+}
+
+const SAFETY_FEATURES = [
+  ...makeSafetyPoints("vehicleRestricted", [[34.22,46.90]]),
+  ...makeSafetyPoints("controlRoom", [[24.70,28.98]]),
+  ...makeSafetyPoints("safetyTeam", [[38.31,75.76]]),
+  ...makeSafetyPoints("sports", [[47.33,33.56],[42.91,22.80]]),
+  ...makeSafetyPoints("hazardousStorage", [[30.03,28.33],[27.50,42.93],[28.34,57.43]]),
+  ...makeSafetyPoints("emergencyCall", [
+    [16.04,48.34],[19.65,72.07],[13.23,75.81],[26.68,52.38],[22.71,24.37],[26.83,25.94],[38.36,23.88],
+    [37.59,40.75],[33.64,36.67],[39.40,54.92],[38.28,51.47],[51.69,54.60],[57.52,52.28],[61.03,38.51],
+    [45.01,36.91],[49.23,28.21],[48.68,21.20],[48.37,11.36],[54.38,12.56],[18.45,85.26],[37.96,31.65]
+  ]),
+  ...makeSafetyPoints("aed", [
+    [17.84,52.72],[22.90,58.43],[37.32,54.42],[38.89,69.63],[40.01,40.34],[32.23,43.60],
+    [18.60,49.34],[27.41,32.13],[32.14,34.45],[50.02,11.49],[25.21,26.84]
+  ]),
+  ...makeSafetyPoints("construction", [[62.43,26.71]]),
+  ...makeSafetyPoints("parking", [[14.65,52.53],[21.88,38.58]]),
+  ...makeSafetyPoints("traffic", [[35.20,24.08],[47.59,26.04],[12.36,61.70],[44.36,63.21]]),
+  ...makeSafetyPoints("slip", [[24.23,23.26],[41.97,55.22]]),
+  ...makeSafetyPoints("hydrant", [[34.81,56.44],[29.21,68.59],[26.19,40.70]]),
+  ...makeSafetyPoints("vehicleGate", [[37.62,18.98],[14.33,57.82],[13.44,62.64],[56.53,27.28]])
+];
+
 /* 첨부된 2026 ERICA MAP 표기를 현재 항공 지도 비율에 맞춰 옮긴 지도 전용 정보. */
 const MAP_FEATURES = [
   {
@@ -3302,7 +3523,7 @@ const MAP_FEATURES = [
 ];
 
 const SETTINGS = {
-  version: "V2.9.2 · COMPACT GROUP MARKERS",
+  version: "V3.0.0 · CAMPUS SAFETY LAYER",
   englishUrlFallbackToKorean: true,
   chineseUrlFallbackToKorean: true,
   mapImages: {
@@ -3315,19 +3536,28 @@ const SETTINGS = {
 const UI = {
   ko: {
     title: "ERICA 캠퍼스맵",
-    metaDescription: "ERICA 캠퍼스의 건물·시설·서비스·흡연구역·캠퍼스혁신파크를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
+    metaDescription: "ERICA 캠퍼스의 건물·시설·서비스·안전정보·흡연구역·캠퍼스혁신파크를 확인할 수 있는 인터랙티브 캠퍼스맵입니다.",
     description: "건물 번호 또는 건물명을 검색하면 지도상의 위치가 표시됩니다.<br>내부 구조도나 안내가 연결된 장소는 지도 번호 또는 아래 이름을 눌러 확인할 수 있습니다.",
     languageLabel: "언어 선택",
-    searchPlaceholder: "건물·시설·서비스 검색 (예: 101, 학생증, 카페)",
-    searchAria: "건물, 시설 또는 서비스 검색",
+    searchPlaceholder: "건물·시설·안전정보 검색 (예: 101, AED, 비상전화)",
+    searchAria: "건물, 시설, 서비스 또는 안전정보 검색",
     clearAria: "검색어 지우기",
     searchButton: "찾기",
     toolbar: "지도를 확대하면 건물 번호를 더 선명하게 확인할 수 있습니다. 확대 후 마우스·트랙패드로 지도를 이동할 수 있습니다.",
     facilityMaster: "시설 보기",
     facilityMasterAria: "전체 시설 표시 전환",
     facilityMasterTitle: "전체 시설 레이어 켜기 또는 끄기",
-    facilityPanelTitle: "교내 시설·흡연구역·캠퍼스혁신파크 표시",
+    facilityPanelTitle: "교내 시설·안전정보·흡연구역·캠퍼스혁신파크 표시",
     facilityPanelHelp: "종류를 선택하면 지도에 표시합니다. 건물 마커를 눌러 층별 시설을 확인하고, 식당명을 눌러 오늘의 메뉴를 보세요.",
+    safetyPanelTitle: "안전정보 세부 항목",
+    safetyPanelHelp: "필요한 안전정보만 선택해 표시합니다. 주의지역은 PPT 범위의 대표 위치로 표시됩니다.",
+    safetyAllOn: "안전 전체 켜기",
+    safetyAllOff: "안전 전체 끄기",
+    safetySource: "학교 제공 캠퍼스 안전지도에서 확인한 위치",
+    safetyRepresentative: "이 표시는 주의구역의 대표 위치입니다.",
+    oneSafetyResult: name => `‘<strong>${escapeHtml(name)}</strong>’을 지도에 표시했습니다.`,
+    manySafetyResults: items => `<strong>${items.length}개</strong> 안전정보가 검색되어 지도에 표시되었습니다: ` + items.slice(0,8).map(item => escapeHtml(safetyFeatureDisplayName(item))).join(", ") + (items.length > 8 ? "…" : ""),
+    safetySearchSummary: (buildings,facilities,safety) => `<strong>건물 ${buildings}개 · 시설/서비스 ${facilities}개 · 안전정보 ${safety}개</strong>가 검색되어 지도에 표시되었습니다.`,
     facilityAllOn: "전체 켜기",
     facilityCount: n => `시설 ${n}곳`, facilityAll: "건물 전체 시설 보기", facilityFiltered: "선택한 종류만 보기", facilityFloors: "층별 시설 안내", floorUnknown: "층 정보 확인 필요",
     facilityAllOff: "전체 끄기",
@@ -3368,19 +3598,28 @@ const UI = {
   },
   en: {
     title: "ERICA Campus Map",
-    metaDescription: "Explore ERICA campus buildings, services, smoking areas and the planned Campus Innovation Park on an interactive map.",
+    metaDescription: "Explore ERICA campus buildings, services, safety information, smoking areas and the planned Campus Innovation Park on an interactive map.",
     description: "Search by building number or name to locate it on the map.<br>Select a linked place on the map or in the directory to view its floor plan or guide.",
     languageLabel: "Language selection",
-    searchPlaceholder: "Search buildings, facilities or services (e.g., 101, Student ID, Cafe)",
-    searchAria: "Search buildings, facilities or services",
+    searchPlaceholder: "Search buildings, facilities or safety (e.g., 101, AED, Emergency Call)",
+    searchAria: "Search buildings, facilities, services or safety information",
     clearAria: "Clear search",
     searchButton: "Search",
     toolbar: "Zoom in to view building numbers more clearly. After zooming, drag or use a trackpad to move around the map.",
     facilityMaster: "Facilities",
     facilityMasterAria: "Toggle all facility layers",
     facilityMasterTitle: "Show or hide all facility layers",
-    facilityPanelTitle: "Campus facilities, smoking areas & Innovation Park",
+    facilityPanelTitle: "Campus facilities, safety, smoking areas & Innovation Park",
     facilityPanelHelp: "Choose a category to show it on the map. Open a building marker for facilities by floor, then select a restaurant to view today's menu.",
+    safetyPanelTitle: "Safety information filters",
+    safetyPanelHelp: "Select only the safety information you need. Caution areas use representative points from the supplied map.",
+    safetyAllOn: "Show all safety",
+    safetyAllOff: "Hide all safety",
+    safetySource: "Location identified from the campus safety map supplied by the university",
+    safetyRepresentative: "This marker represents a caution area.",
+    oneSafetyResult: name => `<strong>${escapeHtml(name)}</strong> has been highlighted on the map.`,
+    manySafetyResults: items => `<strong>${items.length}</strong> safety items matched and are now shown on the map: ` + items.slice(0,8).map(item => escapeHtml(safetyFeatureDisplayName(item))).join(", ") + (items.length > 8 ? "…" : ""),
+    safetySearchSummary: (buildings,facilities,safety) => `<strong>${buildings} building(s) · ${facilities} facility/service result(s) · ${safety} safety item(s)</strong> matched and are now shown on the map.`,
     facilityAllOn: "Show all",
     facilityCount: n => `${n} facilities`, facilityAll: "View all building facilities", facilityFiltered: "Show selected categories", facilityFloors: "Facilities by floor", floorUnknown: "Floor not specified",
     facilityAllOff: "Hide all",
@@ -3421,19 +3660,28 @@ const UI = {
   },
   zh: {
     title: "ERICA校园地图",
-    metaDescription: "可通过交互式地图查看ERICA校园建筑、服务、吸烟区及校园创新园区规划用地。",
+    metaDescription: "可通过交互式地图查看ERICA校园建筑、服务、安全信息、吸烟区及校园创新园区规划用地。",
     description: "输入建筑编号或名称，即可在地图上查看其位置。<br>已连接内部平面图或指南的地点，可点击地图编号或下方名称查看。",
     languageLabel: "语言选择",
-    searchPlaceholder: "搜索建筑、设施或服务（例：101、学生证、咖啡厅）",
-    searchAria: "搜索建筑、设施或服务",
+    searchPlaceholder: "搜索建筑、设施或安全信息（例：101、AED、紧急电话）",
+    searchAria: "搜索建筑、设施、服务或安全信息",
     clearAria: "清除搜索内容",
     searchButton: "搜索",
     toolbar: "放大地图可更清楚地查看建筑编号。放大后可使用鼠标或触控板移动地图。",
     facilityMaster: "设施显示",
     facilityMasterAria: "切换全部设施图层",
     facilityMasterTitle: "显示或隐藏全部设施图层",
-    facilityPanelTitle: "校园设施、吸烟区及校园创新园区",
+    facilityPanelTitle: "校园设施、安全信息、吸烟区及校园创新园区",
     facilityPanelHelp: "选择类别即可在地图上显示。点击建筑标记查看楼层设施，再点击餐厅名称查看今日菜单。",
+    safetyPanelTitle: "安全信息分类",
+    safetyPanelHelp: "请选择需要显示的安全信息。注意区域以所提供地图中的代表位置显示。",
+    safetyAllOn: "显示全部安全信息",
+    safetyAllOff: "隐藏全部安全信息",
+    safetySource: "依据学校提供的校园安全地图确认的位置",
+    safetyRepresentative: "此标记代表一个注意区域。",
+    oneSafetyResult: name => `已在地图上标示<strong>${escapeHtml(name)}</strong>。`,
+    manySafetyResults: items => `共找到<strong>${items.length}</strong>项安全信息，并已显示在地图上：` + items.slice(0,8).map(item => escapeHtml(safetyFeatureDisplayName(item))).join("、") + (items.length > 8 ? "…" : ""),
+    safetySearchSummary: (buildings,facilities,safety) => `共找到<strong>${buildings}栋建筑 · ${facilities}项设施/服务 · ${safety}项安全信息</strong>，并已显示在地图上。`,
     facilityAllOn: "全部开启",
     facilityCount: n => `${n}处设施`, facilityAll: "查看建筑全部设施", facilityFiltered: "仅显示所选类别", facilityFloors: "楼层设施指南", floorUnknown: "楼层待确认",
     facilityAllOff: "全部关闭",
@@ -3513,6 +3761,12 @@ const facilityPanelHelp = document.getElementById("facilityPanelHelp");
 const facilityAllOn = document.getElementById("facilityAllOn");
 const facilityAllOff = document.getElementById("facilityAllOff");
 const facilityCategoryButtons = document.getElementById("facilityCategoryButtons");
+const safetyFilterPanel = document.getElementById("safetyFilterPanel");
+const safetyFilterTitle = document.getElementById("safetyFilterTitle");
+const safetyFilterHelp = document.getElementById("safetyFilterHelp");
+const safetyAllOn = document.getElementById("safetyAllOn");
+const safetyAllOff = document.getElementById("safetyAllOff");
+const safetyTypeButtons = document.getElementById("safetyTypeButtons");
 const facilityLayer = document.getElementById("facilityLayer");
 const facilityPopup = document.getElementById("facilityPopup");
 
@@ -3549,7 +3803,9 @@ const ZOOM_MIN = 1;
 const ZOOM_MAX = 3;
 const ZOOM_STEP = .25;
 const activeFacilityCategories = new Set();
+const activeSafetyTypes = new Set();
 const facilityMarkerEls = new Map();
+const safetyMarkerEls = new Map();
 let facilityPanelOpen = true;
 let selectedFacilityId = null;
 
@@ -3564,6 +3820,11 @@ function localizedValue(obj,prefix){
 function displayName(b){ return localizedValue(b,"name"); }
 function facilityDisplayName(f){ return localizedValue(f,"name"); }
 function mapFeatureDisplayName(feature){ return localizedValue(feature,"name"); }
+function safetyFeatureDisplayName(feature){ return localizedValue(feature,"name"); }
+function safetyTypeLabel(key){
+  const definition = SAFETY_TYPES[key];
+  return definition?.[currentLang] || definition?.ko || key;
+}
 function facilityFloor(f){ return localizedValue(f,"floor"); }
 function facilityDetail(f){ return localizedValue(f,"detail"); }
 function facilityExtraLinks(f){
@@ -3722,7 +3983,9 @@ function renderFacilityControls(){
 
   facilityCategoryButtons.replaceChildren();
   Object.entries(FACILITY_CATEGORIES).forEach(([key,c]) => {
-    const count = FACILITIES.filter(f => f.category === key).length + MAP_FEATURES.filter(f => f.category === key).length;
+    const count = key === "safety"
+      ? SAFETY_FEATURES.length
+      : FACILITIES.filter(f => f.category === key).length + MAP_FEATURES.filter(f => f.category === key).length;
     const label = facilityCategoryLabel(key);
     const btn = document.createElement("button");
     btn.type = "button";
@@ -3735,7 +3998,33 @@ function renderFacilityControls(){
     btn.addEventListener("click",() => toggleFacilityCategory(key));
     facilityCategoryButtons.appendChild(btn);
   });
+  renderSafetyControls();
   updateFacilityMasterCount();
+}
+
+function renderSafetyControls(){
+  const visible = activeFacilityCategories.has("safety");
+  safetyFilterPanel.hidden = !visible;
+  safetyFilterTitle.textContent = t().safetyPanelTitle;
+  safetyFilterHelp.textContent = t().safetyPanelHelp;
+  safetyAllOn.textContent = t().safetyAllOn;
+  safetyAllOff.textContent = t().safetyAllOff;
+  safetyTypeButtons.replaceChildren();
+  if(!visible) return;
+  Object.entries(SAFETY_TYPES).forEach(([key,definition]) => {
+    const count = SAFETY_FEATURES.filter(feature => feature.safetyType === key).length;
+    const label = safetyTypeLabel(key);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "safety-type-btn" + (activeSafetyTypes.has(key) ? " is-active" : "");
+    btn.dataset.safetyType = key;
+    btn.style.setProperty("--safety-color",definition.color);
+    btn.setAttribute("aria-pressed",String(activeSafetyTypes.has(key)));
+    btn.setAttribute("aria-label",t().facilityCategoryAria(label));
+    btn.innerHTML = `<span class="safety-type-icon" aria-hidden="true">${definition.icon}</span><span>${escapeHtml(label)}</span><span class="safety-type-count">${count}</span>`;
+    btn.addEventListener("click",() => toggleSafetyType(key));
+    safetyTypeButtons.appendChild(btn);
+  });
 }
 
 function updateFacilityMasterCount(){
@@ -3762,10 +4051,31 @@ function toggleFacilityCategory(key){
 function setAllFacilityCategories(on){
   activeFacilityCategories.clear();
   if(on) Object.keys(FACILITY_CATEGORIES).forEach(key => activeFacilityCategories.add(key));
+  activeSafetyTypes.clear();
+  if(on) Object.keys(SAFETY_TYPES).forEach(key => activeSafetyTypes.add(key));
   closeFacilityPopup();
   renderFacilityControls();
   updateFacilityVisibility();
 }
+
+function toggleSafetyType(key){
+  if(activeSafetyTypes.has(key)) activeSafetyTypes.delete(key);
+  else activeSafetyTypes.add(key);
+  closeFacilityPopup();
+  renderSafetyControls();
+  updateFacilityVisibility();
+}
+
+function setAllSafetyTypes(on){
+  activeSafetyTypes.clear();
+  if(on) Object.keys(SAFETY_TYPES).forEach(key => activeSafetyTypes.add(key));
+  closeFacilityPopup();
+  renderSafetyControls();
+  updateFacilityVisibility();
+}
+
+safetyAllOn.addEventListener("click",() => setAllSafetyTypes(true));
+safetyAllOff.addEventListener("click",() => setAllSafetyTypes(false));
 
 function groupFacilitiesByBuilding(facilities){
   const groups = new Map();
@@ -3797,6 +4107,8 @@ function renderFacilityMarkers(){
 
 function renderMapFeatures(){
   mapFeatureLayer.replaceChildren();
+  safetyMarkerEls.clear();
+  stage.classList.remove("has-dense-safety","has-very-dense-safety");
 
   if(activeFacilityCategories.has("innovation")){
     const feature = MAP_FEATURES.find(item => item.category === "innovation");
@@ -3831,6 +4143,80 @@ function renderMapFeatures(){
       mapFeatureLayer.appendChild(marker);
     });
   }
+
+  if(activeFacilityCategories.has("safety")) renderSafetyFeatures();
+}
+
+function renderSafetyFeatures(){
+  const visibleFeatures = SAFETY_FEATURES.filter(feature => activeSafetyTypes.has(feature.safetyType));
+  stage.classList.toggle("has-dense-safety",visibleFeatures.length > 15);
+  stage.classList.toggle("has-very-dense-safety",visibleFeatures.length > 35);
+  visibleFeatures.forEach(feature => {
+    const definition = SAFETY_TYPES[feature.safetyType];
+    const marker = document.createElement("button");
+    marker.type = "button";
+    marker.className = "safety-marker" + (definition.warning ? " is-warning" : "");
+    marker.dataset.safetyId = feature.id;
+    marker.dataset.dx = "0";
+    marker.dataset.dy = "-24";
+    marker.style.left = `${feature.x}%`;
+    marker.style.top = `${feature.y}%`;
+    marker.style.setProperty("--safety-color",definition.color);
+    marker.style.setProperty("--dy","-24px");
+    marker.innerHTML = `<span class="safety-marker-icon" aria-hidden="true">${definition.icon}</span>`;
+    marker.title = safetyFeatureDisplayName(feature);
+    marker.setAttribute("aria-label",safetyFeatureDisplayName(feature));
+    marker.setAttribute("aria-haspopup","dialog");
+    marker.addEventListener("click",event => {
+      event.stopPropagation();
+      openSafetyPopup(feature,marker);
+    });
+    mapFeatureLayer.appendChild(marker);
+    safetyMarkerEls.set(feature.id,marker);
+  });
+  layoutSafetyMarkers();
+}
+
+function layoutSafetyMarkers(){
+  const placed = [];
+  const candidates = [
+    {dx:0,dy:-24},{dx:20,dy:-24},{dx:-20,dy:-24},{dx:0,dy:-46},
+    {dx:20,dy:-46},{dx:-20,dy:-46},{dx:40,dy:-24},{dx:-40,dy:-24}
+  ];
+  for(const marker of safetyMarkerEls.values()){
+    const x = marker.offsetLeft;
+    const y = marker.offsetTop;
+    const width = marker.offsetWidth;
+    const height = marker.offsetHeight;
+    const rect = ({dx,dy}) => ({left:x+dx-width/2,right:x+dx+width/2,top:y+dy-height/2,bottom:y+dy+height/2});
+    const position = candidates.find(candidate => {
+      const candidateRect = rect(candidate);
+      return candidateRect.left >= 0 && candidateRect.right <= stage.clientWidth && candidateRect.top >= 0 && candidateRect.bottom <= stage.clientHeight &&
+        !placed.some(other => candidateRect.right+4 > other.left && candidateRect.left-4 < other.right && candidateRect.bottom+4 > other.top && candidateRect.top-4 < other.bottom);
+    }) || candidates[0];
+    marker.dataset.dx = String(position.dx);
+    marker.dataset.dy = String(position.dy);
+    marker.style.setProperty("--dx",`${position.dx}px`);
+    marker.style.setProperty("--dy",`${position.dy}px`);
+    placed.push(rect(position));
+  }
+}
+
+function openSafetyPopup(feature,marker){
+  const definition = SAFETY_TYPES[feature.safetyType];
+  new Set(facilityMarkerEls.values()).forEach(element => element.classList.remove("is-selected"));
+  safetyMarkerEls.forEach(element => element.classList.toggle("is-selected",element === marker));
+  facilityPopup.innerHTML = `
+    <header class="facility-popup-header">
+      <button class="facility-popup-close" type="button" aria-label="${escapeHtml(t().facilityCloseAria)}">×</button>
+      <div class="facility-popup-category">${escapeHtml(safetyTypeLabel(feature.safetyType))}</div>
+      <h2 class="facility-popup-name" id="facilityPopupTitle">${escapeHtml(safetyFeatureDisplayName(feature))}</h2>
+      <div class="facility-popup-location">${escapeHtml(t().safetySource)}</div>
+    </header>
+    ${feature.representative ? `<div class="facility-item-detail">${escapeHtml(t().safetyRepresentative)}</div>` : ""}
+  `;
+  facilityPopup.querySelector(".facility-popup-close").addEventListener("click",closeFacilityPopup);
+  if(!facilityPopup.open) facilityPopup.showModal();
 }
 
 function updateFacilityVisibility(){
@@ -3907,7 +4293,10 @@ function layoutFacilityMarkers(){
     facilityLayer.appendChild(line);
   }
 }
-new ResizeObserver(layoutFacilityMarkers).observe(stage);
+new ResizeObserver(() => {
+  layoutFacilityMarkers();
+  layoutSafetyMarkers();
+}).observe(stage);
 
 function openBuildingFacilities(buildingId,marker,showAll=false,highlightId=null){
   const b = buildingById(buildingId);
@@ -3984,10 +4373,12 @@ function closeFacilityPopup(){
   selectedFacilityId = null;
   if(facilityPopup.open) facilityPopup.close();
   new Set(facilityMarkerEls.values()).forEach(el => el.classList.remove("is-selected"));
+  safetyMarkerEls.forEach(el => el.classList.remove("is-selected"));
 }
 facilityPopup.addEventListener("close",() => {
   selectedFacilityId = null;
   new Set(facilityMarkerEls.values()).forEach(el => el.classList.remove("is-selected"));
+  safetyMarkerEls.forEach(el => el.classList.remove("is-selected"));
 });
 facilityPopup.addEventListener("click",event => {
   const rect = facilityPopup.getBoundingClientRect();
@@ -4167,7 +4558,7 @@ mapScroll.addEventListener("wheel",e => {
 
 let panState = null;
 mapScroll.addEventListener("pointerdown",e => {
-  if(zoom <= 1 || e.button !== 0 || e.target.closest(".map-hotspot,.facility-marker,.facility-popup")) return;
+  if(zoom <= 1 || e.button !== 0 || e.target.closest(".map-hotspot,.facility-marker,.safety-marker,.facility-popup")) return;
   panState = {x:e.clientX,y:e.clientY,left:mapScroll.scrollLeft,top:mapScroll.scrollTop,id:e.pointerId};
   mapScroll.classList.add("is-panning");
   mapScroll.setPointerCapture(e.pointerId);
@@ -4185,7 +4576,7 @@ function stopPan(e){
 mapScroll.addEventListener("pointerup",stopPan);
 mapScroll.addEventListener("pointercancel",stopPan);
 mapScroll.addEventListener("click",e => {
-  if(e.target.closest(".facility-marker,.facility-popup,.map-hotspot")) return;
+  if(e.target.closest(".facility-marker,.safety-marker,.facility-popup,.map-hotspot")) return;
   closeFacilityPopup();
 });
 
@@ -4266,6 +4657,18 @@ function facilityMatchesQuery(f,q){
   return directMatch || categoryMatch;
 }
 
+function safetyMatchesQuery(feature,q){
+  const definition = SAFETY_TYPES[feature.safetyType];
+  const fields = [
+    feature.id,feature.nameKo,feature.nameEn,feature.nameZh,
+    definition?.ko || "",definition?.en || "",definition?.zh || "",
+    ...(definition?.aliasesKo || []),...(definition?.aliasesEn || []),...(definition?.aliasesZh || []),
+    FACILITY_CATEGORIES.safety.ko,FACILITY_CATEGORIES.safety.en,FACILITY_CATEGORIES.safety.zh,
+    ...FACILITY_CATEGORIES.safety.aliasesKo,...FACILITY_CATEGORIES.safety.aliasesEn,...FACILITY_CATEGORIES.safety.aliasesZh
+  ];
+  return fields.some(value => directFieldMatches(value,q));
+}
+
 function activateFacilitySearchResults(facilities){
   if(!facilities.length) return;
 
@@ -4305,6 +4708,40 @@ function focusFacilityResult(f,shouldScroll=true,openPopup=false){
   }
 }
 
+function activateSafetySearchResults(features){
+  if(!features.length) return;
+  activeFacilityCategories.add("safety");
+  activeSafetyTypes.clear();
+  features.forEach(feature => activeSafetyTypes.add(feature.safetyType));
+  closeFacilityPopup();
+  renderFacilityControls();
+  updateFacilityVisibility();
+  features.forEach((feature,index) => {
+    const marker = safetyMarkerEls.get(feature.id);
+    if(!marker) return;
+    marker.classList.remove("search-hit");
+    if(index === 0){
+      void marker.offsetWidth;
+      marker.classList.add("search-hit");
+    }
+  });
+}
+
+function focusSafetyResult(feature,shouldScroll=true,openPopup=false){
+  const marker = safetyMarkerEls.get(feature.id);
+  if(!marker) return;
+  if(shouldScroll){
+    const dx = Number(marker.dataset.dx || 0);
+    const dy = Number(marker.dataset.dy || 0);
+    mapScroll.scrollTo({
+      left:Math.max(0,marker.offsetLeft + dx - mapScroll.clientWidth / 2),
+      top:Math.max(0,marker.offsetTop + dy - mapScroll.clientHeight / 2),
+      behavior:"smooth"
+    });
+  }
+  if(openPopup) openSafetyPopup(feature,marker);
+}
+
 function searchBuildings(shouldScroll=true){
   const raw = searchInput.value.trim();
   clearHighlights();
@@ -4328,13 +4765,14 @@ function searchBuildings(shouldScroll=true){
   if(exactId) buildingResults = [exactId];
 
   const facilityResults = exactId ? [] : FACILITIES.filter(f => facilityMatchesQuery(f,q));
+  const safetyResults = exactId ? [] : SAFETY_FEATURES.filter(feature => safetyMatchesQuery(feature,q));
 
-  if(buildingResults.length === 0 && facilityResults.length === 0){
+  if(buildingResults.length === 0 && facilityResults.length === 0 && safetyResults.length === 0){
     message.innerHTML = t().noResult(escapeHtml(raw));
     return;
   }
 
-  buildingResults.forEach((b,i) => highlightBuilding(b,shouldScroll && i === 0 && facilityResults.length === 0));
+  buildingResults.forEach((b,i) => highlightBuilding(b,shouldScroll && i === 0 && facilityResults.length === 0 && safetyResults.length === 0));
 
   if(facilityResults.length){
     activateFacilitySearchResults(facilityResults);
@@ -4345,7 +4783,19 @@ function searchBuildings(shouldScroll=true){
     focusFacilityResult(facilityResults[0],shouldScroll,facilityResults.length === 1);
   }
 
-  if(buildingResults.length && facilityResults.length){
+  if(safetyResults.length){
+    activateSafetySearchResults(safetyResults);
+    focusSafetyResult(safetyResults[0],shouldScroll,safetyResults.length === 1 && !buildingResults.length && !facilityResults.length);
+  }
+
+  const resultGroupCount = Number(buildingResults.length > 0) + Number(facilityResults.length > 0) + Number(safetyResults.length > 0);
+  if(resultGroupCount > 1){
+    message.innerHTML = t().safetySearchSummary(buildingResults.length,facilityResults.length,safetyResults.length);
+  }else if(safetyResults.length === 1){
+    message.innerHTML = t().oneSafetyResult(safetyFeatureDisplayName(safetyResults[0]));
+  }else if(safetyResults.length > 1){
+    message.innerHTML = t().manySafetyResults(safetyResults);
+  }else if(buildingResults.length && facilityResults.length){
     message.innerHTML = t().mixedResults(buildingResults,facilityResults);
   }else if(facilityResults.length === 1){
     const f = facilityResults[0];
