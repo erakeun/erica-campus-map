@@ -2,7 +2,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const html = fs.readFileSync(require('node:path').join(__dirname, '../index.html'), 'utf8');
-const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+const script = [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
+  .map(match => match[1])
+  .find(source => source.includes('const BUILDINGS ='));
+assert.ok(script, 'application script must exist');
 new vm.Script(script);
 const context = vm.createContext({});
 vm.runInContext(
@@ -86,6 +89,7 @@ for (const key of ['support','convenience','restaurant']) assert.match(categoryD
 for (const query of ['복사','복사기','출력','프린터','인쇄']) assert.ok(categoryData.copy.aliasesKo.includes(query));
 
 assert.equal(buildingData.find(b => b.id === '404').urlKo, 'https://blog.naver.com/hyerica4473/223820883613');
+assert.equal(buildingData.find(b => b.id === '301').urlKo, 'https://blog.naver.com/hyerica4473/224413395059');
 assert.equal(buildingData.find(b => b.id === 'KTC').urlKo, '');
 assert.equal(buildingData.find(b => b.id === 'KAKAO').urlKo, 'https://blog.naver.com/hyerica4473/223938119953');
 assert.deepEqual(

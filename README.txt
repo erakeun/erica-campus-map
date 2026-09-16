@@ -1,4 +1,4 @@
-# ERICA Campus Map V3.0.2 · CAMPUS SAFETY LAYER
+# ERICA Campus Map V3.0.3 · CAMPUS SAFETY LAYER
 
 ## V3.0.0 변경 사항
 
