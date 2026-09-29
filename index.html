@@ -4826,6 +4826,14 @@ clearBtn.addEventListener("click",() => {
 if(params.get("debug") === "1") document.body.classList.add("debug");
 updateZoomControls();
 applyLanguage({preserveSearch:false,updateUrl:false});
+// Optional public building deep-link; only existing IDs are accepted.
+// No interview or personal data is read, stored, or added to the URL.
+const linkedBuilding = BUILDINGS.find(building => building.id === params.get("building"));
+if(linkedBuilding){
+  searchInput.value = linkedBuilding.id;
+  clearBtn.style.display = "block";
+  searchBuildings(true);
+}
 </script>
 </body>
 </html>
