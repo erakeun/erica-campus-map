@@ -4756,6 +4756,10 @@ function searchBuildings(shouldScroll=true){
 
   clearBtn.style.display = "block";
   const q = normalize(raw);
+  if(!q){
+    message.innerHTML = t().noResult(escapeHtml(raw));
+    return;
+  }
 
   let buildingResults = BUILDINGS.filter(b => {
     const fields = [b.id,b.nameKo,b.nameEn,b.nameZh,...(b.aliasesKo || []),...(b.aliasesEn || []),...(b.aliasesZh || [])].map(normalize);
