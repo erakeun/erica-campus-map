@@ -4790,6 +4790,8 @@ function searchBuildings(shouldScroll=true){
 
   if(safetyResults.length){
     activateSafetySearchResults(safetyResults);
+    // Safety activation rebuilds facility markers; restore mixed-search highlights.
+    facilityResults.forEach(f => facilityMarkerEls.get(f.id)?.classList.add("search-hit"));
     focusSafetyResult(safetyResults[0],shouldScroll,safetyResults.length === 1 && !buildingResults.length && !facilityResults.length);
   }
 
