@@ -960,6 +960,14 @@
     }
 
     .facility-popup-link:hover{background:#dfeefe}
+    .location-copy{margin-top:14px;border-top:1px solid #cad8e8;padding-top:12px}
+    .location-copy-button{min-height:44px;padding:9px 13px;border:1px solid #18558c;border-radius:9px;background:#18558c;color:#fff;font:inherit;font-weight:750;cursor:pointer}
+    .location-copy-button:focus-visible,.location-copy-text:focus-visible{outline:3px solid #f0b429;outline-offset:3px}
+    .location-copy-button:disabled{opacity:.65;cursor:wait}
+    .location-copy-status{font-size:.88rem;line-height:1.5;margin:8px 0 0}
+    .location-copy-status:empty{display:none}
+    .location-copy-text{box-sizing:border-box;width:100%;min-height:120px;margin-top:8px;padding:9px;border:1px solid #cad8e8;border-radius:7px;background:#fff;color:#172b45;font:inherit;line-height:1.5;resize:vertical}
+    .location-copy-fallback[hidden]{display:none}
 
     body.debug .facility-marker{
       outline:2px dashed rgba(255,255,255,.95);
@@ -3562,6 +3570,12 @@ const UI = {
     facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
     facilityFloorPlan: "건물 내부 구조도 보기 →",
     facilityCloseAria: "시설 정보 닫기",
+    locationCopyButton: "위치 안내 복사",
+    locationCopyLinkLabel: "지도",
+    locationCopySuccess: "위치 안내문을 복사했습니다.",
+    locationCopyWaiting: "이전 복사가 끝나면 다시 눌러 주세요.",
+    locationCopyManual: "자동 복사가 차단되어 안내문을 표시했습니다. 선택된 텍스트를 직접 복사해 주세요.",
+    locationCopyTextLabel: "복사할 위치 안내문",
     zoomAria: "지도 확대 축소",
     zoomOutAria: "지도 축소",
     zoomInAria: "지도 확대",
@@ -3624,6 +3638,12 @@ const UI = {
     facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
     facilityFloorPlan: "View building floor plan →",
     facilityCloseAria: "Close facility details",
+    locationCopyButton: "Copy location details",
+    locationCopyLinkLabel: "Map",
+    locationCopySuccess: "Location details copied.",
+    locationCopyWaiting: "Wait for the previous copy to finish, then press again.",
+    locationCopyManual: "Automatic copying is unavailable. Copy the selected text below.",
+    locationCopyTextLabel: "Location details to copy",
     zoomAria: "Map zoom controls",
     zoomOutAria: "Zoom out",
     zoomInAria: "Zoom in",
@@ -3686,6 +3706,12 @@ const UI = {
     facilityPopupLocation: (building,floor) => `${building} · ${floor}`,
     facilityFloorPlan: "查看建筑平面图 →",
     facilityCloseAria: "关闭设施信息",
+    locationCopyButton: "复制位置说明",
+    locationCopyLinkLabel: "地图",
+    locationCopySuccess: "已复制位置说明。",
+    locationCopyWaiting: "请等待上一次复制完成，然后再次点击。",
+    locationCopyManual: "无法自动复制。请手动复制下方选中的文字。",
+    locationCopyTextLabel: "待复制的位置说明",
     zoomAria: "地图缩放控制",
     zoomOutAria: "缩小地图",
     zoomInAria: "放大地图",
@@ -4299,6 +4325,90 @@ new ResizeObserver(() => {
   layoutSafetyMarkers();
 }).observe(stage);
 
+// Location-copy prototype: only registered public location fields are used.
+// Keep one write in flight across panel changes; each retry needs a new user action.
+let locationCopyPending = false;
+function locationCopyPayload(buildingId,facilityId="",language=currentLang){
+  const b = BUILDINGS.find(item => item.id === buildingId);
+  if(!b) return null;
+  const f = facilityId ? FACILITIES.find(item => item.id === facilityId && item.buildingId === b.id) : null;
+  if(facilityId && !f) return null;
+  const lang = SUPPORTED_LANGUAGES.includes(language) ? language : "ko";
+  const suffix = LANGUAGE_SUFFIX[lang];
+  const localized = (item,prefix) => {
+    const value = item?.[`${prefix}${suffix}`];
+    return value !== undefined && value !== null && String(value).trim() !== ""
+      ? value : item?.[`${prefix}Ko`] || "";
+  };
+  const url = new URL("https://erakeun.github.io/erica-campus-map/");
+  url.searchParams.set("building",b.id);
+  url.searchParams.set("lang",lang);
+  const buildingLine = `${b.id} ${localized(b,"name")}`;
+  const floor = f ? localized(f,"floor") : "";
+  const lines = f ? [localized(f,"name"),buildingLine + (floor ? ` · ${floor}` : "")] : [buildingLine];
+  lines.push(`${UI[lang].locationCopyLinkLabel}: ${url.href}`);
+  return {text:lines.join("\n"),lang,target:f ? localized(f,"name") : localized(b,"name")};
+}
+
+function locationCopyMarkup(buildingId,facilityId=""){
+  const payload = locationCopyPayload(buildingId,facilityId);
+  if(!payload) return "";
+  const ui = UI[payload.lang];
+  return `<div class="location-copy">
+    <button class="location-copy-button" type="button" data-building-id="${escapeHtml(buildingId)}" data-facility-id="${escapeHtml(facilityId)}" data-language="${payload.lang}" aria-label="${escapeHtml(`${ui.locationCopyButton}: ${payload.target}`)}">${escapeHtml(ui.locationCopyButton)}</button>
+    <p class="location-copy-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <div class="location-copy-fallback" hidden><textarea class="location-copy-text" readonly aria-label="${escapeHtml(ui.locationCopyTextLabel)}"></textarea></div>
+  </div>`;
+}
+
+function syncLocationCopyAvailability(){
+  const button = facilityPopup.querySelector(".location-copy-button");
+  if(!button) return;
+  button.disabled = locationCopyPending;
+  const status = button.closest(".location-copy").querySelector(".location-copy-status");
+  const waiting = UI[button.dataset.language].locationCopyWaiting;
+  if(locationCopyPending) status.textContent = waiting;
+  else if(status.textContent === waiting) status.textContent = "";
+}
+
+function bindLocationCopy(){
+  const button = facilityPopup.querySelector(".location-copy-button");
+  if(!button) return;
+  const box = button.closest(".location-copy");
+  const status = box.querySelector(".location-copy-status");
+  const fallback = box.querySelector(".location-copy-fallback");
+  const textField = box.querySelector(".location-copy-text");
+  const stillCurrent = () => facilityPopup.open && button.isConnected && facilityPopup.contains(button);
+  syncLocationCopyAvailability();
+  button.addEventListener("click",async () => {
+    if(locationCopyPending || button.disabled || !stillCurrent()) return;
+    const payload = locationCopyPayload(button.dataset.buildingId,button.dataset.facilityId,button.dataset.language);
+    if(!payload) return;
+    const ui = UI[payload.lang];
+    locationCopyPending = true;
+    button.disabled = true;
+    status.textContent = "";
+    fallback.hidden = true;
+    try {
+      if(typeof navigator?.clipboard?.writeText !== "function") throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(payload.text);
+      if(stillCurrent()) status.textContent = ui.locationCopySuccess;
+    } catch {
+      if(stillCurrent()){
+        textField.value = payload.text;
+        fallback.hidden = false;
+        status.textContent = ui.locationCopyManual;
+        textField.focus();
+        textField.select();
+      }
+    } finally {
+      locationCopyPending = false;
+      button.disabled = false;
+      syncLocationCopyAvailability();
+    }
+  });
+}
+
 function openBuildingFacilities(buildingId,marker,showAll=false,highlightId=null){
   const b = buildingById(buildingId);
   if(!b || !marker.isConnected) return;
@@ -4325,6 +4435,7 @@ function openBuildingFacilities(buildingId,marker,showAll=false,highlightId=null
     </header>
     ${all.length > all.filter(f => activeFacilityCategories.has(f.category)).length ? `<button class="facility-scope-btn" type="button">${escapeHtml(showAll ? t().facilityFiltered : t().facilityAll)}</button>` : ""}
     ${floors}
+    ${locationCopyMarkup(b.id,items.some(f => f.id === highlightId) ? highlightId : "")}
     ${hasUrl(b) ? `<a class="facility-popup-link" href="${escapeHtml(buildingUrl(b))}" target="_blank" rel="noopener noreferrer">${escapeHtml(t().facilityFloorPlan)}</a>` : ""}
   `;
   facilityPopup.querySelector(".facility-popup-close").addEventListener("click",closeFacilityPopup);
@@ -4332,6 +4443,7 @@ function openBuildingFacilities(buildingId,marker,showAll=false,highlightId=null
     openBuildingFacilities(buildingId,marker,!showAll,highlightId);
     facilityPopup.querySelector(".facility-scope-btn")?.focus({preventScroll:true});
   });
+  bindLocationCopy();
   if(!facilityPopup.open) facilityPopup.showModal();
   facilityPopup.querySelector(".is-search-result")?.scrollIntoView({block:"nearest"});
 }
@@ -4351,7 +4463,9 @@ function openBuildingLinks(b){
       <h2 class="facility-popup-name" id="facilityPopupTitle">${escapeHtml(displayName(b))}</h2>
     </header>
     <div>${links.map(link => `<a class="facility-popup-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(link.label)} →</a>`).join(" ")}</div>
+    ${locationCopyMarkup(b.id)}
   `;
+  bindLocationCopy();
   facilityPopup.querySelector(".facility-popup-close").addEventListener("click",closeFacilityPopup);
   if(!facilityPopup.open) facilityPopup.showModal();
 }
@@ -4365,7 +4479,9 @@ function openPlaceInfo(b){
       <h2 class="facility-popup-name" id="facilityPopupTitle">${escapeHtml(displayName(b))}</h2>
       <div class="facility-popup-location">${escapeHtml(t().pending)}</div>
     </header>
+    ${locationCopyMarkup(b.id)}
   `;
+  bindLocationCopy();
   facilityPopup.querySelector(".facility-popup-close").addEventListener("click",closeFacilityPopup);
   if(!facilityPopup.open) facilityPopup.showModal();
 }
